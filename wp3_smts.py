@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2023.2.3),
-    on Mon Mar 11 17:14:30 2024
+    on Tue Mar 12 17:46:53 2024
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -49,8 +49,6 @@ print("now sending markers...")
 screen_markers = [['Fixation'], ['Target'], ['ITI']]
 behav_markers = [['Correct'], ['Incorrect'], ['Repeat']]
 condition_markers = [['Color_Change'], ['Locat_Change'], ['Color_Locat_Change'], ['Identical']]
-# Run 'Before Experiment' code from trial_location_color
-repeat_trial = False
 # --- Setup global variables (available in all functions) ---
 # Ensure that relative paths start from the same directory as this script
 _thisDir = os.path.dirname(os.path.abspath(__file__))
@@ -150,9 +148,9 @@ def setupLogging(filename):
         Text stream to receive inputs from the logging system.
     """
     # this outputs to the screen, not a file
-    logging.console.setLevel(logging.EXP)
+    logging.console.setLevel(logging.DATA)
     # save a log file for detail verbose info
-    logFile = logging.LogFile(filename+'.log', level=logging.EXP)
+    logFile = logging.LogFile(filename+'.log', level=logging.DATA)
     
     return logFile
 
@@ -335,8 +333,47 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     key_resp = keyboard.Keyboard()
     # Run 'Begin Experiment' code from setup
     #Setup some of the variables that are used for experiment
-    potential_colors = ['white', 'black', 'red', 'green', 'blue', 'orange', 'pink', 'purple', 'cyan', 'brown', 'coral', 'gold', 'lightgray'] 
-    response_accuracy = []
+    import time
+    
+    grace_period = 0.5
+    
+    #Color palette
+    potential_colors = ['white', 'black', 'red', 'green', 'blue', 'orange', 'pink', 'purple', 'cyan', 'magenta', 'lightsteelblue', 'yellow', 'lightgreen'] 
+    
+    #Create unique locations so no locations of squares are overlapping
+    def unique_locations(upper_limit):
+        potential_location = []
+        while len(potential_location) < upper_limit:
+            potential_coord = 0.1*randint(-3,3)
+            if potential_coord != 0 and not(potential_coord in potential_location):
+                potential_location.append(potential_coord) 
+        return potential_location
+    
+    def square_manipulation(squares_list, x_coord, y_coord, colors, decider_randomisation, color_or_position, square_to_change, practice_switch):
+        if decider_randomisation == 1: # if change
+            if color_or_position == 0: #color changes
+              change_square = squares_list[square_to_change] 
+              change_square.color = colors[4]
+              if practice_switch == 0: #only save for trial, not for practice
+                thisExp.addData('label_square', "Color_Change")
+            elif color_or_position == 1: #position changes
+              change_square = squares_list[square_to_change] 
+              change_square.pos = (x_coord[4], y_coord[4])
+              if practice_switch == 0:
+                thisExp.addData('label_square', "Locat_Change")
+            elif color_or_position == 2: #color and position change
+              change_square = squares_list[square_to_change] 
+              change_square.pos = (x_coord[4], y_coord[4])
+              change_square.color = colors[4]
+              if practice_switch == 0:
+                thisExp.addData('label_square', "Color_Locat_Change")
+    
+    #Practice
+    response_accuracy_practice = []
+    repeat_trial_practice = False
+    
+    #Test trials
+    response_accuracy_trial = []
     
     # --- Initialize components for Routine "Practice_ITI" ---
     practice_iti_500 = visual.ShapeStim(
@@ -377,8 +414,6 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         ori=0.0, pos=(0.4, 0.4), anchor='center',
         lineWidth=1.0,     colorSpace='rgb',  lineColor='white', fillColor='red',
         opacity=None, depth=-4.0, interpolate=True)
-    # Run 'Begin Experiment' code from practice_location_color
-    repeat_trial_practice = False
     
     # --- Initialize components for Routine "fixation" ---
     fix = visual.ShapeStim(
@@ -477,6 +512,8 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         ori=0.0, pos=(0, 0), anchor='center',
         lineWidth=1.0,     colorSpace='rgb',  lineColor='blue', fillColor='blue',
         opacity=None, depth=-4.0, interpolate=True)
+    # Run 'Begin Experiment' code from trial_location_color
+    repeat_trial = False
     
     # --- Initialize components for Routine "fixation_trial" ---
     fix_cross5 = visual.ShapeStim(
@@ -766,7 +803,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         routineTimer.addTime(-0.500000)
     
     # set up handler to look after randomisation of conditions etc
-    trials_practice = data.TrialHandler(nReps=5.0, method='random', 
+    trials_practice = data.TrialHandler(nReps=10.0, method='random', 
         extraInfo=expInfo, originPath=-1,
         trialList=[None],
         seed=None, name='trials_practice')
@@ -795,7 +832,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 globals()[paramName] = thisTrials_practice[paramName]
         
         # set up handler to look after randomisation of conditions etc
-        repeat_last_practice = data.TrialHandler(nReps=1.0, method='random', 
+        repeat_last_practice = data.TrialHandler(nReps=5.0, method='random', 
             extraInfo=expInfo, originPath=-1,
             trialList=[None],
             seed=None, name='repeat_last_practice')
@@ -831,15 +868,6 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             sqr2.setPos((0.2, 0.2))
             # Run 'Begin Routine' code from practice_location_color
             #Randomize locations of squares
-            
-            #Create unique locations so no locations of squares are overlapping
-            def unique_locations(upper_limit):
-                potential_location = []
-                while len(potential_location) < upper_limit:
-                    potential_coord = 0.1*randint(-3,3)
-                    if potential_coord != 0 and not(potential_coord in potential_location):
-                        potential_location.append(potential_coord) 
-                return potential_location
             
             #Create list with four squares and one with potential colors to choose from
             squares_test = [sqr1, sqr2, sqr3, sqr4]
@@ -1148,8 +1176,6 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                         # update status
                         fix.status = FINISHED
                         fix.setAutoDraw(False)
-                # Run 'Each Frame' code from lsl_fixation_practice
-                #TODO
                 
                 # check for quit (typically the Esc key)
                 if defaultKeyboard.getKeys(keyList=["escape"]):
@@ -1193,12 +1219,12 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             # Run 'Begin Routine' code from practice_button_presses
             ###### Randomization of location and color ######
             
+            #Create list with all four squares that are used for comparison
+            squares_test = [sqr_ident_1, sqr_ident_2, sqr_ident_3, sqr_ident_4]
+            
             #Register possible buttons
             p_pressed = 0
             q_pressed = 0
-            
-            #Create list with all four squares that are used for comparison
-            squares_test = [sqr_ident_1, sqr_ident_2, sqr_ident_3, sqr_ident_4]
             
             #Create variables for position and color
             #Set these to be identical to squares that were first displayed
@@ -1207,24 +1233,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                  current_square.pos = (x_coord[i], y_coord[i])
                  current_square.color = colors[i]
             
-            #Create new color and location depending on what is chosen randomly
-            #Here the extra 5th color/location is used to be replaced for one of the other four squares
-            if decider_randomisation == 1: # if change
-                 if color_or_position == 0: #color changes
-                      change_square = squares_test[square_to_change] 
-                      change_square.color = colors[4]
-                      #thisExp.addData('label_square', "ColorChange")
-                 elif color_or_position == 1: #position changes
-                      change_square = squares_test[square_to_change] 
-                      change_square.pos = (x_coord[4], y_coord[4])
-                      #thisExp.addData('label_square', "LocationChange")
-                 elif color_or_position == 2: #color and position change
-                      change_square = squares_test[square_to_change] 
-                      change_square.pos = (x_coord[4], y_coord[4])
-                      change_square.color = colors[4]
-                      #thisExp.addData('label_square', "ColorLocationChange")
-            
-            
+            square_manipulation(squares_test, x_coord, y_coord, colors, decider_randomisation, color_or_position, square_to_change, 1)
             
             # Run 'Begin Routine' code from lsl_practice_accuracy
             #Push target presentation and accuracy
@@ -1384,18 +1393,18 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 #Decide whether last trial is repeated or if we go to the next trial
                 
                 #Generate variable for time and grace period during which two buttons can be pressed
-                import time
-                grace_period = 0.5
                 
                 if q_pressed == 0 and 'q' in response_key.keys: #only q is pressed
                     q_pressed = time.time()
+                    #thisExp.addData('button_press', "response_q")
                 elif p_pressed == 0 and 'p' in response_key.keys: #only p is pressed
                     p_pressed = time.time()
+                    #thisExp.addData('button_press', "response_p")
                 elif q_pressed != 0 and p_pressed != 0: #q and p are pressed within grace period: last trial is repeated
                     repeat_last_practice.finished = False
                     repeat_trial_practice = True
                     continueRoutine = False
-                    print('!!!!REPEAT!!!!')
+                    #thisExp.addData('button_press', "response_p_and_q")
                 #q and p are pressed outside of grace period: last trial is not repeated
                 elif (q_pressed != 0 and (time.time() - q_pressed) > grace_period) or (p_pressed != 0 and (time.time() - p_pressed) > grace_period):
                     repeat_last_practice.finished = True
@@ -1451,13 +1460,13 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             if p_pressed != 0 and q_pressed != 0:  #p and q pressed: repeat trial
                 pass
             elif p_pressed != 0 and decider_randomisation == 0: #squares identical
-                response_accuracy.append(1)
+                response_accuracy_practice.append(1)
                 thisExp.addData('response_accuracy', "Correct")
             elif q_pressed != 0 and decider_randomisation != 0: #squares not identical
-                response_accuracy.append(1)
+                response_accuracy_practice.append(1)
                 thisExp.addData('response_accuracy', "Correct")
             else: 
-                response_accuracy.append(0) #wrong button was pressed
+                response_accuracy_practice.append(0) #wrong button was pressed
                 thisExp.addData('response_accuracy', "Incorrect")
             
             
@@ -1612,9 +1621,9 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 routineTimer.reset()
             else:
                 routineTimer.addTime(-1.500000)
-        # completed 1.0 repeats of 'repeat_last_practice'
+        # completed 5.0 repeats of 'repeat_last_practice'
         
-    # completed 5.0 repeats of 'trials_practice'
+    # completed 10.0 repeats of 'trials_practice'
     
     
     # --- Prepare to start Routine "start_test" ---
@@ -1734,7 +1743,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     routineTimer.reset()
     
     # set up handler to look after randomisation of conditions etc
-    trials_trial = data.TrialHandler(nReps=5.0, method='random', 
+    trials_trial = data.TrialHandler(nReps=40.0, method='random', 
         extraInfo=expInfo, originPath=-1,
         trialList=[None],
         seed=None, name='trials_trial')
@@ -1763,7 +1772,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 globals()[paramName] = thisTrials_trial[paramName]
         
         # set up handler to look after randomisation of conditions etc
-        repeat_last_trial = data.TrialHandler(nReps=5.0, method='random', 
+        repeat_last_trial = data.TrialHandler(nReps=8.0, method='random', 
             extraInfo=expInfo, originPath=-1,
             trialList=[None],
             seed=None, name='repeat_last_trial')
@@ -1797,16 +1806,6 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             thisExp.addData('sqr_trial.started', globalClock.getTime())
             # Run 'Begin Routine' code from trial_location_color
             #Randomize locations of squares
-            
-            #Create unique locations so no locations of squares are overlapping and 
-            #also not in the center of the screen where fixation cross is
-            def unique_locations(upper_limit):
-                potential_location = []
-                while len(potential_location) < upper_limit:
-                    potential_coord = 0.1*randint(-3,3) #randomize location
-                    if potential_coord != 0 and not(potential_coord in potential_location):
-                        potential_location.append(potential_coord) 
-                return potential_location
             
             #Create list with four squares and one with potential colors to choose from
             squares_trial = [sqr1_trial, sqr2_trial, sqr3_trial, sqr4_trial]
@@ -2175,22 +2174,8 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                  current_square.pos = (x_coord[i], y_coord[i])
                  current_square.color = colors[i]
             
-            #Create new color and location depending on what is chosen randomly
-            #Here the extra 5th color/location is used to be replaced for one of the other four squares
-            if decider_randomisation == 1: # if change
-                 if color_or_position == 0: #color changes
-                      change_square = squares_test[square_to_change] 
-                      change_square.color = colors[4]
-                      thisExp.addData('label_square', "Color_Change")
-                 elif color_or_position == 1: #position changes
-                      change_square = squares_test[square_to_change] 
-                      change_square.pos = (x_coord[4], y_coord[4])
-                      thisExp.addData('label_square', "Locat_Change")
-                 elif color_or_position == 2: #color and position change
-                      change_square = squares_test[square_to_change] 
-                      change_square.pos = (x_coord[4], y_coord[4])
-                      change_square.color = colors[4]
-                      thisExp.addData('label_square', "Color_Locat_Change")
+            square_manipulation(squares_test, x_coord, y_coord, colors, decider_randomisation, color_or_position, square_to_change, 0)
+            
             
             # Run 'Begin Routine' code from lsl_trial_accuracy
             #Push screen target
@@ -2352,19 +2337,17 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 #Create conditions that register button presses
                 #Decide whether last trial is repeated or if we go to the next trial
                 
-                #Generate variable for time and grace period during which two buttons can be pressed
-                import time
-                grace_period = 0.5
-                
                 if q_pressed == 0 and 'q' in response_key_trial.keys: #only q is pressed
                     q_pressed = time.time()
+                    thisExp.addData('button_press', "response_q")
                 elif p_pressed == 0 and 'p' in response_key_trial.keys: #only p is pressed
                     p_pressed = time.time()
+                    thisExp.addData('button_press', "response_p")
                 elif q_pressed != 0 and p_pressed != 0: #q and p are pressed within grace period: last trial is repeated
                     repeat_last_trial.finished = False
                     repeat_trial = True
                     continueRoutine = False
-                    print('!!!!REPEAT!!!!')
+                    thisExp.addData('button_press', "response_p_and_q")
                 #q and p are pressed outside of grace period: last trial is not repeated
                 elif (q_pressed != 0 and (time.time() - q_pressed) > grace_period) or (p_pressed != 0 and (time.time() - p_pressed) > grace_period):
                     repeat_last_trial.finished = True
@@ -2417,41 +2400,41 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             #Squares are identical -> decider_randomisation == 0 -> "p" 
             #Squares are not identical (change of color/location) -> decider_randomisation != 0 -> "q" 
             
-            if p_pressed != 0 and q_pressed != 0:  #p and q pressed: repeat trial
+            if p_pressed != 0 and q_pressed != 0 and ((time.time() - p_pressed) < grace_period): #p and q pressed: repeat trial
                 pass
             elif p_pressed != 0 and decider_randomisation == 0: #squares identical
-                response_accuracy.append(1)
+                response_accuracy_trial.append(1)
                 thisExp.addData('response_accuracy', "Correct")
             elif q_pressed != 0 and decider_randomisation != 0: #squares not identical
-                response_accuracy.append(1)
+                response_accuracy_trial.append(1)
                 thisExp.addData('response_accuracy', "Correct")
             else: 
-                response_accuracy.append(0) #wrong button was pressed
+                response_accuracy_trial.append(0) #wrong button was pressed
                 thisExp.addData('response_accuracy', "Incorrect")
             
             
             print('-----------------')
+            print('we are in trial no:', trial_counter)
             print('randomization:', decider_randomisation)
             #print('response:', response_randomisation)
-            print('result is correct:', response_accuracy)
-            print('we are in trial no:', trial_counter)
-            if trial_counter >= 5: #for testing: no more than 5 trials
-                print('goodbye')
-                trials_trial.finished = True
+            if repeat_trial == True: 
+                print('!!!!REPEAT!!!!')
+            if repeat_trial == False: 
+                print('list of results:', response_accuracy_trial)
                 
             
             # Run 'End Routine' code from lsl_trial_accuracy
             #Push accuracy: correct and incorrect button presses
-            if (p_pressed != 0 or q_pressed != 0) and (time.time() - p_pressed) < grace_period:
+            if (p_pressed != None or q_pressed != None) and (time.time() - p_pressed) < grace_period:
                 if target_present_marker_count == 0:
-                    if response_accuracy == 1:
+                    if response_accuracy_trial == 1:
                         behav_outlet.push_sample(behav_markers[0]) #correct response
                         target_present_marker_count += 1
                     else:
                         behav_outlet.push_sample(behav_markers[1]) #incorrect response
                         target_present_marker_count += 1
             
-            #Push whether target stayed identical or not
+            #Push whether target squares stayed identical or not
             if decider_randomisation == 0:
                 screen_outlet.push_sample(condition_markers[3]) #identical squares
             elif decider_randomisation == 1: #color_or_position -> 0 = color change, 1 = location change, 2 = both change
@@ -2561,14 +2544,14 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             if thisSession is not None:
                 # if running in a Session with a Liaison client, send data up to now
                 thisSession.sendExperimentData()
-        # completed 5.0 repeats of 'repeat_last_trial'
+        # completed 8.0 repeats of 'repeat_last_trial'
         
         thisExp.nextEntry()
         
         if thisSession is not None:
             # if running in a Session with a Liaison client, send data up to now
             thisSession.sendExperimentData()
-    # completed 5.0 repeats of 'trials_trial'
+    # completed 40.0 repeats of 'trials_trial'
     
     
     # --- Prepare to start Routine "goodbye" ---
