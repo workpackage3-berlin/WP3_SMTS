@@ -1,8 +1,8 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2023.2.3),
-    on Tue Mar 12 17:46:53 2024
+    on Fri Mar 22 14:35:51 2024
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -123,7 +123,7 @@ def setupData(expInfo, dataDir=None):
     thisExp = data.ExperimentHandler(
         name=expName, version='',
         extraInfo=expInfo, runtimeInfo=None,
-        originPath='/Users/Merle/Desktop/WP3/wp3_smts.py',
+        originPath='/Users/Merle/Desktop/Merle/Medizin/Promotion/WP3_SMTS/wp3_smts.py',
         savePickle=True, saveWideText=True,
         dataFileName=dataDir + os.sep + filename, sortColumns='time'
     )
@@ -174,7 +174,7 @@ def setupWindow(expInfo=None, win=None):
     if win is None:
         # if not given a window to setup, make one
         win = visual.Window(
-            size=[900, 600], fullscr=False, screen=0,
+            size=[1440, 900], fullscr=False, screen=0,
             winType='pyglet', allowStencil=False,
             monitor='testMonitor', color=[0,0,0], colorSpace='rgb',
             backgroundImage='', backgroundFit='none',
@@ -334,8 +334,17 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     # Run 'Begin Experiment' code from setup
     #Setup some of the variables that are used for experiment
     import time
+    grace_period = 0.5 #upper time limit for button presses
+    practice_counter = 0 #keep track of practice trials
+    trial_counter = 0 #keep track of test trial we are in
+    repeat_trial = False #default is set to continuing with next trial
     
-    grace_period = 0.5
+    #Set up lists with possible conditions for practice and trials
+    #Conditions: Squares stay identical, color change, location change, both change
+    practice_list = [0]*4 + [1]*4 + [2]*4 + [3]*4 #16 practice trials
+    shuffle(practice_list)
+    test_list = [0]*20 + [1]*20 + [2]*20 + [3]*20 #80 test trials
+    shuffle(test_list)
     
     #Color palette
     potential_colors = ['white', 'black', 'red', 'green', 'blue', 'orange', 'pink', 'purple', 'cyan', 'magenta', 'lightsteelblue', 'yellow', 'lightgreen'] 
@@ -512,8 +521,6 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         ori=0.0, pos=(0, 0), anchor='center',
         lineWidth=1.0,     colorSpace='rgb',  lineColor='blue', fillColor='blue',
         opacity=None, depth=-4.0, interpolate=True)
-    # Run 'Begin Experiment' code from trial_location_color
-    repeat_trial = False
     
     # --- Initialize components for Routine "fixation_trial" ---
     fix_cross5 = visual.ShapeStim(
@@ -555,9 +562,6 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         lineWidth=1.0,     colorSpace='rgb',  lineColor='blue', fillColor='blue',
         opacity=None, depth=-4.0, interpolate=True)
     response_key_trial = keyboard.Keyboard()
-    # Run 'Begin Experiment' code from trial_button_presses
-    #Keep track of current trial we are in
-    trial_counter = 0
     
     # --- Initialize components for Routine "pause_trial" ---
     fix_cross4 = visual.ShapeStim(
@@ -874,14 +878,21 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             
             #If task is not repeated, go on to next one
             if repeat_trial_practice == False: 
+                 practice_counter = practice_counter + 1
                  x_coord = unique_locations(5) #Create one extra position in case location changes
                  y_coord = unique_locations(5) #Create one extra position in case location changes
                  color_indices = randchoice(len(potential_colors), 5, replace = False) #get 5 indices to create one extra color
                  colors = [potential_colors[i] for i in color_indices] #select shuffled colours
-                 decider_randomisation = randint(0,2) # should anything be randomized
-                 color_or_position = randint(0,3) # color or position
+                 if practice_list[practice_counter] == 0:
+                    decider_randomisation = 0 #squares stay the same
+                    color_or_position = 0
+                 elif practice_list[practice_counter] != 0:
+                    decider_randomisation = 1 #squares change (color, position, both)
+                    color_or_position = practice_list[practice_counter]
+                 #decider_randomisation = randint(0,2) # should anything be randomized
+                 #color_or_position = randint(0,3) # color or position
                  square_to_change = randint(0,4) # for which square
-               
+            
             # set first squares with respective color and location
             # the created extra 5th location/color is not used here
             for i in range(len(squares_test)):
@@ -1743,7 +1754,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     routineTimer.reset()
     
     # set up handler to look after randomisation of conditions etc
-    trials_trial = data.TrialHandler(nReps=40.0, method='random', 
+    trials_trial = data.TrialHandler(nReps=20.0, method='random', 
         extraInfo=expInfo, originPath=-1,
         trialList=[None],
         seed=None, name='trials_trial')
@@ -1819,9 +1830,16 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                  y_coord = unique_locations(5) #Create one extra position in case location changes
                  color_indices = randchoice(len(potential_colors), 5, replace = False) #get 5 indices to create one extra color
                  colors = [potential_colors[i] for i in color_indices] #select shuffled colours
-                 decider_randomisation = randint(0,2) #should anything be randomized
-                 color_or_position = randint(0,3) #color or position
-                 square_to_change = randint(0,4) #for which square
+                 if test_list[trial_counter] == 0:
+                    decider_randomisation = 0 #squares stay the same
+                    color_or_position = 0
+                 elif test_list[trial_counter] != 0:
+                    decider_randomisation = 1 #squares change (color, position, both)
+                    color_or_position = test_list[trial_counter]
+                 #decider_randomisation = randint(0,2) # should anything be randomized
+                 #color_or_position = randint(0,3) # color or position
+                 square_to_change = randint(0,4) # for which square
+               
                
             # set first squares with respective color and location
             # the created extra 5th location/color is not used here
@@ -2551,7 +2569,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         if thisSession is not None:
             # if running in a Session with a Liaison client, send data up to now
             thisSession.sendExperimentData()
-    # completed 40.0 repeats of 'trials_trial'
+    # completed 20.0 repeats of 'trials_trial'
     
     
     # --- Prepare to start Routine "goodbye" ---
