@@ -1,8 +1,8 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2023.2.3),
-    on Fri Mar 22 14:35:51 2024
+    on Thu Mar 28 19:00:10 2024
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -174,7 +174,7 @@ def setupWindow(expInfo=None, win=None):
     if win is None:
         # if not given a window to setup, make one
         win = visual.Window(
-            size=[1440, 900], fullscr=False, screen=0,
+            size=[900, 600], fullscr=False, screen=0,
             winType='pyglet', allowStencil=False,
             monitor='testMonitor', color=[0,0,0], colorSpace='rgb',
             backgroundImage='', backgroundFit='none',
@@ -324,7 +324,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     
     # --- Initialize components for Routine "instruction" ---
     text = visual.TextStim(win=win, name='text',
-        text='Willkommen beim SMTS. Bei diesem Test werden sie erst vier Quadrate in vier verschiedenen Farben sehen. Nach einer kurzen Pause werden erneut vier Quadrate sehen, bei denen sie folgende Entscheidung treffen sollen:\n- Sind die Quadrate in Farbe und Position identisch? Dann drücken sie "p"\n- Unterscheiden sich die Quadrate in der Farbe, der Position, oder beidem? Dann drücken sie "q"\nMöchten Sie die Quadrate erneut anschauen, weil sie sich nicht sicher sind, dann drücken sie bitte "p" und "q" gleichzeitig.\n\nWenn Sie bereit sind, drücken Sie einen der Knöpfe um den Testdurchlauf zu starten',
+        text='Willkommen beim SMTS. \n\nWenn Sie bereit sind, drücken Sie einen der Knöpfe um den Testdurchlauf zu starten',
         font='Open Sans',
         pos=(0, 0), height=0.05, wrapWidth=None, ori=0.0, 
         color='white', colorSpace='rgb', opacity=None, 
@@ -339,11 +339,15 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     trial_counter = 0 #keep track of test trial we are in
     repeat_trial = False #default is set to continuing with next trial
     
+    # actual buttons we observe
+    same_button = 'left'
+    different_button = 'right'
+    
     #Set up lists with possible conditions for practice and trials
     #Conditions: Squares stay identical, color change, location change, both change
-    practice_list = [0]*4 + [1]*4 + [2]*4 + [3]*4 #16 practice trials
+    practice_list = [0]*5 + [1]*5 + [2]*5  #15 practice trials
     shuffle(practice_list)
-    test_list = [0]*20 + [1]*20 + [2]*20 + [3]*20 #80 test trials
+    test_list = [0]*40 + [1]*20 + [2]*20 #80 test trials
     shuffle(test_list)
     
     #Color palette
@@ -370,12 +374,12 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
               change_square.pos = (x_coord[4], y_coord[4])
               if practice_switch == 0:
                 thisExp.addData('label_square', "Locat_Change")
-            elif color_or_position == 2: #color and position change
-              change_square = squares_list[square_to_change] 
-              change_square.pos = (x_coord[4], y_coord[4])
-              change_square.color = colors[4]
-              if practice_switch == 0:
-                thisExp.addData('label_square', "Color_Locat_Change")
+            #elif color_or_position == 2: #color and position change
+              #change_square = squares_list[square_to_change] 
+              #change_square.pos = (x_coord[4], y_coord[4])
+              #change_square.color = colors[4]
+              #if practice_switch == 0:
+                #thisExp.addData('label_square', "Color_Locat_Change")
     
     #Practice
     response_accuracy_practice = []
@@ -383,6 +387,10 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     
     #Test trials
     response_accuracy_trial = []
+    
+    #Opacity for iti
+    opacity_cross = None
+    opacity_text = None
     
     # --- Initialize components for Routine "Practice_ITI" ---
     practice_iti_500 = visual.ShapeStim(
@@ -463,22 +471,21 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         ori=0.0, pos=(0.4, 0.4), anchor='center',
         lineWidth=1.0,     colorSpace='rgb',  lineColor='white', fillColor='blue',
         opacity=None, depth=-4.0, interpolate=True)
-    response_key = keyboard.Keyboard()
     
     # --- Initialize components for Routine "pause_practice" ---
-    pause_btw_trials = visual.TextStim(win=win, name='pause_btw_trials',
-        text=None,
+    next_round_text = visual.TextStim(win=win, name='next_round_text',
+        text='Nächste Runde beginnt',
         font='Open Sans',
         pos=(0, 0), height=0.05, wrapWidth=None, ori=0.0, 
-        color='white', colorSpace='rgb', opacity=None, 
+        color='white', colorSpace='rgb', opacity=1.0, 
         languageStyle='LTR',
-        depth=0.0);
-    fix_cross3 = visual.ShapeStim(
-        win=win, name='fix_cross3', vertices='cross',
+        depth=-1.0);
+    repeat_cross = visual.ShapeStim(
+        win=win, name='repeat_cross', vertices='cross',
         size=(0.01, 0.01),
         ori=0.0, pos=(0, 0), anchor='center',
         lineWidth=1.0,     colorSpace='rgb',  lineColor='black', fillColor='black',
-        opacity=None, depth=-1.0, interpolate=True)
+        opacity=1.0, depth=-2.0, interpolate=True)
     
     # --- Initialize components for Routine "start_test" ---
     starting_test = visual.TextStim(win=win, name='starting_test',
@@ -561,15 +568,21 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         ori=0.0, pos=(0, 0), anchor='center',
         lineWidth=1.0,     colorSpace='rgb',  lineColor='blue', fillColor='blue',
         opacity=None, depth=-4.0, interpolate=True)
-    response_key_trial = keyboard.Keyboard()
     
     # --- Initialize components for Routine "pause_trial" ---
-    fix_cross4 = visual.ShapeStim(
-        win=win, name='fix_cross4', vertices='cross',
+    next_round_text_trial = visual.TextStim(win=win, name='next_round_text_trial',
+        text='Nächste Runde beginnt',
+        font='Open Sans',
+        pos=(0, 0), height=0.05, wrapWidth=None, ori=0.0, 
+        color='white', colorSpace='rgb', opacity=1.0, 
+        languageStyle='LTR',
+        depth=-1.0);
+    repeat_trial = visual.ShapeStim(
+        win=win, name='repeat_trial', vertices='cross',
         size=(0.01, 0.01),
         ori=0.0, pos=(0, 0), anchor='center',
         lineWidth=1.0,     colorSpace='rgb',  lineColor='black', fillColor='black',
-        opacity=None, depth=0.0, interpolate=True)
+        opacity=1.0, depth=-2.0, interpolate=True)
     
     # --- Initialize components for Routine "goodbye" ---
     goodbye_text = visual.TextStim(win=win, name='goodbye_text',
@@ -807,7 +820,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         routineTimer.addTime(-0.500000)
     
     # set up handler to look after randomisation of conditions etc
-    trials_practice = data.TrialHandler(nReps=10.0, method='random', 
+    trials_practice = data.TrialHandler(nReps=2.0, method='random', 
         extraInfo=expInfo, originPath=-1,
         trialList=[None],
         seed=None, name='trials_practice')
@@ -1224,18 +1237,24 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             continueRoutine = True
             # update component parameters for each repeat
             thisExp.addData('square_ident.started', globalClock.getTime())
-            response_key.keys = []
-            response_key.rt = []
-            _response_key_allKeys = []
             # Run 'Begin Routine' code from practice_button_presses
             ###### Randomization of location and color ######
+            
             
             #Create list with all four squares that are used for comparison
             squares_test = [sqr_ident_1, sqr_ident_2, sqr_ident_3, sqr_ident_4]
             
+            # bools to check if buttons are pressed
+            same_button_pressed = False
+            different_button_pressed = False
+            
             #Register possible buttons
-            p_pressed = 0
-            q_pressed = 0
+            same_button_time = 0
+            different_button_time = 0
+            
+            # initialize a keyboard listener - won't work if there is an additional response key in the routine...
+            kb = keyboard.Keyboard()
+            
             
             #Create variables for position and color
             #Set these to be identical to squares that were first displayed
@@ -1247,11 +1266,14 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             square_manipulation(squares_test, x_coord, y_coord, colors, decider_randomisation, color_or_position, square_to_change, 1)
             
             # Run 'Begin Routine' code from lsl_practice_accuracy
-            #Push target presentation and accuracy
+            #Push screen target
             #screen_outlet.push_sample(screen_markers[1])
             #target_present_marker_count = 0
+            
+            
+            
             # keep track of which components have finished
-            square_identComponents = [fix_cross2, sqr_ident_1, sqr_ident_2, sqr_ident_3, sqr_ident_4, response_key]
+            square_identComponents = [fix_cross2, sqr_ident_1, sqr_ident_2, sqr_ident_3, sqr_ident_4]
             for thisComponent in square_identComponents:
                 thisComponent.tStart = None
                 thisComponent.tStop = None
@@ -1373,61 +1395,33 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 if sqr_ident_4.status == STARTED:
                     # update params
                     pass
-                
-                # *response_key* updates
-                waitOnFlip = False
-                
-                # if response_key is starting this frame...
-                if response_key.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
-                    # keep track of start time/frame for later
-                    response_key.frameNStart = frameN  # exact frame index
-                    response_key.tStart = t  # local t and not account for scr refresh
-                    response_key.tStartRefresh = tThisFlipGlobal  # on global time
-                    win.timeOnFlip(response_key, 'tStartRefresh')  # time at next scr refresh
-                    # add timestamp to datafile
-                    thisExp.timestampOnFlip(win, 'response_key.started')
-                    # update status
-                    response_key.status = STARTED
-                    # keyboard checking is just starting
-                    waitOnFlip = True
-                    win.callOnFlip(response_key.clock.reset)  # t=0 on next screen flip
-                    win.callOnFlip(response_key.clearEvents, eventType='keyboard')  # clear events on next screen flip
-                if response_key.status == STARTED and not waitOnFlip:
-                    theseKeys = response_key.getKeys(keyList=['p','q'], ignoreKeys=["escape"], waitRelease=True)
-                    _response_key_allKeys.extend(theseKeys)
-                    if len(_response_key_allKeys):
-                        response_key.keys = [key.name for key in _response_key_allKeys]  # storing all keys
-                        response_key.rt = [key.rt for key in _response_key_allKeys]
-                        response_key.duration = [key.duration for key in _response_key_allKeys]
                 # Run 'Each Frame' code from practice_button_presses
                 #Create conditions that register button presses
                 #Decide whether last trial is repeated or if we go to the next trial
                 
                 #Generate variable for time and grace period during which two buttons can be pressed
+                keys = kb.getKeys([same_button, different_button], waitRelease=False, clear = False)
                 
-                if q_pressed == 0 and 'q' in response_key.keys: #only q is pressed
-                    q_pressed = time.time()
-                    #thisExp.addData('button_press', "response_q")
-                elif p_pressed == 0 and 'p' in response_key.keys: #only p is pressed
-                    p_pressed = time.time()
-                    #thisExp.addData('button_press', "response_p")
-                elif q_pressed != 0 and p_pressed != 0: #q and p are pressed within grace period: last trial is repeated
-                    repeat_last_practice.finished = False
-                    repeat_trial_practice = True
-                    continueRoutine = False
-                    #thisExp.addData('button_press', "response_p_and_q")
-                #q and p are pressed outside of grace period: last trial is not repeated
-                elif (q_pressed != 0 and (time.time() - q_pressed) > grace_period) or (p_pressed != 0 and (time.time() - p_pressed) > grace_period):
-                    repeat_last_practice.finished = True
-                    repeat_trial_practice = False
-                    continueRoutine = False
-                    
-                
-                
-                             
-                
-                
-                
+                for key in keys:
+                    if key == same_button and key.duration == None: # "left" is pressed and no duration assigned yet
+                        same_button_pressed = True
+                    if key == different_button and key.duration == None: # "right"is pressed and no duration assigned yet
+                        different_button_pressed = True
+                    if same_button_pressed == True and different_button_pressed == True: #left and right are pressed at the same time
+                        repeat_last_practice.finished = False
+                        repeat_trial_practice = True
+                        continueRoutine = False
+                    #check if button is released and no second button pressed during that time
+                    if key == different_button and key.duration != None: # "right" button pressed & released while duration is there
+                        repeat_last_practice.finished = True
+                        repeat_trial_practice = False
+                        continueRoutine = False
+                        different_button_time = key.tDown          
+                    if key == same_button and key.duration != None: # "left" button pressed and released with duration 
+                        repeat_last_practice.finished = True
+                        repeat_trial_practice = False
+                        continueRoutine = False
+                        same_button_time = key.tDown          
                 
                 
                 # check for quit (typically the Esc key)
@@ -1456,49 +1450,55 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 if hasattr(thisComponent, "setAutoDraw"):
                     thisComponent.setAutoDraw(False)
             thisExp.addData('square_ident.stopped', globalClock.getTime())
-            # check responses
-            if response_key.keys in ['', [], None]:  # No response was made
-                response_key.keys = None
-            repeat_last_practice.addData('response_key.keys',response_key.keys)
-            if response_key.keys != None:  # we had a response
-                repeat_last_practice.addData('response_key.rt', response_key.rt)
-                repeat_last_practice.addData('response_key.duration', response_key.duration)
             # Run 'End Routine' code from practice_button_presses
             #Create variable for accuracy (correct button presses)
-            #Squares are identical -> decider_randomisation == 0 -> "p" 
-            #Squares are not identical (change of color/location) -> decider_randomisation != 0 -> "q" 
+            #Squares are identical -> decider_randomisation == 0 -> "left" 
+            #Squares are not identical (change of color/location) -> decider_randomisation != 0 -> "right" 
+            kb.clearEvents()
             
-            if p_pressed != 0 and q_pressed != 0:  #p and q pressed: repeat trial
-                pass
-            elif p_pressed != 0 and decider_randomisation == 0: #squares identical
+            if different_button_pressed != 0 and same_button_pressed != 0 :  #"left" and "right" pressed: repeat trial
+                opacity_text = 0
+                opacity_cross = 1
+            elif same_button_time != 0 and decider_randomisation == 0: #squares identical
                 response_accuracy_practice.append(1)
                 thisExp.addData('response_accuracy', "Correct")
-            elif q_pressed != 0 and decider_randomisation != 0: #squares not identical
+                opacity_text = 1
+                opacity_cross = 0
+            elif different_button_time != 0 and decider_randomisation != 0: #squares not identical
                 response_accuracy_practice.append(1)
                 thisExp.addData('response_accuracy', "Correct")
+                opacity_text = 1
+                opacity_cross = 0
             else: 
                 response_accuracy_practice.append(0) #wrong button was pressed
                 thisExp.addData('response_accuracy', "Incorrect")
+                opacity_text = 1
+                opacity_cross = 0
+            
             
             
                 
             
             # Run 'End Routine' code from lsl_practice_accuracy
-            #Push accuracy: correct and incorrect button presses
-            #if (p_pressed != 0 or q_pressed != 0) and (time.time() - p_pressed) < grace_period:
-            #    if target_present_marker_count == 0:
-            #        if accuracy_button_press_trial == 1:
-            #            behav_outlet.push_sample(behav_markers[0]) #correct response
-            #            target_present_marker_count += 1
-            #        else:
-            #            behav_outlet.push_sample(behav_markers[1]) #incorrect response
-            #            target_present_marker_count += 1
+            ##Push accuracy and if conditions change
             
-            #Push whether target stayed identical or not
-            #if decider_randomisation == 0:
-            #    screen_outlet.push_sample(condition_markers[3]) #identical squares
-            #elif decider_randomisation == 1: #color_or_position -> 0 = color change, 1 = location change, 2 = both change
-            #     screen_outlet.push_sample(condition_markers[color_or_position])
+            #if repeat_trial == True: 
+            #    behav_outlet.push_sample(behav_markers[2]) #repeated trial
+            #else:
+            #    #Push wehter correct or incorrect button presses
+            #    if correct_response == True: 
+            #        behav_outlet.push_sample(behav_markers[0]) #correct response
+            #    elif correct_response == False: 
+            #        behav_outlet.push_sample(behav_markers[1]) #incorrect response
+            
+            #    #Push whether target squares stayed identical or not
+            #    if decider_randomisation == 0:
+            #        screen_outlet.push_sample(condition_markers[3]) #identical squares
+            #    elif decider_randomisation == 1: #color_or_position -> 0 = color change, 1 = location change, 2 = both change
+            #        screen_outlet.push_sample(condition_markers[color_or_position])
+            
+            
+            
                 
             
             # the Routine "square_ident" was not non-slip safe, so reset the non-slip timer
@@ -1511,8 +1511,10 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             # Run 'Begin Routine' code from lsl_iti_practice
             #sending first iti for practice
             #screen_outlet.push_sample(screen_markers[2])
+            next_round_text.setOpacity(opacity_text)
+            repeat_cross.setOpacity(opacity_cross)
             # keep track of which components have finished
-            pause_practiceComponents = [pause_btw_trials, fix_cross3]
+            pause_practiceComponents = [next_round_text, repeat_cross]
             for thisComponent in pause_practiceComponents:
                 thisComponent.tStart = None
                 thisComponent.tStop = None
@@ -1535,71 +1537,71 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
                 # update/draw components on each frame
                 
-                # *pause_btw_trials* updates
+                # *next_round_text* updates
                 
-                # if pause_btw_trials is starting this frame...
-                if pause_btw_trials.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # if next_round_text is starting this frame...
+                if next_round_text.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
                     # keep track of start time/frame for later
-                    pause_btw_trials.frameNStart = frameN  # exact frame index
-                    pause_btw_trials.tStart = t  # local t and not account for scr refresh
-                    pause_btw_trials.tStartRefresh = tThisFlipGlobal  # on global time
-                    win.timeOnFlip(pause_btw_trials, 'tStartRefresh')  # time at next scr refresh
+                    next_round_text.frameNStart = frameN  # exact frame index
+                    next_round_text.tStart = t  # local t and not account for scr refresh
+                    next_round_text.tStartRefresh = tThisFlipGlobal  # on global time
+                    win.timeOnFlip(next_round_text, 'tStartRefresh')  # time at next scr refresh
                     # add timestamp to datafile
-                    thisExp.timestampOnFlip(win, 'pause_btw_trials.started')
+                    thisExp.timestampOnFlip(win, 'next_round_text.started')
                     # update status
-                    pause_btw_trials.status = STARTED
-                    pause_btw_trials.setAutoDraw(True)
+                    next_round_text.status = STARTED
+                    next_round_text.setAutoDraw(True)
                 
-                # if pause_btw_trials is active this frame...
-                if pause_btw_trials.status == STARTED:
+                # if next_round_text is active this frame...
+                if next_round_text.status == STARTED:
                     # update params
                     pass
                 
-                # if pause_btw_trials is stopping this frame...
-                if pause_btw_trials.status == STARTED:
+                # if next_round_text is stopping this frame...
+                if next_round_text.status == STARTED:
                     # is it time to stop? (based on global clock, using actual start)
-                    if tThisFlipGlobal > pause_btw_trials.tStartRefresh + 1.5-frameTolerance:
+                    if tThisFlipGlobal > next_round_text.tStartRefresh + 1.5-frameTolerance:
                         # keep track of stop time/frame for later
-                        pause_btw_trials.tStop = t  # not accounting for scr refresh
-                        pause_btw_trials.frameNStop = frameN  # exact frame index
+                        next_round_text.tStop = t  # not accounting for scr refresh
+                        next_round_text.frameNStop = frameN  # exact frame index
                         # add timestamp to datafile
-                        thisExp.timestampOnFlip(win, 'pause_btw_trials.stopped')
+                        thisExp.timestampOnFlip(win, 'next_round_text.stopped')
                         # update status
-                        pause_btw_trials.status = FINISHED
-                        pause_btw_trials.setAutoDraw(False)
+                        next_round_text.status = FINISHED
+                        next_round_text.setAutoDraw(False)
                 
-                # *fix_cross3* updates
+                # *repeat_cross* updates
                 
-                # if fix_cross3 is starting this frame...
-                if fix_cross3.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # if repeat_cross is starting this frame...
+                if repeat_cross.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
                     # keep track of start time/frame for later
-                    fix_cross3.frameNStart = frameN  # exact frame index
-                    fix_cross3.tStart = t  # local t and not account for scr refresh
-                    fix_cross3.tStartRefresh = tThisFlipGlobal  # on global time
-                    win.timeOnFlip(fix_cross3, 'tStartRefresh')  # time at next scr refresh
+                    repeat_cross.frameNStart = frameN  # exact frame index
+                    repeat_cross.tStart = t  # local t and not account for scr refresh
+                    repeat_cross.tStartRefresh = tThisFlipGlobal  # on global time
+                    win.timeOnFlip(repeat_cross, 'tStartRefresh')  # time at next scr refresh
                     # add timestamp to datafile
-                    thisExp.timestampOnFlip(win, 'fix_cross3.started')
+                    thisExp.timestampOnFlip(win, 'repeat_cross.started')
                     # update status
-                    fix_cross3.status = STARTED
-                    fix_cross3.setAutoDraw(True)
+                    repeat_cross.status = STARTED
+                    repeat_cross.setAutoDraw(True)
                 
-                # if fix_cross3 is active this frame...
-                if fix_cross3.status == STARTED:
+                # if repeat_cross is active this frame...
+                if repeat_cross.status == STARTED:
                     # update params
                     pass
                 
-                # if fix_cross3 is stopping this frame...
-                if fix_cross3.status == STARTED:
+                # if repeat_cross is stopping this frame...
+                if repeat_cross.status == STARTED:
                     # is it time to stop? (based on global clock, using actual start)
-                    if tThisFlipGlobal > fix_cross3.tStartRefresh + 1.5-frameTolerance:
+                    if tThisFlipGlobal > repeat_cross.tStartRefresh + 1.5-frameTolerance:
                         # keep track of stop time/frame for later
-                        fix_cross3.tStop = t  # not accounting for scr refresh
-                        fix_cross3.frameNStop = frameN  # exact frame index
+                        repeat_cross.tStop = t  # not accounting for scr refresh
+                        repeat_cross.frameNStop = frameN  # exact frame index
                         # add timestamp to datafile
-                        thisExp.timestampOnFlip(win, 'fix_cross3.stopped')
+                        thisExp.timestampOnFlip(win, 'repeat_cross.stopped')
                         # update status
-                        fix_cross3.status = FINISHED
-                        fix_cross3.setAutoDraw(False)
+                        repeat_cross.status = FINISHED
+                        repeat_cross.setAutoDraw(False)
                 
                 # check for quit (typically the Esc key)
                 if defaultKeyboard.getKeys(keyList=["escape"]):
@@ -1634,7 +1636,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 routineTimer.addTime(-1.500000)
         # completed 5.0 repeats of 'repeat_last_practice'
         
-    # completed 10.0 repeats of 'trials_practice'
+    # completed 2.0 repeats of 'trials_practice'
     
     
     # --- Prepare to start Routine "start_test" ---
@@ -1754,7 +1756,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     routineTimer.reset()
     
     # set up handler to look after randomisation of conditions etc
-    trials_trial = data.TrialHandler(nReps=20.0, method='random', 
+    trials_trial = data.TrialHandler(nReps=80.0, method='random', 
         extraInfo=expInfo, originPath=-1,
         trialList=[None],
         seed=None, name='trials_trial')
@@ -2172,15 +2174,19 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             continueRoutine = True
             # update component parameters for each repeat
             thisExp.addData('sqr_ident_trial.started', globalClock.getTime())
-            response_key_trial.keys = []
-            response_key_trial.rt = []
-            _response_key_trial_allKeys = []
             # Run 'Begin Routine' code from trial_button_presses
             ###### Randomization of location and color ######
             
+            #placeholder correctnes of participant answer
+            correct_response = None
+            
+            # bools to check if buttons are pressed
+            same_button_pressed = False
+            different_button_pressed = False
+            
             #Register possible buttons
-            p_pressed = 0
-            q_pressed = 0
+            same_button_time = 0
+            different_button_time = 0
             
             #Create list with all four squares that are used for comparison
             squares_test = [sqr_ident_1_trial, sqr_ident_2_trial, sqr_ident_3_trial, sqr_ident_4_trial]
@@ -2203,7 +2209,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             
             
             # keep track of which components have finished
-            sqr_ident_trialComponents = [fix_cross_4, sqr_ident_1_trial, sqr_ident_2_trial, sqr_ident_3_trial, sqr_ident_4_trial, response_key_trial]
+            sqr_ident_trialComponents = [fix_cross_4, sqr_ident_1_trial, sqr_ident_2_trial, sqr_ident_3_trial, sqr_ident_4_trial]
             for thisComponent in sqr_ident_trialComponents:
                 thisComponent.tStart = None
                 thisComponent.tStop = None
@@ -2325,54 +2331,49 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 if sqr_ident_4_trial.status == STARTED:
                     # update params
                     pass
-                
-                # *response_key_trial* updates
-                waitOnFlip = False
-                
-                # if response_key_trial is starting this frame...
-                if response_key_trial.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
-                    # keep track of start time/frame for later
-                    response_key_trial.frameNStart = frameN  # exact frame index
-                    response_key_trial.tStart = t  # local t and not account for scr refresh
-                    response_key_trial.tStartRefresh = tThisFlipGlobal  # on global time
-                    win.timeOnFlip(response_key_trial, 'tStartRefresh')  # time at next scr refresh
-                    # add timestamp to datafile
-                    thisExp.timestampOnFlip(win, 'response_key_trial.started')
-                    # update status
-                    response_key_trial.status = STARTED
-                    # keyboard checking is just starting
-                    waitOnFlip = True
-                    win.callOnFlip(response_key_trial.clock.reset)  # t=0 on next screen flip
-                    win.callOnFlip(response_key_trial.clearEvents, eventType='keyboard')  # clear events on next screen flip
-                if response_key_trial.status == STARTED and not waitOnFlip:
-                    theseKeys = response_key_trial.getKeys(keyList=['p','q'], ignoreKeys=["escape"], waitRelease=True)
-                    _response_key_trial_allKeys.extend(theseKeys)
-                    if len(_response_key_trial_allKeys):
-                        response_key_trial.keys = [key.name for key in _response_key_trial_allKeys]  # storing all keys
-                        response_key_trial.rt = [key.rt for key in _response_key_trial_allKeys]
-                        response_key_trial.duration = [key.duration for key in _response_key_trial_allKeys]
                 # Run 'Each Frame' code from trial_button_presses
                 #Create conditions that register button presses
                 #Decide whether last trial is repeated or if we go to the next trial
                 
-                if q_pressed == 0 and 'q' in response_key_trial.keys: #only q is pressed
-                    q_pressed = time.time()
-                    thisExp.addData('button_press', "response_q")
-                elif p_pressed == 0 and 'p' in response_key_trial.keys: #only p is pressed
-                    p_pressed = time.time()
-                    thisExp.addData('button_press', "response_p")
-                elif q_pressed != 0 and p_pressed != 0: #q and p are pressed within grace period: last trial is repeated
-                    repeat_last_trial.finished = False
-                    repeat_trial = True
-                    continueRoutine = False
-                    thisExp.addData('button_press', "response_p_and_q")
-                #q and p are pressed outside of grace period: last trial is not repeated
-                elif (q_pressed != 0 and (time.time() - q_pressed) > grace_period) or (p_pressed != 0 and (time.time() - p_pressed) > grace_period):
-                    repeat_last_trial.finished = True
-                    repeat_trial = False
-                    continueRoutine = False
+                #if button_same == 0 and 'left' in response_key_trial.keys: #only "left" (aka same) is pressed
+                #    button_same = time.time()
+                #    thisExp.addData('button_press', "button_same")
+                #elif button_different == 0 and 'right' in response_key_trial.keys: #only "right" (aka different) is pressed
+                #    button_different = time.time()
+                #    thisExp.addData('button_press', "button_different")
+                #elif button_same != 0 and button_different != 0: #"left" and "right" are pressed within grace period: last trial is repeated
+                #    repeat_last_trial.finished = False
+                #    repeat_trial = True
+                #    continueRoutine = False
+                #    thisExp.addData('button_press', "button_both")
+                ##"left" and "right" are pressed outside of grace period: last trial is not repeated
+                #elif (button_same != 0 and (time.time() - button_same) > grace_period) or (button_different != 0 and (time.time() - button_different) > grace_period):
+                #    repeat_last_trials.finished = True
+                #    repeat_trial = False
+                #    continueRoutine = False
                     
+                keys = kb.getKeys([same_button, different_button], waitRelease=False, clear = False)
                 
+                for key in keys:
+                    if key == same_button and key.duration == None: # "left" is pressed and no duration assigned yet
+                        same_button_pressed = True
+                    if key == different_button and key.duration == None: # "right"is pressed and no duration assigned yet
+                        different_button_pressed = True
+                    if same_button_pressed == True and different_button_pressed == True: #left and right are pressed at the same time
+                        repeat_last_trial.finished = False
+                        repeat_trial = True
+                        continueRoutine = False
+                    #check if button is released and no second button pressed during that time
+                    if key == different_button and key.duration != None: # "right" button pressed & released while duration is there
+                        repeat_last_trial.finished = True
+                        repeat_trial = False
+                        continueRoutine = False
+                        different_button_time = key.tDown          
+                    if key == same_button and key.duration != None: # "left" button pressed and released with duration 
+                        repeat_last_trial.finished = True
+                        repeat_trial = False
+                        continueRoutine = False
+                        same_button_time = key.tDown 
                 
                              
                 
@@ -2406,29 +2407,33 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 if hasattr(thisComponent, "setAutoDraw"):
                     thisComponent.setAutoDraw(False)
             thisExp.addData('sqr_ident_trial.stopped', globalClock.getTime())
-            # check responses
-            if response_key_trial.keys in ['', [], None]:  # No response was made
-                response_key_trial.keys = None
-            repeat_last_trial.addData('response_key_trial.keys',response_key_trial.keys)
-            if response_key_trial.keys != None:  # we had a response
-                repeat_last_trial.addData('response_key_trial.rt', response_key_trial.rt)
-                repeat_last_trial.addData('response_key_trial.duration', response_key_trial.duration)
             # Run 'End Routine' code from trial_button_presses
             #Create variable for accuracy (correct button presses)
-            #Squares are identical -> decider_randomisation == 0 -> "p" 
-            #Squares are not identical (change of color/location) -> decider_randomisation != 0 -> "q" 
+            #Squares are identical -> decider_randomisation == 0 -> "left" 
+            #Squares are not identical (change of color/location) -> decider_randomisation != 0 -> "right" 
+            kb.clearEvents()
             
-            if p_pressed != 0 and q_pressed != 0 and ((time.time() - p_pressed) < grace_period): #p and q pressed: repeat trial
-                pass
-            elif p_pressed != 0 and decider_randomisation == 0: #squares identical
+            if same_button_pressed != 0 and different_button_pressed != 0: #"left" and "right" pressed: repeat trial
+                opacity_text = 0
+                opacity_cross = 1
+            elif same_button_time != 0 and decider_randomisation == 0: #squares identical
+                correct_response = True
                 response_accuracy_trial.append(1)
                 thisExp.addData('response_accuracy', "Correct")
-            elif q_pressed != 0 and decider_randomisation != 0: #squares not identical
+                opacity_text = 1
+                opacity_cross = 0
+            elif different_button_time != 0 and decider_randomisation != 0: #squares not identical
+                correct_response = True
                 response_accuracy_trial.append(1)
                 thisExp.addData('response_accuracy', "Correct")
+                opacity_text = 1
+                opacity_cross = 0
             else: 
+                correct_response = False
                 response_accuracy_trial.append(0) #wrong button was pressed
                 thisExp.addData('response_accuracy', "Incorrect")
+                opacity_text = 1
+                opacity_cross = 0
             
             
             print('-----------------')
@@ -2442,21 +2447,26 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 
             
             # Run 'End Routine' code from lsl_trial_accuracy
-            #Push accuracy: correct and incorrect button presses
-            if (p_pressed != None or q_pressed != None) and (time.time() - p_pressed) < grace_period:
-                if target_present_marker_count == 0:
-                    if response_accuracy_trial == 1:
-                        behav_outlet.push_sample(behav_markers[0]) #correct response
-                        target_present_marker_count += 1
-                    else:
-                        behav_outlet.push_sample(behav_markers[1]) #incorrect response
-                        target_present_marker_count += 1
+            ##Push accuracy and if conditions change
             
-            #Push whether target squares stayed identical or not
-            if decider_randomisation == 0:
-                screen_outlet.push_sample(condition_markers[3]) #identical squares
-            elif decider_randomisation == 1: #color_or_position -> 0 = color change, 1 = location change, 2 = both change
-                screen_outlet.push_sample(condition_markers[color_or_position])
+            if repeat_trial == True: 
+                behav_outlet.push_sample(behav_markers[2]) #repeated trial
+            else:
+                #Push wehter correct or incorrect button presses
+                if correct_response == True: 
+                    behav_outlet.push_sample(behav_markers[0]) #correct response
+                elif correct_response == False: 
+                    behav_outlet.push_sample(behav_markers[1]) #incorrect response
+            
+                #Push whether target squares stayed identical or not
+                if decider_randomisation == 0:
+                    screen_outlet.push_sample(condition_markers[3]) #identical squares
+                elif decider_randomisation == 1: #color_or_position -> 0 = color change, 1 = location change, 2 = both change
+                    screen_outlet.push_sample(condition_markers[color_or_position])
+            
+            
+            
+            
                 
             
             # the Routine "sqr_ident_trial" was not non-slip safe, so reset the non-slip timer
@@ -2469,8 +2479,10 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             # Run 'Begin Routine' code from lsl_iti_trial
             #sending first iti for practice
             screen_outlet.push_sample(screen_markers[2])
+            next_round_text_trial.setOpacity(opacity_text)
+            repeat_trial.setOpacity(opacity_cross)
             # keep track of which components have finished
-            pause_trialComponents = [fix_cross4]
+            pause_trialComponents = [next_round_text_trial, repeat_trial]
             for thisComponent in pause_trialComponents:
                 thisComponent.tStart = None
                 thisComponent.tStop = None
@@ -2493,38 +2505,71 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
                 # update/draw components on each frame
                 
-                # *fix_cross4* updates
+                # *next_round_text_trial* updates
                 
-                # if fix_cross4 is starting this frame...
-                if fix_cross4.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # if next_round_text_trial is starting this frame...
+                if next_round_text_trial.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
                     # keep track of start time/frame for later
-                    fix_cross4.frameNStart = frameN  # exact frame index
-                    fix_cross4.tStart = t  # local t and not account for scr refresh
-                    fix_cross4.tStartRefresh = tThisFlipGlobal  # on global time
-                    win.timeOnFlip(fix_cross4, 'tStartRefresh')  # time at next scr refresh
+                    next_round_text_trial.frameNStart = frameN  # exact frame index
+                    next_round_text_trial.tStart = t  # local t and not account for scr refresh
+                    next_round_text_trial.tStartRefresh = tThisFlipGlobal  # on global time
+                    win.timeOnFlip(next_round_text_trial, 'tStartRefresh')  # time at next scr refresh
                     # add timestamp to datafile
-                    thisExp.timestampOnFlip(win, 'fix_cross4.started')
+                    thisExp.timestampOnFlip(win, 'next_round_text_trial.started')
                     # update status
-                    fix_cross4.status = STARTED
-                    fix_cross4.setAutoDraw(True)
+                    next_round_text_trial.status = STARTED
+                    next_round_text_trial.setAutoDraw(True)
                 
-                # if fix_cross4 is active this frame...
-                if fix_cross4.status == STARTED:
+                # if next_round_text_trial is active this frame...
+                if next_round_text_trial.status == STARTED:
                     # update params
                     pass
                 
-                # if fix_cross4 is stopping this frame...
-                if fix_cross4.status == STARTED:
+                # if next_round_text_trial is stopping this frame...
+                if next_round_text_trial.status == STARTED:
                     # is it time to stop? (based on global clock, using actual start)
-                    if tThisFlipGlobal > fix_cross4.tStartRefresh + 1.5-frameTolerance:
+                    if tThisFlipGlobal > next_round_text_trial.tStartRefresh + 1.5-frameTolerance:
                         # keep track of stop time/frame for later
-                        fix_cross4.tStop = t  # not accounting for scr refresh
-                        fix_cross4.frameNStop = frameN  # exact frame index
+                        next_round_text_trial.tStop = t  # not accounting for scr refresh
+                        next_round_text_trial.frameNStop = frameN  # exact frame index
                         # add timestamp to datafile
-                        thisExp.timestampOnFlip(win, 'fix_cross4.stopped')
+                        thisExp.timestampOnFlip(win, 'next_round_text_trial.stopped')
                         # update status
-                        fix_cross4.status = FINISHED
-                        fix_cross4.setAutoDraw(False)
+                        next_round_text_trial.status = FINISHED
+                        next_round_text_trial.setAutoDraw(False)
+                
+                # *repeat_trial* updates
+                
+                # if repeat_trial is starting this frame...
+                if repeat_trial.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                    # keep track of start time/frame for later
+                    repeat_trial.frameNStart = frameN  # exact frame index
+                    repeat_trial.tStart = t  # local t and not account for scr refresh
+                    repeat_trial.tStartRefresh = tThisFlipGlobal  # on global time
+                    win.timeOnFlip(repeat_trial, 'tStartRefresh')  # time at next scr refresh
+                    # add timestamp to datafile
+                    thisExp.timestampOnFlip(win, 'repeat_trial.started')
+                    # update status
+                    repeat_trial.status = STARTED
+                    repeat_trial.setAutoDraw(True)
+                
+                # if repeat_trial is active this frame...
+                if repeat_trial.status == STARTED:
+                    # update params
+                    pass
+                
+                # if repeat_trial is stopping this frame...
+                if repeat_trial.status == STARTED:
+                    # is it time to stop? (based on global clock, using actual start)
+                    if tThisFlipGlobal > repeat_trial.tStartRefresh + 1.5-frameTolerance:
+                        # keep track of stop time/frame for later
+                        repeat_trial.tStop = t  # not accounting for scr refresh
+                        repeat_trial.frameNStop = frameN  # exact frame index
+                        # add timestamp to datafile
+                        thisExp.timestampOnFlip(win, 'repeat_trial.stopped')
+                        # update status
+                        repeat_trial.status = FINISHED
+                        repeat_trial.setAutoDraw(False)
                 
                 # check for quit (typically the Esc key)
                 if defaultKeyboard.getKeys(keyList=["escape"]):
@@ -2569,7 +2614,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         if thisSession is not None:
             # if running in a Session with a Liaison client, send data up to now
             thisSession.sendExperimentData()
-    # completed 20.0 repeats of 'trials_trial'
+    # completed 80.0 repeats of 'trials_trial'
     
     
     # --- Prepare to start Routine "goodbye" ---
