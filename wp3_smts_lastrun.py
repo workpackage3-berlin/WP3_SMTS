@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2023.2.3),
-    on Fri Mar 29 13:22:18 2024
+    on Wed Apr  3 15:19:20 2024
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -2434,7 +2434,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 opacity_text = 1
                 opacity_cross = 0
             
-            if trials_trial.thisN == nReps_trials-1:
+            if trials_trial.thisN == nReps_trial-1:
                 opacity_text = 0
                 opacity_cross = 0
             
