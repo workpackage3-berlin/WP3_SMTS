@@ -11,5 +11,5 @@ behavioral_task_env = "psychopy"
 external_device_env = "tmsi"
 
 # Run scripts in their respective environments
-run_script('scripts\\wp3_smts.py', behavioral_task_env)
+run_script('scripts\\smts.py', behavioral_task_env)
 run_script('scripts\\stream_lsl_eeg.py', external_device_env)
