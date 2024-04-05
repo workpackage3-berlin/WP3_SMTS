@@ -1,8 +1,8 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2023.2.3),
-    on Wed Apr  3 17:35:33 2024
+    on Fri Apr  5 13:58:05 2024
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -487,7 +487,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     
     # --- Initialize components for Routine "start_test" ---
     starting_test = visual.TextStim(win=win, name='starting_test',
-        text='Nun beginnt der richtige Test',
+        text='Herzlichen Glückwunsch, Sie haben die Trainingsphase erfolgreich beendet! \n\nBitte geben Sie der Versuchsleiterin Bescheid, um fortzufahren.\n\nVersuchsleitung: \nStart der Aufzeichnungen, Durchführung der Synchronisationsimpulse.',
         font='Open Sans',
         pos=(0, 0), height=0.05, wrapWidth=None, ori=0.0, 
         color='white', colorSpace='rgb', opacity=None, 
@@ -1248,6 +1248,10 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             same_button_time = 0
             different_button_time = 0
             
+            #Button counter to avoid multiple registrations of button presses
+            same_button_counter = 0
+            different_button_counter = 0
+            
             # initialize a keyboard listener - won't work if there is an additional response key in the routine...
             kb = keyboard.Keyboard()
             
@@ -1399,14 +1403,18 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 keys = kb.getKeys([same_button, different_button], waitRelease=False, clear = False)
                 
                 for key in keys:
-                    if key == same_button and key.duration == None: # "left" is pressed and no duration assigned yet
+                    if key == same_button and key.duration == None and same_button_counter == 0: # "left" is pressed and no duration assigned yet
                         same_button_pressed = True
-                    if key == different_button and key.duration == None: # "right"is pressed and no duration assigned yet
+                        same_button_counter = 1 
+                    if key == different_button and key.duration == None and different_button_counter == 0: # "right"is pressed and no duration assigned yet
                         different_button_pressed = True
-                    if same_button_pressed == True and different_button_pressed == True: #left and right are pressed at the same time
+                        different_button_counter = 1
+                    if same_button_pressed == True and different_button_pressed == True and same_button_counter == 0 and different_button_counter == 0: #left and right are pressed at the same time
                         repeat_last_practice.finished = False
                         repeat_trial_practice = True
                         continueRoutine = False
+                        different_button_counter = 1
+                        same_button_counter = 1
                     #check if button is released and no second button pressed during that time
                     if key == different_button and key.duration != None: # "right" button pressed & released while duration is there
                         repeat_last_practice.finished = True
@@ -1709,7 +1717,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             win.callOnFlip(beginn_test.clock.reset)  # t=0 on next screen flip
             win.callOnFlip(beginn_test.clearEvents, eventType='keyboard')  # clear events on next screen flip
         if beginn_test.status == STARTED and not waitOnFlip:
-            theseKeys = beginn_test.getKeys(keyList=None, ignoreKeys=["escape"], waitRelease=False)
+            theseKeys = beginn_test.getKeys(keyList=['s'], ignoreKeys=["escape"], waitRelease=False)
             _beginn_test_allKeys.extend(theseKeys)
             if len(_beginn_test_allKeys):
                 beginn_test.keys = _beginn_test_allKeys[-1].name  # just the last key pressed
@@ -2175,14 +2183,14 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             # Run 'Begin Routine' code from trial_button_presses
             ###### Randomization of location and color ######
             
-            #placeholder correctnes of participant answer
+            #Placeholder for correctness of participant's answer
             correct_response = None
             
-            # bools to check if buttons are pressed
+            #Bools to check if buttons are pressed
             same_button_pressed = False
             different_button_pressed = False
             
-            #Register possible buttons
+            #Variable for timing of button presses/release time
             same_button_time = 0
             different_button_time = 0
             
@@ -2332,23 +2340,6 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 # Run 'Each Frame' code from trial_button_presses
                 #Create conditions that register button presses
                 #Decide whether last trial is repeated or if we go to the next trial
-                
-                #if button_same == 0 and 'left' in response_key_trial.keys: #only "left" (aka same) is pressed
-                #    button_same = time.time()
-                #    thisExp.addData('button_press', "button_same")
-                #elif button_different == 0 and 'right' in response_key_trial.keys: #only "right" (aka different) is pressed
-                #    button_different = time.time()
-                #    thisExp.addData('button_press', "button_different")
-                #elif button_same != 0 and button_different != 0: #"left" and "right" are pressed within grace period: last trial is repeated
-                #    repeat_last_trial.finished = False
-                #    repeat_trial = True
-                #    continueRoutine = False
-                #    thisExp.addData('button_press', "button_both")
-                ##"left" and "right" are pressed outside of grace period: last trial is not repeated
-                #elif (button_same != 0 and (time.time() - button_same) > grace_period) or (button_different != 0 and (time.time() - button_different) > grace_period):
-                #    repeat_last_trials.finished = True
-                #    repeat_trial = False
-                #    continueRoutine = False
                     
                 keys = kb.getKeys([same_button, different_button], waitRelease=False, clear = False)
                 
@@ -2433,7 +2424,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 opacity_text = 1
                 opacity_cross = 0
             
-            if trials_trial.thisN == nReps_trial-1:
+            if trials_trial.thisN == nReps_trial-1: #do not show text if we are at the end of practice/trials
                 opacity_text = 0
                 opacity_cross = 0
             
