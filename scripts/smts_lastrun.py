@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2023.2.3),
-    on Fri Apr  5 18:38:10 2024
+    on Mon Apr  8 20:55:45 2024
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -324,7 +324,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     
     # --- Initialize components for Routine "instruction" ---
     text = visual.TextStim(win=win, name='text',
-        text='Willkommen beim SMTS. \n\nWenn Sie bereit sind, drücken Sie einen der Knöpfe um den Testdurchlauf zu starten',
+        text='Willkommen beim SMTS. \n\nWenn Sie bereit sind, drücken Sie die rechte oder die linke Taste, um den Trainingsdurchlauf zu starten',
         font='Open Sans',
         pos=(0, 0), height=0.05, wrapWidth=None, ori=0.0, 
         color='white', colorSpace='rgb', opacity=None, 
@@ -334,7 +334,6 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     # Run 'Begin Experiment' code from setup
     #Setup some of the variables that are used for experiment
     import time
-    grace_period = 0.5 #upper time limit for button presses
     practice_counter = 0 #keep track of practice trials
     trial_counter = 0 #keep track of test trial we are in
     repeat_trial = False #default is set to continuing with next trial
@@ -367,7 +366,8 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     opacity_cross = None
     opacity_text = None
     
-    #Trial number
+    #Trial numbers we want to have for practice and trials
+    #can be changed as needed
     nReps_trial = 80
     nReps_practice = 15
     
@@ -383,6 +383,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 potential_location.append(potential_coord) 
         return potential_location
     
+    #Function that creates four squares in which color/position are set
     def square_manipulation(squares_list, x_coord, y_coord, colors, decider_randomisation, color_or_position, square_to_change, practice_switch):
         if decider_randomisation == 1: # if change
             if color_or_position == 1: #color changes
@@ -753,7 +754,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     
     # --- Run Routine "Practice_ITI" ---
     routineForceEnded = not continueRoutine
-    while continueRoutine and routineTimer.getTime() < 0.5:
+    while continueRoutine and routineTimer.getTime() < 1.5:
         # get current time
         t = routineTimer.getTime()
         tThisFlip = win.getFutureFlipTime(clock=routineTimer)
@@ -784,7 +785,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         # if practice_iti_500 is stopping this frame...
         if practice_iti_500.status == STARTED:
             # is it time to stop? (based on global clock, using actual start)
-            if tThisFlipGlobal > practice_iti_500.tStartRefresh + 0.5-frameTolerance:
+            if tThisFlipGlobal > practice_iti_500.tStartRefresh + 1.5-frameTolerance:
                 # keep track of stop time/frame for later
                 practice_iti_500.tStop = t  # not accounting for scr refresh
                 practice_iti_500.frameNStop = frameN  # exact frame index
@@ -824,7 +825,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     if routineForceEnded:
         routineTimer.reset()
     else:
-        routineTimer.addTime(-0.500000)
+        routineTimer.addTime(-1.500000)
     
     # set up handler to look after randomisation of conditions etc
     trials_practice = data.TrialHandler(nReps=nReps_practice, method='random', 
@@ -1147,8 +1148,8 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             thisExp.addData('fixation.started', globalClock.getTime())
             # Run 'Begin Routine' code from lsl_fixation_practice
             #Push screen fixation
-            screen_outlet.push_sample(screen_markers[0])
-            fixation_marker_count = 0
+            #screen_outlet.push_sample(screen_markers[0])
+            #fixation_marker_count = 0
             # keep track of which components have finished
             fixationComponents = [fix]
             for thisComponent in fixationComponents:
@@ -1276,8 +1277,8 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             
             # Run 'Begin Routine' code from lsl_practice_accuracy
             #Push screen target
-            screen_outlet.push_sample(screen_markers[1])
-            target_present_marker_count = 0
+            #screen_outlet.push_sample(screen_markers[1])
+            #target_present_marker_count = 0
             
             
             
@@ -1501,20 +1502,20 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             
             # Run 'End Routine' code from lsl_practice_accuracy
             ##Push accuracy and if conditions change
-            if repeat_trial_practice == True: 
-                behav_outlet.push_sample(behav_markers[2]) #repeated trial
-            else:
-                #Push whether correct or incorrect button presses
-                if correct_response == True: 
-                    behav_outlet.push_sample(behav_markers[0]) #correct response
-                elif correct_response == False: 
-                    behav_outlet.push_sample(behav_markers[1]) #incorrect response
+            #if repeat_trial_practice == True: 
+            #    behav_outlet.push_sample(behav_markers[2]) #repeated trial
+            #else:
+            #    #Push whether correct or incorrect button presses
+            #    if correct_response == True: 
+            #        behav_outlet.push_sample(behav_markers[0]) #correct response
+            #    elif correct_response == False: 
+            #        behav_outlet.push_sample(behav_markers[1]) #incorrect response
             
-                #Push whether target squares stayed identical or not
-                if decider_randomisation == 0:
-                    screen_outlet.push_sample(condition_markers[0]) #identical squares
-                elif decider_randomisation == 1: #color_or_position -> 0 = color change, 1 = location change
-                    screen_outlet.push_sample(condition_markers[color_or_position])
+            #    #Push whether target squares stayed identical or not
+            #    if decider_randomisation == 0:
+            #        screen_outlet.push_sample(condition_markers[0]) #identical squares
+            #    elif decider_randomisation == 1: #color_or_position -> 0 = color change, 1 = location change
+            #        screen_outlet.push_sample(condition_markers[color_or_position])
             
             
             
@@ -2461,7 +2462,6 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             
             # Run 'End Routine' code from lsl_trial_accuracy
             ##Push accuracy and if conditions change
-            
             if repeat_trial == True: 
                 behav_outlet.push_sample(behav_markers[2]) #repeated trial
             else:
