@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2023.2.3),
-    on Fri Apr  5 16:48:40 2024
+    on Wed Apr 10 19:56:04 2024
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -54,7 +54,7 @@ condition_markers = [['Identical'], ['Color_Change'], ['Locat_Change']]
 _thisDir = os.path.dirname(os.path.abspath(__file__))
 # Store info about the experiment session
 psychopyVersion = '2023.2.3'
-expName = 'wp3_smts'  # from the Builder filename that created this script
+expName = 'smts'  # from the Builder filename that created this script
 expInfo = {
     'participant': f"{randint(0, 999999):06.0f}",
     'session': '001',
@@ -123,7 +123,7 @@ def setupData(expInfo, dataDir=None):
     thisExp = data.ExperimentHandler(
         name=expName, version='',
         extraInfo=expInfo, runtimeInfo=None,
-        originPath='/Users/Merle/Desktop/Merle/Medizin/Promotion/WP3_SMTS/wp3_smts_lastrun.py',
+        originPath='/Users/Merle/Desktop/Merle/Medizin/Promotion/WP3_SMTS/scripts/smts.py',
         savePickle=True, saveWideText=True,
         dataFileName=dataDir + os.sep + filename, sortColumns='time'
     )
@@ -174,7 +174,7 @@ def setupWindow(expInfo=None, win=None):
     if win is None:
         # if not given a window to setup, make one
         win = visual.Window(
-            size=[1440, 900], fullscr=True, screen=0,
+            size=[1920, 1080], fullscr=True, screen=1,
             winType='pyglet', allowStencil=False,
             monitor='testMonitor', color=[0,0,0], colorSpace='rgb',
             backgroundImage='', backgroundFit='none',
@@ -324,7 +324,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     
     # --- Initialize components for Routine "instruction" ---
     text = visual.TextStim(win=win, name='text',
-        text='Willkommen beim SMTS. \n\nWenn Sie bereit sind, drücken Sie einen der Knöpfe um den Testdurchlauf zu starten',
+        text='Willkommen beim SMTS. \n\nWenn Sie bereit sind, drücken Sie die rechte oder die linke Taste, um den Trainingsdurchlauf zu starten',
         font='Open Sans',
         pos=(0, 0), height=0.05, wrapWidth=None, ori=0.0, 
         color='white', colorSpace='rgb', opacity=None, 
@@ -334,7 +334,6 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     # Run 'Begin Experiment' code from setup
     #Setup some of the variables that are used for experiment
     import time
-    grace_period = 0.5 #upper time limit for button presses
     practice_counter = 0 #keep track of practice trials
     trial_counter = 0 #keep track of test trial we are in
     repeat_trial = False #default is set to continuing with next trial
@@ -342,6 +341,9 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     # actual buttons we observe
     same_button = 'left'
     different_button = 'right'
+    
+    #Set seed -> every participants gets same randomization
+    np.random.seed(42)
     
     #Set up lists with possible conditions for practice and trials
     #Conditions: Squares stay identical, color change, location change, both change
@@ -352,28 +354,6 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     
     #Color palette
     potential_colors = ['white', 'black', 'red', 'green', 'blue', 'orange', 'pink', 'purple', 'cyan', 'magenta', 'lightsteelblue', 'yellow', 'lightgreen'] 
-    
-    #Create unique locations so no locations of squares are overlapping
-    def unique_locations(upper_limit):
-        potential_location = []
-        while len(potential_location) < upper_limit:
-            potential_coord = 0.1*randint(-3,3)
-            if potential_coord != 0 and not(potential_coord in potential_location):
-                potential_location.append(potential_coord) 
-        return potential_location
-    
-    def square_manipulation(squares_list, x_coord, y_coord, colors, decider_randomisation, color_or_position, square_to_change, practice_switch):
-        if decider_randomisation == 1: # if change
-            if color_or_position == 1: #color changes
-              change_square = squares_list[square_to_change] 
-              change_square.color = colors[4]
-              if practice_switch == 0: #only save for trial, not for practice
-                thisExp.addData('label_square', "Color_Change")
-            elif color_or_position == 2: #position changes
-              change_square = squares_list[square_to_change] 
-              change_square.pos = (x_coord[4], y_coord[4])
-              if practice_switch == 0:
-                thisExp.addData('label_square', "Locat_Change")
     
     #Practice
     response_accuracy_practice = []
@@ -386,14 +366,44 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     opacity_cross = None
     opacity_text = None
     
-    #Trial number
+    #Trial numbers we want to have for practice and trials
+    #can be changed as needed
     nReps_trial = 80
     nReps_practice = 15
     
-    
+    #Accuracy
     correct_response = None
     
-    # --- Initialize components for Routine "Practice_ITI" ---
+    #Create unique locations so no locations of squares are overlapping
+    def unique_locations(upper_limit):
+        potential_location = []
+        while len(potential_location) < upper_limit:
+            potential_coord = 0.1*randint(-3,3)
+            if potential_coord != 0 and not(potential_coord in potential_location):
+                potential_location.append(potential_coord) 
+        return potential_location
+    
+    #Function that creates four squares in which color/position are set
+    def square_manipulation(squares_list, x_coord, y_coord, colors, decider_randomisation, color_or_position, square_to_change, practice_switch):
+        if decider_randomisation == 1: # if change
+            if color_or_position == 1: #color changes
+                change_square = squares_list[square_to_change] 
+                change_square.color = colors[4]
+                if practice_switch == 0: #only save for trial, not for practice
+                    thisExp.addData('label_square', "Color_Change")
+            elif color_or_position == 2: #position changes
+                change_square = squares_list[square_to_change] 
+                change_square.pos = (x_coord[4], y_coord[4])
+                if practice_switch == 0:
+                    thisExp.addData('label_square', "Locat_Change")
+        else:
+            if practice_switch == 0: 
+                thisExp.addData('label_square', "No_change")
+    
+    
+    
+    
+    # --- Initialize components for Routine "ITI_preparation_trial" ---
     practice_iti_500 = visual.ShapeStim(
         win=win, name='practice_iti_500', vertices='cross',
         size=(0.01, 0.01),
@@ -497,6 +507,14 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         languageStyle='LTR',
         depth=0.0);
     beginn_test = keyboard.Keyboard()
+    
+    # --- Initialize components for Routine "ITI_preparation_trial" ---
+    practice_iti_500 = visual.ShapeStim(
+        win=win, name='practice_iti_500', vertices='cross',
+        size=(0.01, 0.01),
+        ori=0.0, pos=(0, 0), anchor='center',
+        lineWidth=1.0,     colorSpace='rgb',  lineColor='black', fillColor='black',
+        opacity=None, depth=0.0, interpolate=True)
     
     # --- Initialize components for Routine "sqr_trial" ---
     fix_cross_trial = visual.ShapeStim(
@@ -722,18 +740,18 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     # the Routine "instruction" was not non-slip safe, so reset the non-slip timer
     routineTimer.reset()
     
-    # --- Prepare to start Routine "Practice_ITI" ---
+    # --- Prepare to start Routine "ITI_preparation_trial" ---
     continueRoutine = True
     # update component parameters for each repeat
-    thisExp.addData('Practice_ITI.started', globalClock.getTime())
-    # Run 'Begin Routine' code from lsl_practice_iti
+    thisExp.addData('ITI_preparation_trial.started', globalClock.getTime())
+    # Run 'Begin Routine' code from lsl_iti
     #sending first iti for practice
     #screen_outlet.push_sample([screen_markers[2]])
     
     
     # keep track of which components have finished
-    Practice_ITIComponents = [practice_iti_500]
-    for thisComponent in Practice_ITIComponents:
+    ITI_preparation_trialComponents = [practice_iti_500]
+    for thisComponent in ITI_preparation_trialComponents:
         thisComponent.tStart = None
         thisComponent.tStop = None
         thisComponent.tStartRefresh = None
@@ -745,9 +763,9 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     _timeToFirstFrame = win.getFutureFlipTime(clock="now")
     frameN = -1
     
-    # --- Run Routine "Practice_ITI" ---
+    # --- Run Routine "ITI_preparation_trial" ---
     routineForceEnded = not continueRoutine
-    while continueRoutine and routineTimer.getTime() < 0.5:
+    while continueRoutine and routineTimer.getTime() < 1.5:
         # get current time
         t = routineTimer.getTime()
         tThisFlip = win.getFutureFlipTime(clock=routineTimer)
@@ -778,7 +796,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         # if practice_iti_500 is stopping this frame...
         if practice_iti_500.status == STARTED:
             # is it time to stop? (based on global clock, using actual start)
-            if tThisFlipGlobal > practice_iti_500.tStartRefresh + 0.5-frameTolerance:
+            if tThisFlipGlobal > practice_iti_500.tStartRefresh + 1.5-frameTolerance:
                 # keep track of stop time/frame for later
                 practice_iti_500.tStop = t  # not accounting for scr refresh
                 practice_iti_500.frameNStop = frameN  # exact frame index
@@ -800,7 +818,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             routineForceEnded = True
             break
         continueRoutine = False  # will revert to True if at least one component still running
-        for thisComponent in Practice_ITIComponents:
+        for thisComponent in ITI_preparation_trialComponents:
             if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
                 continueRoutine = True
                 break  # at least one component has not yet finished
@@ -809,16 +827,16 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
             win.flip()
     
-    # --- Ending Routine "Practice_ITI" ---
-    for thisComponent in Practice_ITIComponents:
+    # --- Ending Routine "ITI_preparation_trial" ---
+    for thisComponent in ITI_preparation_trialComponents:
         if hasattr(thisComponent, "setAutoDraw"):
             thisComponent.setAutoDraw(False)
-    thisExp.addData('Practice_ITI.stopped', globalClock.getTime())
+    thisExp.addData('ITI_preparation_trial.stopped', globalClock.getTime())
     # using non-slip timing so subtract the expected duration of this Routine (unless ended on request)
     if routineForceEnded:
         routineTimer.reset()
     else:
-        routineTimer.addTime(-0.500000)
+        routineTimer.addTime(-1.500000)
     
     # set up handler to look after randomisation of conditions etc
     trials_practice = data.TrialHandler(nReps=nReps_practice, method='random', 
@@ -850,7 +868,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 globals()[paramName] = thisTrials_practice[paramName]
         
         # set up handler to look after randomisation of conditions etc
-        repeat_last_practice = data.TrialHandler(nReps=5.0, method='random', 
+        repeat_last_practice = data.TrialHandler(nReps=1.0, method='random', 
             extraInfo=expInfo, originPath=-1,
             trialList=[None],
             seed=None, name='repeat_last_practice')
@@ -1141,8 +1159,8 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             thisExp.addData('fixation.started', globalClock.getTime())
             # Run 'Begin Routine' code from lsl_fixation_practice
             #Push screen fixation
-            screen_outlet.push_sample(screen_markers[0])
-            fixation_marker_count = 0
+            #screen_outlet.push_sample(screen_markers[0])
+            #fixation_marker_count = 0
             # keep track of which components have finished
             fixationComponents = [fix]
             for thisComponent in fixationComponents:
@@ -1270,8 +1288,8 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             
             # Run 'Begin Routine' code from lsl_practice_accuracy
             #Push screen target
-            screen_outlet.push_sample(screen_markers[1])
-            target_present_marker_count = 0
+            #screen_outlet.push_sample(screen_markers[1])
+            #target_present_marker_count = 0
             
             
             
@@ -1468,22 +1486,23 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             if different_button_pressed != 0 and same_button_pressed != 0 :  #"left" and "right" pressed: repeat trial
                 opacity_text = 0
                 opacity_cross = 1
+                thisExp.addData('response_accuracy_practice', "Repeat/Checking")    
             elif same_button_time != 0 and decider_randomisation == 0: #squares identical
                 correct_response = True
                 response_accuracy_practice.append(1)
-                thisExp.addData('response_accuracy', "Correct")
+                thisExp.addData('response_accuracy_practice', "Correct")
                 opacity_text = 1
                 opacity_cross = 0
             elif different_button_time != 0 and decider_randomisation != 0: #squares not identical
                 correct_response = True    
                 response_accuracy_practice.append(1)
-                thisExp.addData('response_accuracy', "Correct")
+                thisExp.addData('response_accuracy_practice', "Correct")
                 opacity_text = 1
                 opacity_cross = 0
             else: 
                 correct_response = False    
                 response_accuracy_practice.append(0) #wrong button was pressed
-                thisExp.addData('response_accuracy', "Incorrect")
+                thisExp.addData('response_accuracy_practice', "Incorrect")
                 opacity_text = 1
                 opacity_cross = 0
             
@@ -1495,20 +1514,20 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             
             # Run 'End Routine' code from lsl_practice_accuracy
             ##Push accuracy and if conditions change
-            if repeat_trial_practice == True: 
-                behav_outlet.push_sample(behav_markers[2]) #repeated trial
-            else:
-                #Push whether correct or incorrect button presses
-                if correct_response == True: 
-                    behav_outlet.push_sample(behav_markers[0]) #correct response
-                elif correct_response == False: 
-                    behav_outlet.push_sample(behav_markers[1]) #incorrect response
+            #if repeat_trial_practice == True: 
+            #    behav_outlet.push_sample(behav_markers[2]) #repeated trial
+            #else:
+            #    #Push whether correct or incorrect button presses
+            #    if correct_response == True: 
+            #        behav_outlet.push_sample(behav_markers[0]) #correct response
+            #    elif correct_response == False: 
+            #        behav_outlet.push_sample(behav_markers[1]) #incorrect response
             
-                #Push whether target squares stayed identical or not
-                if decider_randomisation == 0:
-                    screen_outlet.push_sample(condition_markers[0]) #identical squares
-                elif decider_randomisation == 1: #color_or_position -> 0 = color change, 1 = location change
-                    screen_outlet.push_sample(condition_markers[color_or_position])
+            #    #Push whether target squares stayed identical or not
+            #    if decider_randomisation == 0:
+            #        screen_outlet.push_sample(condition_markers[0]) #identical squares
+            #    elif decider_randomisation == 1: #color_or_position -> 0 = color change, 1 = location change
+            #        screen_outlet.push_sample(condition_markers[color_or_position])
             
             
             
@@ -1516,139 +1535,153 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             
             # the Routine "square_ident" was not non-slip safe, so reset the non-slip timer
             routineTimer.reset()
+            thisExp.nextEntry()
             
-            # --- Prepare to start Routine "pause_practice" ---
-            continueRoutine = True
-            # update component parameters for each repeat
-            thisExp.addData('pause_practice.started', globalClock.getTime())
-            # Run 'Begin Routine' code from lsl_iti_practice
-            #sending first iti for practice
-            #screen_outlet.push_sample(screen_markers[2])
-            next_round_text.setOpacity(opacity_text)
-            repeat_cross.setOpacity(opacity_cross)
-            # keep track of which components have finished
-            pause_practiceComponents = [next_round_text, repeat_cross]
-            for thisComponent in pause_practiceComponents:
-                thisComponent.tStart = None
-                thisComponent.tStop = None
-                thisComponent.tStartRefresh = None
-                thisComponent.tStopRefresh = None
-                if hasattr(thisComponent, 'status'):
-                    thisComponent.status = NOT_STARTED
-            # reset timers
-            t = 0
-            _timeToFirstFrame = win.getFutureFlipTime(clock="now")
-            frameN = -1
-            
-            # --- Run Routine "pause_practice" ---
-            routineForceEnded = not continueRoutine
-            while continueRoutine and routineTimer.getTime() < 1.5:
-                # get current time
-                t = routineTimer.getTime()
-                tThisFlip = win.getFutureFlipTime(clock=routineTimer)
-                tThisFlipGlobal = win.getFutureFlipTime(clock=None)
-                frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
-                # update/draw components on each frame
-                
-                # *next_round_text* updates
-                
-                # if next_round_text is starting this frame...
-                if next_round_text.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
-                    # keep track of start time/frame for later
-                    next_round_text.frameNStart = frameN  # exact frame index
-                    next_round_text.tStart = t  # local t and not account for scr refresh
-                    next_round_text.tStartRefresh = tThisFlipGlobal  # on global time
-                    win.timeOnFlip(next_round_text, 'tStartRefresh')  # time at next scr refresh
-                    # add timestamp to datafile
-                    thisExp.timestampOnFlip(win, 'next_round_text.started')
-                    # update status
-                    next_round_text.status = STARTED
-                    next_round_text.setAutoDraw(True)
-                
-                # if next_round_text is active this frame...
-                if next_round_text.status == STARTED:
-                    # update params
-                    pass
-                
-                # if next_round_text is stopping this frame...
-                if next_round_text.status == STARTED:
-                    # is it time to stop? (based on global clock, using actual start)
-                    if tThisFlipGlobal > next_round_text.tStartRefresh + 1.5-frameTolerance:
-                        # keep track of stop time/frame for later
-                        next_round_text.tStop = t  # not accounting for scr refresh
-                        next_round_text.frameNStop = frameN  # exact frame index
-                        # add timestamp to datafile
-                        thisExp.timestampOnFlip(win, 'next_round_text.stopped')
-                        # update status
-                        next_round_text.status = FINISHED
-                        next_round_text.setAutoDraw(False)
-                
-                # *repeat_cross* updates
-                
-                # if repeat_cross is starting this frame...
-                if repeat_cross.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
-                    # keep track of start time/frame for later
-                    repeat_cross.frameNStart = frameN  # exact frame index
-                    repeat_cross.tStart = t  # local t and not account for scr refresh
-                    repeat_cross.tStartRefresh = tThisFlipGlobal  # on global time
-                    win.timeOnFlip(repeat_cross, 'tStartRefresh')  # time at next scr refresh
-                    # add timestamp to datafile
-                    thisExp.timestampOnFlip(win, 'repeat_cross.started')
-                    # update status
-                    repeat_cross.status = STARTED
-                    repeat_cross.setAutoDraw(True)
-                
-                # if repeat_cross is active this frame...
-                if repeat_cross.status == STARTED:
-                    # update params
-                    pass
-                
-                # if repeat_cross is stopping this frame...
-                if repeat_cross.status == STARTED:
-                    # is it time to stop? (based on global clock, using actual start)
-                    if tThisFlipGlobal > repeat_cross.tStartRefresh + 1.5-frameTolerance:
-                        # keep track of stop time/frame for later
-                        repeat_cross.tStop = t  # not accounting for scr refresh
-                        repeat_cross.frameNStop = frameN  # exact frame index
-                        # add timestamp to datafile
-                        thisExp.timestampOnFlip(win, 'repeat_cross.stopped')
-                        # update status
-                        repeat_cross.status = FINISHED
-                        repeat_cross.setAutoDraw(False)
-                
-                # check for quit (typically the Esc key)
-                if defaultKeyboard.getKeys(keyList=["escape"]):
-                    thisExp.status = FINISHED
-                if thisExp.status == FINISHED or endExpNow:
-                    endExperiment(thisExp, inputs=inputs, win=win)
-                    return
-                
-                # check if all components have finished
-                if not continueRoutine:  # a component has requested a forced-end of Routine
-                    routineForceEnded = True
-                    break
-                continueRoutine = False  # will revert to True if at least one component still running
-                for thisComponent in pause_practiceComponents:
-                    if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
-                        continueRoutine = True
-                        break  # at least one component has not yet finished
-                
-                # refresh the screen
-                if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
-                    win.flip()
-            
-            # --- Ending Routine "pause_practice" ---
-            for thisComponent in pause_practiceComponents:
-                if hasattr(thisComponent, "setAutoDraw"):
-                    thisComponent.setAutoDraw(False)
-            thisExp.addData('pause_practice.stopped', globalClock.getTime())
-            # using non-slip timing so subtract the expected duration of this Routine (unless ended on request)
-            if routineForceEnded:
-                routineTimer.reset()
-            else:
-                routineTimer.addTime(-1.500000)
-        # completed 5.0 repeats of 'repeat_last_practice'
+            if thisSession is not None:
+                # if running in a Session with a Liaison client, send data up to now
+                thisSession.sendExperimentData()
+        # completed 1.0 repeats of 'repeat_last_practice'
         
+        # get names of stimulus parameters
+        if repeat_last_practice.trialList in ([], [None], None):
+            params = []
+        else:
+            params = repeat_last_practice.trialList[0].keys()
+        # save data for this loop
+        repeat_last_practice.saveAsExcel(filename + '.xlsx', sheetName='repeat_last_practice',
+            stimOut=params,
+            dataOut=['n','all_mean','all_std', 'all_raw'])
+        
+        # --- Prepare to start Routine "pause_practice" ---
+        continueRoutine = True
+        # update component parameters for each repeat
+        thisExp.addData('pause_practice.started', globalClock.getTime())
+        # Run 'Begin Routine' code from lsl_iti_practice
+        #sending first iti for practice
+        #screen_outlet.push_sample(screen_markers[2])
+        next_round_text.setOpacity(opacity_text)
+        repeat_cross.setOpacity(opacity_cross)
+        # keep track of which components have finished
+        pause_practiceComponents = [next_round_text, repeat_cross]
+        for thisComponent in pause_practiceComponents:
+            thisComponent.tStart = None
+            thisComponent.tStop = None
+            thisComponent.tStartRefresh = None
+            thisComponent.tStopRefresh = None
+            if hasattr(thisComponent, 'status'):
+                thisComponent.status = NOT_STARTED
+        # reset timers
+        t = 0
+        _timeToFirstFrame = win.getFutureFlipTime(clock="now")
+        frameN = -1
+        
+        # --- Run Routine "pause_practice" ---
+        routineForceEnded = not continueRoutine
+        while continueRoutine and routineTimer.getTime() < 1.5:
+            # get current time
+            t = routineTimer.getTime()
+            tThisFlip = win.getFutureFlipTime(clock=routineTimer)
+            tThisFlipGlobal = win.getFutureFlipTime(clock=None)
+            frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
+            # update/draw components on each frame
+            
+            # *next_round_text* updates
+            
+            # if next_round_text is starting this frame...
+            if next_round_text.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                next_round_text.frameNStart = frameN  # exact frame index
+                next_round_text.tStart = t  # local t and not account for scr refresh
+                next_round_text.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(next_round_text, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'next_round_text.started')
+                # update status
+                next_round_text.status = STARTED
+                next_round_text.setAutoDraw(True)
+            
+            # if next_round_text is active this frame...
+            if next_round_text.status == STARTED:
+                # update params
+                pass
+            
+            # if next_round_text is stopping this frame...
+            if next_round_text.status == STARTED:
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > next_round_text.tStartRefresh + 1.5-frameTolerance:
+                    # keep track of stop time/frame for later
+                    next_round_text.tStop = t  # not accounting for scr refresh
+                    next_round_text.frameNStop = frameN  # exact frame index
+                    # add timestamp to datafile
+                    thisExp.timestampOnFlip(win, 'next_round_text.stopped')
+                    # update status
+                    next_round_text.status = FINISHED
+                    next_round_text.setAutoDraw(False)
+            
+            # *repeat_cross* updates
+            
+            # if repeat_cross is starting this frame...
+            if repeat_cross.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                repeat_cross.frameNStart = frameN  # exact frame index
+                repeat_cross.tStart = t  # local t and not account for scr refresh
+                repeat_cross.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(repeat_cross, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'repeat_cross.started')
+                # update status
+                repeat_cross.status = STARTED
+                repeat_cross.setAutoDraw(True)
+            
+            # if repeat_cross is active this frame...
+            if repeat_cross.status == STARTED:
+                # update params
+                pass
+            
+            # if repeat_cross is stopping this frame...
+            if repeat_cross.status == STARTED:
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > repeat_cross.tStartRefresh + 1.5-frameTolerance:
+                    # keep track of stop time/frame for later
+                    repeat_cross.tStop = t  # not accounting for scr refresh
+                    repeat_cross.frameNStop = frameN  # exact frame index
+                    # add timestamp to datafile
+                    thisExp.timestampOnFlip(win, 'repeat_cross.stopped')
+                    # update status
+                    repeat_cross.status = FINISHED
+                    repeat_cross.setAutoDraw(False)
+            
+            # check for quit (typically the Esc key)
+            if defaultKeyboard.getKeys(keyList=["escape"]):
+                thisExp.status = FINISHED
+            if thisExp.status == FINISHED or endExpNow:
+                endExperiment(thisExp, inputs=inputs, win=win)
+                return
+            
+            # check if all components have finished
+            if not continueRoutine:  # a component has requested a forced-end of Routine
+                routineForceEnded = True
+                break
+            continueRoutine = False  # will revert to True if at least one component still running
+            for thisComponent in pause_practiceComponents:
+                if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
+                    continueRoutine = True
+                    break  # at least one component has not yet finished
+            
+            # refresh the screen
+            if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
+                win.flip()
+        
+        # --- Ending Routine "pause_practice" ---
+        for thisComponent in pause_practiceComponents:
+            if hasattr(thisComponent, "setAutoDraw"):
+                thisComponent.setAutoDraw(False)
+        thisExp.addData('pause_practice.stopped', globalClock.getTime())
+        # using non-slip timing so subtract the expected duration of this Routine (unless ended on request)
+        if routineForceEnded:
+            routineTimer.reset()
+        else:
+            routineTimer.addTime(-1.500000)
     # completed nReps_practice repeats of 'trials_practice'
     
     
@@ -1768,6 +1801,104 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     # the Routine "start_test" was not non-slip safe, so reset the non-slip timer
     routineTimer.reset()
     
+    # --- Prepare to start Routine "ITI_preparation_trial" ---
+    continueRoutine = True
+    # update component parameters for each repeat
+    thisExp.addData('ITI_preparation_trial.started', globalClock.getTime())
+    # Run 'Begin Routine' code from lsl_iti
+    #sending first iti for practice
+    #screen_outlet.push_sample([screen_markers[2]])
+    
+    
+    # keep track of which components have finished
+    ITI_preparation_trialComponents = [practice_iti_500]
+    for thisComponent in ITI_preparation_trialComponents:
+        thisComponent.tStart = None
+        thisComponent.tStop = None
+        thisComponent.tStartRefresh = None
+        thisComponent.tStopRefresh = None
+        if hasattr(thisComponent, 'status'):
+            thisComponent.status = NOT_STARTED
+    # reset timers
+    t = 0
+    _timeToFirstFrame = win.getFutureFlipTime(clock="now")
+    frameN = -1
+    
+    # --- Run Routine "ITI_preparation_trial" ---
+    routineForceEnded = not continueRoutine
+    while continueRoutine and routineTimer.getTime() < 1.5:
+        # get current time
+        t = routineTimer.getTime()
+        tThisFlip = win.getFutureFlipTime(clock=routineTimer)
+        tThisFlipGlobal = win.getFutureFlipTime(clock=None)
+        frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
+        # update/draw components on each frame
+        
+        # *practice_iti_500* updates
+        
+        # if practice_iti_500 is starting this frame...
+        if practice_iti_500.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+            # keep track of start time/frame for later
+            practice_iti_500.frameNStart = frameN  # exact frame index
+            practice_iti_500.tStart = t  # local t and not account for scr refresh
+            practice_iti_500.tStartRefresh = tThisFlipGlobal  # on global time
+            win.timeOnFlip(practice_iti_500, 'tStartRefresh')  # time at next scr refresh
+            # add timestamp to datafile
+            thisExp.timestampOnFlip(win, 'practice_iti_500.started')
+            # update status
+            practice_iti_500.status = STARTED
+            practice_iti_500.setAutoDraw(True)
+        
+        # if practice_iti_500 is active this frame...
+        if practice_iti_500.status == STARTED:
+            # update params
+            pass
+        
+        # if practice_iti_500 is stopping this frame...
+        if practice_iti_500.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > practice_iti_500.tStartRefresh + 1.5-frameTolerance:
+                # keep track of stop time/frame for later
+                practice_iti_500.tStop = t  # not accounting for scr refresh
+                practice_iti_500.frameNStop = frameN  # exact frame index
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'practice_iti_500.stopped')
+                # update status
+                practice_iti_500.status = FINISHED
+                practice_iti_500.setAutoDraw(False)
+        
+        # check for quit (typically the Esc key)
+        if defaultKeyboard.getKeys(keyList=["escape"]):
+            thisExp.status = FINISHED
+        if thisExp.status == FINISHED or endExpNow:
+            endExperiment(thisExp, inputs=inputs, win=win)
+            return
+        
+        # check if all components have finished
+        if not continueRoutine:  # a component has requested a forced-end of Routine
+            routineForceEnded = True
+            break
+        continueRoutine = False  # will revert to True if at least one component still running
+        for thisComponent in ITI_preparation_trialComponents:
+            if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
+                continueRoutine = True
+                break  # at least one component has not yet finished
+        
+        # refresh the screen
+        if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
+            win.flip()
+    
+    # --- Ending Routine "ITI_preparation_trial" ---
+    for thisComponent in ITI_preparation_trialComponents:
+        if hasattr(thisComponent, "setAutoDraw"):
+            thisComponent.setAutoDraw(False)
+    thisExp.addData('ITI_preparation_trial.stopped', globalClock.getTime())
+    # using non-slip timing so subtract the expected duration of this Routine (unless ended on request)
+    if routineForceEnded:
+        routineTimer.reset()
+    else:
+        routineTimer.addTime(-1.500000)
+    
     # set up handler to look after randomisation of conditions etc
     trials_trial = data.TrialHandler(nReps=nReps_trial, method='random', 
         extraInfo=expInfo, originPath=-1,
@@ -1798,7 +1929,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 globals()[paramName] = thisTrials_trial[paramName]
         
         # set up handler to look after randomisation of conditions etc
-        repeat_last_trial = data.TrialHandler(nReps=8.0, method='random', 
+        repeat_last_trial = data.TrialHandler(nReps=1.0, method='random', 
             extraInfo=expInfo, originPath=-1,
             trialList=[None],
             seed=None, name='repeat_last_trial')
@@ -2420,6 +2551,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             if same_button_pressed != 0 and different_button_pressed != 0: #"left" and "right" pressed: repeat trial
                 opacity_text = 0
                 opacity_cross = 1
+                thisExp.addData('response_accuracy', "Repeat/Checking")
             elif same_button_time != 0 and decider_randomisation == 0: #squares identical
                 correct_response = True
                 response_accuracy_trial.append(1)
@@ -2455,7 +2587,6 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             
             # Run 'End Routine' code from lsl_trial_accuracy
             ##Push accuracy and if conditions change
-            
             if repeat_trial == True: 
                 behav_outlet.push_sample(behav_markers[2]) #repeated trial
             else:
@@ -2478,144 +2609,151 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             
             # the Routine "sqr_ident_trial" was not non-slip safe, so reset the non-slip timer
             routineTimer.reset()
-            
-            # --- Prepare to start Routine "pause_trial" ---
-            continueRoutine = True
-            # update component parameters for each repeat
-            thisExp.addData('pause_trial.started', globalClock.getTime())
-            # Run 'Begin Routine' code from lsl_iti_trial
-            #sending first iti for practice
-            screen_outlet.push_sample(screen_markers[2])
-            next_round_text_trial.setOpacity(opacity_text)
-            repeat_trial_cross.setOpacity(opacity_cross)
-            # keep track of which components have finished
-            pause_trialComponents = [next_round_text_trial, repeat_trial_cross]
-            for thisComponent in pause_trialComponents:
-                thisComponent.tStart = None
-                thisComponent.tStop = None
-                thisComponent.tStartRefresh = None
-                thisComponent.tStopRefresh = None
-                if hasattr(thisComponent, 'status'):
-                    thisComponent.status = NOT_STARTED
-            # reset timers
-            t = 0
-            _timeToFirstFrame = win.getFutureFlipTime(clock="now")
-            frameN = -1
-            
-            # --- Run Routine "pause_trial" ---
-            routineForceEnded = not continueRoutine
-            while continueRoutine and routineTimer.getTime() < 1.5:
-                # get current time
-                t = routineTimer.getTime()
-                tThisFlip = win.getFutureFlipTime(clock=routineTimer)
-                tThisFlipGlobal = win.getFutureFlipTime(clock=None)
-                frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
-                # update/draw components on each frame
-                
-                # *next_round_text_trial* updates
-                
-                # if next_round_text_trial is starting this frame...
-                if next_round_text_trial.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
-                    # keep track of start time/frame for later
-                    next_round_text_trial.frameNStart = frameN  # exact frame index
-                    next_round_text_trial.tStart = t  # local t and not account for scr refresh
-                    next_round_text_trial.tStartRefresh = tThisFlipGlobal  # on global time
-                    win.timeOnFlip(next_round_text_trial, 'tStartRefresh')  # time at next scr refresh
-                    # add timestamp to datafile
-                    thisExp.timestampOnFlip(win, 'next_round_text_trial.started')
-                    # update status
-                    next_round_text_trial.status = STARTED
-                    next_round_text_trial.setAutoDraw(True)
-                
-                # if next_round_text_trial is active this frame...
-                if next_round_text_trial.status == STARTED:
-                    # update params
-                    pass
-                
-                # if next_round_text_trial is stopping this frame...
-                if next_round_text_trial.status == STARTED:
-                    # is it time to stop? (based on global clock, using actual start)
-                    if tThisFlipGlobal > next_round_text_trial.tStartRefresh + 1.5-frameTolerance:
-                        # keep track of stop time/frame for later
-                        next_round_text_trial.tStop = t  # not accounting for scr refresh
-                        next_round_text_trial.frameNStop = frameN  # exact frame index
-                        # add timestamp to datafile
-                        thisExp.timestampOnFlip(win, 'next_round_text_trial.stopped')
-                        # update status
-                        next_round_text_trial.status = FINISHED
-                        next_round_text_trial.setAutoDraw(False)
-                
-                # *repeat_trial_cross* updates
-                
-                # if repeat_trial_cross is starting this frame...
-                if repeat_trial_cross.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
-                    # keep track of start time/frame for later
-                    repeat_trial_cross.frameNStart = frameN  # exact frame index
-                    repeat_trial_cross.tStart = t  # local t and not account for scr refresh
-                    repeat_trial_cross.tStartRefresh = tThisFlipGlobal  # on global time
-                    win.timeOnFlip(repeat_trial_cross, 'tStartRefresh')  # time at next scr refresh
-                    # add timestamp to datafile
-                    thisExp.timestampOnFlip(win, 'repeat_trial_cross.started')
-                    # update status
-                    repeat_trial_cross.status = STARTED
-                    repeat_trial_cross.setAutoDraw(True)
-                
-                # if repeat_trial_cross is active this frame...
-                if repeat_trial_cross.status == STARTED:
-                    # update params
-                    pass
-                
-                # if repeat_trial_cross is stopping this frame...
-                if repeat_trial_cross.status == STARTED:
-                    # is it time to stop? (based on global clock, using actual start)
-                    if tThisFlipGlobal > repeat_trial_cross.tStartRefresh + 1.5-frameTolerance:
-                        # keep track of stop time/frame for later
-                        repeat_trial_cross.tStop = t  # not accounting for scr refresh
-                        repeat_trial_cross.frameNStop = frameN  # exact frame index
-                        # add timestamp to datafile
-                        thisExp.timestampOnFlip(win, 'repeat_trial_cross.stopped')
-                        # update status
-                        repeat_trial_cross.status = FINISHED
-                        repeat_trial_cross.setAutoDraw(False)
-                
-                # check for quit (typically the Esc key)
-                if defaultKeyboard.getKeys(keyList=["escape"]):
-                    thisExp.status = FINISHED
-                if thisExp.status == FINISHED or endExpNow:
-                    endExperiment(thisExp, inputs=inputs, win=win)
-                    return
-                
-                # check if all components have finished
-                if not continueRoutine:  # a component has requested a forced-end of Routine
-                    routineForceEnded = True
-                    break
-                continueRoutine = False  # will revert to True if at least one component still running
-                for thisComponent in pause_trialComponents:
-                    if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
-                        continueRoutine = True
-                        break  # at least one component has not yet finished
-                
-                # refresh the screen
-                if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
-                    win.flip()
-            
-            # --- Ending Routine "pause_trial" ---
-            for thisComponent in pause_trialComponents:
-                if hasattr(thisComponent, "setAutoDraw"):
-                    thisComponent.setAutoDraw(False)
-            thisExp.addData('pause_trial.stopped', globalClock.getTime())
-            # using non-slip timing so subtract the expected duration of this Routine (unless ended on request)
-            if routineForceEnded:
-                routineTimer.reset()
-            else:
-                routineTimer.addTime(-1.500000)
             thisExp.nextEntry()
             
             if thisSession is not None:
                 # if running in a Session with a Liaison client, send data up to now
                 thisSession.sendExperimentData()
-        # completed 8.0 repeats of 'repeat_last_trial'
+        # completed 1.0 repeats of 'repeat_last_trial'
         
+        # get names of stimulus parameters
+        if repeat_last_trial.trialList in ([], [None], None):
+            params = []
+        else:
+            params = repeat_last_trial.trialList[0].keys()
+        # save data for this loop
+        repeat_last_trial.saveAsExcel(filename + '.xlsx', sheetName='repeat_last_trial',
+            stimOut=params,
+            dataOut=['n','all_mean','all_std', 'all_raw'])
+        
+        # --- Prepare to start Routine "pause_trial" ---
+        continueRoutine = True
+        # update component parameters for each repeat
+        thisExp.addData('pause_trial.started', globalClock.getTime())
+        # Run 'Begin Routine' code from lsl_iti_trial
+        #sending first iti for practice
+        screen_outlet.push_sample(screen_markers[2])
+        # keep track of which components have finished
+        pause_trialComponents = [next_round_text_trial, repeat_trial_cross]
+        for thisComponent in pause_trialComponents:
+            thisComponent.tStart = None
+            thisComponent.tStop = None
+            thisComponent.tStartRefresh = None
+            thisComponent.tStopRefresh = None
+            if hasattr(thisComponent, 'status'):
+                thisComponent.status = NOT_STARTED
+        # reset timers
+        t = 0
+        _timeToFirstFrame = win.getFutureFlipTime(clock="now")
+        frameN = -1
+        
+        # --- Run Routine "pause_trial" ---
+        routineForceEnded = not continueRoutine
+        while continueRoutine and routineTimer.getTime() < 1.5:
+            # get current time
+            t = routineTimer.getTime()
+            tThisFlip = win.getFutureFlipTime(clock=routineTimer)
+            tThisFlipGlobal = win.getFutureFlipTime(clock=None)
+            frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
+            # update/draw components on each frame
+            
+            # *next_round_text_trial* updates
+            
+            # if next_round_text_trial is starting this frame...
+            if next_round_text_trial.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                next_round_text_trial.frameNStart = frameN  # exact frame index
+                next_round_text_trial.tStart = t  # local t and not account for scr refresh
+                next_round_text_trial.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(next_round_text_trial, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'next_round_text_trial.started')
+                # update status
+                next_round_text_trial.status = STARTED
+                next_round_text_trial.setAutoDraw(True)
+            
+            # if next_round_text_trial is active this frame...
+            if next_round_text_trial.status == STARTED:
+                # update params
+                pass
+            
+            # if next_round_text_trial is stopping this frame...
+            if next_round_text_trial.status == STARTED:
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > next_round_text_trial.tStartRefresh + 1.5-frameTolerance:
+                    # keep track of stop time/frame for later
+                    next_round_text_trial.tStop = t  # not accounting for scr refresh
+                    next_round_text_trial.frameNStop = frameN  # exact frame index
+                    # add timestamp to datafile
+                    thisExp.timestampOnFlip(win, 'next_round_text_trial.stopped')
+                    # update status
+                    next_round_text_trial.status = FINISHED
+                    next_round_text_trial.setAutoDraw(False)
+            
+            # *repeat_trial_cross* updates
+            
+            # if repeat_trial_cross is starting this frame...
+            if repeat_trial_cross.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                repeat_trial_cross.frameNStart = frameN  # exact frame index
+                repeat_trial_cross.tStart = t  # local t and not account for scr refresh
+                repeat_trial_cross.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(repeat_trial_cross, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'repeat_trial_cross.started')
+                # update status
+                repeat_trial_cross.status = STARTED
+                repeat_trial_cross.setAutoDraw(True)
+            
+            # if repeat_trial_cross is active this frame...
+            if repeat_trial_cross.status == STARTED:
+                # update params
+                pass
+            
+            # if repeat_trial_cross is stopping this frame...
+            if repeat_trial_cross.status == STARTED:
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > repeat_trial_cross.tStartRefresh + 1.5-frameTolerance:
+                    # keep track of stop time/frame for later
+                    repeat_trial_cross.tStop = t  # not accounting for scr refresh
+                    repeat_trial_cross.frameNStop = frameN  # exact frame index
+                    # add timestamp to datafile
+                    thisExp.timestampOnFlip(win, 'repeat_trial_cross.stopped')
+                    # update status
+                    repeat_trial_cross.status = FINISHED
+                    repeat_trial_cross.setAutoDraw(False)
+            
+            # check for quit (typically the Esc key)
+            if defaultKeyboard.getKeys(keyList=["escape"]):
+                thisExp.status = FINISHED
+            if thisExp.status == FINISHED or endExpNow:
+                endExperiment(thisExp, inputs=inputs, win=win)
+                return
+            
+            # check if all components have finished
+            if not continueRoutine:  # a component has requested a forced-end of Routine
+                routineForceEnded = True
+                break
+            continueRoutine = False  # will revert to True if at least one component still running
+            for thisComponent in pause_trialComponents:
+                if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
+                    continueRoutine = True
+                    break  # at least one component has not yet finished
+            
+            # refresh the screen
+            if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
+                win.flip()
+        
+        # --- Ending Routine "pause_trial" ---
+        for thisComponent in pause_trialComponents:
+            if hasattr(thisComponent, "setAutoDraw"):
+                thisComponent.setAutoDraw(False)
+        thisExp.addData('pause_trial.stopped', globalClock.getTime())
+        # using non-slip timing so subtract the expected duration of this Routine (unless ended on request)
+        if routineForceEnded:
+            routineTimer.reset()
+        else:
+            routineTimer.addTime(-1.500000)
         thisExp.nextEntry()
         
         if thisSession is not None:
@@ -2623,6 +2761,15 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             thisSession.sendExperimentData()
     # completed nReps_trial repeats of 'trials_trial'
     
+    # get names of stimulus parameters
+    if trials_trial.trialList in ([], [None], None):
+        params = []
+    else:
+        params = trials_trial.trialList[0].keys()
+    # save data for this loop
+    trials_trial.saveAsExcel(filename + '.xlsx', sheetName='trials_trial',
+        stimOut=params,
+        dataOut=['n','all_mean','all_std', 'all_raw'])
     
     # --- Prepare to start Routine "goodbye" ---
     continueRoutine = True
