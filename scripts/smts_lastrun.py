@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2023.2.3),
-    on Wed Apr 10 19:57:16 2024
+    on Wed Apr 10 20:44:10 2024
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -2633,6 +2633,8 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         # Run 'Begin Routine' code from lsl_iti_trial
         #sending first iti for practice
         screen_outlet.push_sample(screen_markers[2])
+        next_round_text_trial.setOpacity(opacity_text)
+        repeat_trial_cross.setOpacity(opacity_cross)
         # keep track of which components have finished
         pause_trialComponents = [next_round_text_trial, repeat_trial_cross]
         for thisComponent in pause_trialComponents:
