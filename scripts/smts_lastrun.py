@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2023.2.3),
-    on Fri Apr  5 14:00:12 2024
+    on Mon Apr  8 20:55:45 2024
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -54,7 +54,7 @@ condition_markers = [['Identical'], ['Color_Change'], ['Locat_Change']]
 _thisDir = os.path.dirname(os.path.abspath(__file__))
 # Store info about the experiment session
 psychopyVersion = '2023.2.3'
-expName = 'wp3_smts'  # from the Builder filename that created this script
+expName = 'smts'  # from the Builder filename that created this script
 expInfo = {
     'participant': f"{randint(0, 999999):06.0f}",
     'session': '001',
@@ -123,7 +123,7 @@ def setupData(expInfo, dataDir=None):
     thisExp = data.ExperimentHandler(
         name=expName, version='',
         extraInfo=expInfo, runtimeInfo=None,
-        originPath='/Users/Merle/Desktop/Merle/Medizin/Promotion/WP3_SMTS/wp3_smts.py',
+        originPath='/Users/Merle/Desktop/Merle/Medizin/Promotion/WP3_SMTS/scripts/smts_lastrun.py',
         savePickle=True, saveWideText=True,
         dataFileName=dataDir + os.sep + filename, sortColumns='time'
     )
@@ -174,7 +174,7 @@ def setupWindow(expInfo=None, win=None):
     if win is None:
         # if not given a window to setup, make one
         win = visual.Window(
-            size=[900, 600], fullscr=False, screen=0,
+            size=[920, 600], fullscr=False, screen=0,
             winType='pyglet', allowStencil=False,
             monitor='testMonitor', color=[0,0,0], colorSpace='rgb',
             backgroundImage='', backgroundFit='none',
@@ -324,7 +324,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     
     # --- Initialize components for Routine "instruction" ---
     text = visual.TextStim(win=win, name='text',
-        text='Willkommen beim SMTS. \n\nWenn Sie bereit sind, drücken Sie einen der Knöpfe um den Testdurchlauf zu starten',
+        text='Willkommen beim SMTS. \n\nWenn Sie bereit sind, drücken Sie die rechte oder die linke Taste, um den Trainingsdurchlauf zu starten',
         font='Open Sans',
         pos=(0, 0), height=0.05, wrapWidth=None, ori=0.0, 
         color='white', colorSpace='rgb', opacity=None, 
@@ -334,7 +334,6 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     # Run 'Begin Experiment' code from setup
     #Setup some of the variables that are used for experiment
     import time
-    grace_period = 0.5 #upper time limit for button presses
     practice_counter = 0 #keep track of practice trials
     trial_counter = 0 #keep track of test trial we are in
     repeat_trial = False #default is set to continuing with next trial
@@ -342,6 +341,9 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     # actual buttons we observe
     same_button = 'left'
     different_button = 'right'
+    
+    #Set seed -> every participants gets same randomization
+    np.random.seed(42)
     
     #Set up lists with possible conditions for practice and trials
     #Conditions: Squares stay identical, color change, location change, both change
@@ -353,6 +355,25 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     #Color palette
     potential_colors = ['white', 'black', 'red', 'green', 'blue', 'orange', 'pink', 'purple', 'cyan', 'magenta', 'lightsteelblue', 'yellow', 'lightgreen'] 
     
+    #Practice
+    response_accuracy_practice = []
+    repeat_trial_practice = False
+    
+    #Test trials
+    response_accuracy_trial = []
+    
+    #Opacity for iti
+    opacity_cross = None
+    opacity_text = None
+    
+    #Trial numbers we want to have for practice and trials
+    #can be changed as needed
+    nReps_trial = 80
+    nReps_practice = 15
+    
+    #Accuracy
+    correct_response = None
+    
     #Create unique locations so no locations of squares are overlapping
     def unique_locations(upper_limit):
         potential_location = []
@@ -362,6 +383,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 potential_location.append(potential_coord) 
         return potential_location
     
+    #Function that creates four squares in which color/position are set
     def square_manipulation(squares_list, x_coord, y_coord, colors, decider_randomisation, color_or_position, square_to_change, practice_switch):
         if decider_randomisation == 1: # if change
             if color_or_position == 1: #color changes
@@ -375,20 +397,8 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
               if practice_switch == 0:
                 thisExp.addData('label_square', "Locat_Change")
     
-    #Practice
-    response_accuracy_practice = []
-    repeat_trial_practice = False
     
-    #Test trials
-    response_accuracy_trial = []
     
-    #Opacity for iti
-    opacity_cross = None
-    opacity_text = None
-    
-    #Trial number
-    nReps_trial = 80
-    nReps_practice = 15
     
     # --- Initialize components for Routine "Practice_ITI" ---
     practice_iti_500 = visual.ShapeStim(
@@ -487,7 +497,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     
     # --- Initialize components for Routine "start_test" ---
     starting_test = visual.TextStim(win=win, name='starting_test',
-        text='Herzlichen Glückwunsch, Sie haben die Trainingsphase erfolgreich beendet! \n\nBitte geben Sie der Versuchsleiterin Bescheid, um fortzufahren.\n\nVersuchsleitung: \nStart der Aufzeichnungen, Durchführung der Synchronisationsimpulse.',
+        text='Herzlichen Glückwunsch, Sie haben die Trainingsphase erfolgreich beendet! \n\nBitte geben Sie der Versuchsleiterin Bescheid, um fortzufahren.\n\n',
         font='Open Sans',
         pos=(0, 0), height=0.05, wrapWidth=None, ori=0.0, 
         color='white', colorSpace='rgb', opacity=None, 
@@ -744,7 +754,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     
     # --- Run Routine "Practice_ITI" ---
     routineForceEnded = not continueRoutine
-    while continueRoutine and routineTimer.getTime() < 0.5:
+    while continueRoutine and routineTimer.getTime() < 1.5:
         # get current time
         t = routineTimer.getTime()
         tThisFlip = win.getFutureFlipTime(clock=routineTimer)
@@ -775,7 +785,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         # if practice_iti_500 is stopping this frame...
         if practice_iti_500.status == STARTED:
             # is it time to stop? (based on global clock, using actual start)
-            if tThisFlipGlobal > practice_iti_500.tStartRefresh + 0.5-frameTolerance:
+            if tThisFlipGlobal > practice_iti_500.tStartRefresh + 1.5-frameTolerance:
                 # keep track of stop time/frame for later
                 practice_iti_500.tStop = t  # not accounting for scr refresh
                 practice_iti_500.frameNStop = frameN  # exact frame index
@@ -815,7 +825,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     if routineForceEnded:
         routineTimer.reset()
     else:
-        routineTimer.addTime(-0.500000)
+        routineTimer.addTime(-1.500000)
     
     # set up handler to look after randomisation of conditions etc
     trials_practice = data.TrialHandler(nReps=nReps_practice, method='random', 
@@ -1138,8 +1148,8 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             thisExp.addData('fixation.started', globalClock.getTime())
             # Run 'Begin Routine' code from lsl_fixation_practice
             #Push screen fixation
-            screen_outlet.push_sample(screen_markers[0])
-            fixation_marker_count = 0
+            #screen_outlet.push_sample(screen_markers[0])
+            #fixation_marker_count = 0
             # keep track of which components have finished
             fixationComponents = [fix]
             for thisComponent in fixationComponents:
@@ -1267,8 +1277,8 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             
             # Run 'Begin Routine' code from lsl_practice_accuracy
             #Push screen target
-            screen_outlet.push_sample(screen_markers[1])
-            target_present_marker_count = 0
+            #screen_outlet.push_sample(screen_markers[1])
+            #target_present_marker_count = 0
             
             
             
@@ -1399,8 +1409,8 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 #Create conditions that register button presses
                 #Decide whether last trial is repeated or if we go to the next trial
                 
-                #Generate variable for time and grace period during which two buttons can be pressed
-                keys = kb.getKeys([same_button, different_button], waitRelease=False, clear = False)
+                
+                keys = kb.getKeys([same_button, different_button], waitRelease = False, clear = False)
                 
                 for key in keys:
                     if key == same_button and key.duration == None and same_button_counter == 0: # "left" is pressed and no duration assigned yet
@@ -1409,22 +1419,24 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                     if key == different_button and key.duration == None and different_button_counter == 0: # "right"is pressed and no duration assigned yet
                         different_button_pressed = True
                         different_button_counter = 1
-                    if same_button_pressed == True and different_button_pressed == True and same_button_counter == 0 and different_button_counter == 0: #left and right are pressed at the same time
+                    if same_button_pressed == True and different_button_pressed == True: #left and right are pressed at the same time
                         repeat_last_practice.finished = False
                         repeat_trial_practice = True
                         continueRoutine = False
                         different_button_counter = 1
                         same_button_counter = 1
                     #check if button is released and no second button pressed during that time
-                    if key == different_button and key.duration != None: # "right" button pressed & released while duration is there
-                        repeat_last_practice.finished = True
-                        repeat_trial_practice = False
-                        continueRoutine = False
-                        different_button_time = key.tDown          
-                    if key == same_button and key.duration != None: # "left" button pressed and released with duration 
-                        repeat_last_practice.finished = True
-                        repeat_trial_practice = False
-                        continueRoutine = False
+                    if different_button_counter == 1:
+                        if key == different_button and key.duration != None: # "right" button pressed & released while duration is there
+                            repeat_last_practice.finished = True
+                            repeat_trial_practice = False
+                            continueRoutine = False
+                            different_button_time = key.tDown
+                    if same_button_counter == 1:
+                        if key == same_button and key.duration != None: # "left" button pressed and released with duration 
+                            repeat_last_practice.finished = True
+                            repeat_trial_practice = False
+                            continueRoutine = False
                         same_button_time = key.tDown          
                 
                 
@@ -1490,20 +1502,20 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             
             # Run 'End Routine' code from lsl_practice_accuracy
             ##Push accuracy and if conditions change
-            if repeat_trial_practice == True: 
-                behav_outlet.push_sample(behav_markers[2]) #repeated trial
-            else:
-                #Push whether correct or incorrect button presses
-                if correct_response == True: 
-                    behav_outlet.push_sample(behav_markers[0]) #correct response
-                elif correct_response == False: 
-                    behav_outlet.push_sample(behav_markers[1]) #incorrect response
+            #if repeat_trial_practice == True: 
+            #    behav_outlet.push_sample(behav_markers[2]) #repeated trial
+            #else:
+            #    #Push whether correct or incorrect button presses
+            #    if correct_response == True: 
+            #        behav_outlet.push_sample(behav_markers[0]) #correct response
+            #    elif correct_response == False: 
+            #        behav_outlet.push_sample(behav_markers[1]) #incorrect response
             
-                #Push whether target squares stayed identical or not
-                if decider_randomisation == 0:
-                    screen_outlet.push_sample(condition_markers[0]) #identical squares
-                elif decider_randomisation == 1: #color_or_position -> 0 = color change, 1 = location change
-                    screen_outlet.push_sample(condition_markers[color_or_position])
+            #    #Push whether target squares stayed identical or not
+            #    if decider_randomisation == 0:
+            #        screen_outlet.push_sample(condition_markers[0]) #identical squares
+            #    elif decider_randomisation == 1: #color_or_position -> 0 = color change, 1 = location change
+            #        screen_outlet.push_sample(condition_markers[color_or_position])
             
             
             
@@ -2194,6 +2206,10 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             same_button_time = 0
             different_button_time = 0
             
+            #Button counter to avoid multiple registrations of button presses
+            same_button_counter = 0
+            different_button_counter = 0
+            
             #Create list with all four squares that are used for comparison
             squares_test = [sqr_ident_1_trial, sqr_ident_2_trial, sqr_ident_3_trial, sqr_ident_4_trial]
             
@@ -2344,25 +2360,31 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 keys = kb.getKeys([same_button, different_button], waitRelease=False, clear = False)
                 
                 for key in keys:
-                    if key == same_button and key.duration == None: # "left" is pressed and no duration assigned yet
+                    if key == same_button and key.duration == None and same_button_counter == 0: # "left" is pressed and no duration assigned yet
                         same_button_pressed = True
-                    if key == different_button and key.duration == None: # "right"is pressed and no duration assigned yet
+                        same_button_counter = 1
+                    if key == different_button and key.duration == None and different_button_counter == 0: # "right"is pressed and no duration assigned yet
                         different_button_pressed = True
+                        different_button_counter = 1
                     if same_button_pressed == True and different_button_pressed == True: #left and right are pressed at the same time
                         repeat_last_trial.finished = False
                         repeat_trial = True
                         continueRoutine = False
+                        same_button_counter = 1
+                        different_button_counter = 1
                     #check if button is released and no second button pressed during that time
-                    if key == different_button and key.duration != None: # "right" button pressed & released while duration is there
-                        repeat_last_trial.finished = True
-                        repeat_trial = False
-                        continueRoutine = False
-                        different_button_time = key.tDown          
-                    if key == same_button and key.duration != None: # "left" button pressed and released with duration 
-                        repeat_last_trial.finished = True
-                        repeat_trial = False
-                        continueRoutine = False
-                        same_button_time = key.tDown 
+                    if different_button_counter == 1:
+                        if key == different_button and key.duration != None: # "right" button pressed & released while duration is there
+                            repeat_last_trial.finished = True
+                            repeat_trial = False
+                            continueRoutine = False
+                            different_button_time = key.tDown          
+                    if same_button_counter == 1:
+                        if key == same_button and key.duration != None: # "left" button pressed and released with duration 
+                            repeat_last_trial.finished = True
+                            repeat_trial = False
+                            continueRoutine = False
+                            same_button_time = key.tDown 
                 
                              
                 
@@ -2440,7 +2462,6 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             
             # Run 'End Routine' code from lsl_trial_accuracy
             ##Push accuracy and if conditions change
-            
             if repeat_trial == True: 
                 behav_outlet.push_sample(behav_markers[2]) #repeated trial
             else:

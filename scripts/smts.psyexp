@@ -10,7 +10,7 @@
     <Param val="" valType="str" updates="None" name="End Message"/>
     <Param val="{'participant': 'f&quot;{randint(0, 999999):06.0f}&quot;', 'session': '001'}" valType="code" updates="None" name="Experiment info"/>
     <Param val="True" valType="bool" updates="None" name="Force stereo"/>
-    <Param val="False" valType="bool" updates="None" name="Full-screen window"/>
+    <Param val="True" valType="bool" updates="None" name="Full-screen window"/>
     <Param val="" valType="str" updates="None" name="HTML path"/>
     <Param val="" valType="str" updates="None" name="Incomplete URL"/>
     <Param val="testMonitor" valType="str" updates="None" name="Monitor"/>
@@ -21,12 +21,12 @@
     <Param val="True" valType="bool" updates="None" name="Save log file"/>
     <Param val="True" valType="bool" updates="None" name="Save psydat file"/>
     <Param val="True" valType="bool" updates="None" name="Save wide csv file"/>
-    <Param val="1" valType="num" updates="None" name="Screen"/>
+    <Param val="2" valType="num" updates="None" name="Screen"/>
     <Param val="True" valType="bool" updates="None" name="Show info dlg"/>
     <Param val="False" valType="bool" updates="None" name="Show mouse"/>
     <Param val="height" valType="str" updates="None" name="Units"/>
     <Param val="" valType="str" updates="None" name="Use version"/>
-    <Param val="[900, 600]" valType="list" updates="None" name="Window size (pixels)"/>
+    <Param val="[1440, 900]" valType="list" updates="None" name="Window size (pixels)"/>
     <Param val="none" valType="str" updates="None" name="backgroundFit"/>
     <Param val="" valType="str" updates="None" name="backgroundImg"/>
     <Param val="avg" valType="str" updates="None" name="blendMode"/>
@@ -43,7 +43,7 @@
     <Param val="False" valType="bool" updates="None" name="elSimMode"/>
     <Param val="RIGHT_EYE" valType="str" updates="None" name="elTrackEyes"/>
     <Param val="PUPIL_CR_TRACKING" valType="str" updates="None" name="elTrackingMode"/>
-    <Param val="wp3_smts2" valType="str" updates="None" name="expName"/>
+    <Param val="smts" valType="str" updates="None" name="expName"/>
     <Param val="on Sync" valType="str" updates="None" name="exportHTML"/>
     <Param val="None" valType="str" updates="None" name="eyetracker"/>
     <Param val="127.0.0.1" valType="str" updates="None" name="gpAddress"/>
@@ -89,7 +89,7 @@
         <Param val="" valType="code" updates="constant" name="stopVal"/>
         <Param val="False" valType="bool" updates="None" name="useWindowParams"/>
       </RoutineSettingsComponent>
-      <PolygonComponent name="FixationScreen_Practice" plugin="None">
+      <PolygonComponent name="fix" plugin="None">
         <Param val="center" valType="str" updates="constant" name="anchor"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
@@ -100,7 +100,7 @@
         <Param val="black" valType="color" updates="constant" name="lineColor"/>
         <Param val="1" valType="num" updates="constant" name="lineWidth"/>
         <Param val="4" valType="int" updates="constant" name="nVertices"/>
-        <Param val="FixationScreen_Practice" valType="code" updates="None" name="name"/>
+        <Param val="fix" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
         <Param val="(0, 0)" valType="list" updates="constant" name="pos"/>
@@ -207,7 +207,7 @@
         <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
         <Param val="" valType="code" updates="constant" name="stopVal"/>
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
-        <Param val="Willkommen beim SMTS. &amp;#10;&amp;#10;Wenn Sie bereit sind, drücken Sie einen der Knöpfe um den Testdurchlauf zu starten" valType="str" updates="constant" name="text"/>
+        <Param val="Willkommen beim SMTS. &amp;#10;&amp;#10;Wenn Sie bereit sind, drücken Sie die rechte oder die linke Taste, um den Trainingsdurchlauf zu starten" valType="str" updates="constant" name="text"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
         <Param val="" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
@@ -250,8 +250,8 @@
       <CodeComponent name="setup" plugin="None">
         <Param val="" valType="extendedCode" updates="constant" name="Before Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Before JS Experiment"/>
-        <Param val="#Setup some of the variables that are used for experiment&amp;#10;import time&amp;#10;practice_counter = 0 #keep track of practice trials&amp;#10;trial_counter = 0 #keep track of test trial we are in&amp;#10;repeat_trial = False #default is set to continuing with next trial&amp;#10;correct_response = None #for calculating accuracy&amp;#10;&amp;#10;# actual buttons we observe&amp;#10;same_button = 'left'&amp;#10;different_button = 'right'&amp;#10;&amp;#10;#Set seed&amp;#10;&amp;#10;&amp;#10;#Set up lists with possible conditions for practice and trials&amp;#10;#Conditions: Squares stay identical, color change, location change, both change&amp;#10;practice_list = [0]*5 + [1]*5 + [2]*5  #15 practice trials&amp;#10;shuffle(practice_list)&amp;#10;test_list = [0]*40 + [1]*20 + [2]*20 #80 test trials&amp;#10;shuffle(test_list)&amp;#10;&amp;#10;#Color palette&amp;#10;potential_colors = ['white', 'black', 'red', 'green', 'blue', 'orange', 'pink', 'purple', 'cyan', 'magenta', 'lightsteelblue', 'yellow', 'lightgreen'] &amp;#10;&amp;#10;#Create unique locations so no locations of squares are overlapping&amp;#10;def unique_locations(upper_limit):&amp;#10;    potential_location = []&amp;#10;    while len(potential_location) &lt; upper_limit:&amp;#10;        potential_coord = 0.1*randint(-3,3)&amp;#10;        if potential_coord != 0 and not(potential_coord in potential_location):&amp;#10;            potential_location.append(potential_coord) &amp;#10;    return potential_location&amp;#10;&amp;#10;#Create function that decides whether color or location are changed&amp;#10;def square_manipulation(squares_list, x_coord, y_coord, colors, decider_randomisation, color_or_position, square_to_change, practice_switch):&amp;#10;    if decider_randomisation == 1: # if change&amp;#10;        if color_or_position == 1: #color changes&amp;#10;          change_square = squares_list[square_to_change] &amp;#10;          change_square.color = colors[4]&amp;#10;          if practice_switch == 0: #only save for trial, not for practice&amp;#10;            thisExp.addData('label_square', &quot;Color_Change&quot;)&amp;#10;        elif color_or_position == 2: #position changes&amp;#10;          change_square = squares_list[square_to_change] &amp;#10;          change_square.pos = (x_coord[4], y_coord[4])&amp;#10;          if practice_switch == 0:&amp;#10;            thisExp.addData('label_square', &quot;Locat_Change&quot;)&amp;#10;&amp;#10;#Practice&amp;#10;response_accuracy_practice = []&amp;#10;repeat_trial_practice = False&amp;#10;&amp;#10;#Test trials&amp;#10;response_accuracy_trial = []&amp;#10;&amp;#10;#Opacity for iti&amp;#10;opacity_cross = None&amp;#10;opacity_text = None&amp;#10;&amp;#10;#Trial number&amp;#10;nReps_trial = 80&amp;#10;nReps_practice = 15&amp;#10;&amp;#10;" valType="extendedCode" updates="constant" name="Begin Experiment"/>
-        <Param val="import * as time from 'time';&amp;#10;function _pj_snippets(container) {&amp;#10;    function in_es6(left, right) {&amp;#10;        if (((right instanceof Array) || ((typeof right) === &quot;string&quot;))) {&amp;#10;            return (right.indexOf(left) &gt; (- 1));&amp;#10;        } else {&amp;#10;            if (((right instanceof Map) || (right instanceof Set) || (right instanceof WeakMap) || (right instanceof WeakSet))) {&amp;#10;                return right.has(left);&amp;#10;            } else {&amp;#10;                return (left in right);&amp;#10;            }&amp;#10;        }&amp;#10;    }&amp;#10;    container[&quot;in_es6&quot;] = in_es6;&amp;#10;    return container;&amp;#10;}&amp;#10;_pj = {};&amp;#10;_pj_snippets(_pj);&amp;#10;practice_counter = 0;&amp;#10;trial_counter = 0;&amp;#10;repeat_trial = false;&amp;#10;correct_response = null;&amp;#10;same_button = &quot;left&quot;;&amp;#10;different_button = &quot;right&quot;;&amp;#10;practice_list = ((([0] * 5) + ([1] * 5)) + ([2] * 5));&amp;#10;util.shuffle(practice_list);&amp;#10;test_list = ((([0] * 40) + ([1] * 20)) + ([2] * 20));&amp;#10;util.shuffle(test_list);&amp;#10;potential_colors = [&quot;white&quot;, &quot;black&quot;, &quot;red&quot;, &quot;green&quot;, &quot;blue&quot;, &quot;orange&quot;, &quot;pink&quot;, &quot;purple&quot;, &quot;cyan&quot;, &quot;magenta&quot;, &quot;lightsteelblue&quot;, &quot;yellow&quot;, &quot;lightgreen&quot;];&amp;#10;function unique_locations(upper_limit) {&amp;#10;    var potential_coord, potential_location;&amp;#10;    potential_location = [];&amp;#10;    while ((potential_location.length &lt; upper_limit)) {&amp;#10;        potential_coord = (0.1 * util.randint((- 3), 3));&amp;#10;        if (((potential_coord !== 0) &amp;&amp; (! _pj.in_es6(potential_coord, potential_location)))) {&amp;#10;            potential_location.push(potential_coord);&amp;#10;        }&amp;#10;    }&amp;#10;    return potential_location;&amp;#10;}&amp;#10;function square_manipulation(squares_list, x_coord, y_coord, colors, decider_randomisation, color_or_position, square_to_change, practice_switch) {&amp;#10;    var change_square;&amp;#10;    if ((decider_randomisation === 1)) {&amp;#10;        if ((color_or_position === 1)) {&amp;#10;            change_square = squares_list[square_to_change];&amp;#10;            change_square.color = colors[4];&amp;#10;            if ((practice_switch === 0)) {&amp;#10;                psychoJS.experiment.addData(&quot;label_square&quot;, &quot;Color_Change&quot;);&amp;#10;            }&amp;#10;        } else {&amp;#10;            if ((color_or_position === 2)) {&amp;#10;                change_square = squares_list[square_to_change];&amp;#10;                change_square.pos = [x_coord[4], y_coord[4]];&amp;#10;                if ((practice_switch === 0)) {&amp;#10;                    psychoJS.experiment.addData(&quot;label_square&quot;, &quot;Locat_Change&quot;);&amp;#10;                }&amp;#10;            }&amp;#10;        }&amp;#10;    }&amp;#10;}&amp;#10;response_accuracy_practice = [];&amp;#10;repeat_trial_practice = false;&amp;#10;response_accuracy_trial = [];&amp;#10;opacity_cross = null;&amp;#10;opacity_text = null;&amp;#10;nReps_trial = 80;&amp;#10;nReps_practice = 15;&amp;#10;" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
+        <Param val="#Setup some of the variables that are used for experiment&amp;#10;import time&amp;#10;practice_counter = 0 #keep track of practice trials&amp;#10;trial_counter = 0 #keep track of test trial we are in&amp;#10;repeat_trial = False #default is set to continuing with next trial&amp;#10;&amp;#10;# actual buttons we observe&amp;#10;same_button = 'left'&amp;#10;different_button = 'right'&amp;#10;&amp;#10;#Set seed -&gt; every participants gets same randomization&amp;#10;np.random.seed(42)&amp;#10;&amp;#10;#Set up lists with possible conditions for practice and trials&amp;#10;#Conditions: Squares stay identical, color change, location change, both change&amp;#10;practice_list = [0]*5 + [1]*5 + [2]*5  #15 practice trials&amp;#10;shuffle(practice_list)&amp;#10;test_list = [0]*40 + [1]*20 + [2]*20 #80 test trials&amp;#10;shuffle(test_list)&amp;#10;&amp;#10;#Color palette&amp;#10;potential_colors = ['white', 'black', 'red', 'green', 'blue', 'orange', 'pink', 'purple', 'cyan', 'magenta', 'lightsteelblue', 'yellow', 'lightgreen'] &amp;#10;&amp;#10;#Practice&amp;#10;response_accuracy_practice = []&amp;#10;repeat_trial_practice = False&amp;#10;&amp;#10;#Test trials&amp;#10;response_accuracy_trial = []&amp;#10;&amp;#10;#Opacity for iti&amp;#10;opacity_cross = None&amp;#10;opacity_text = None&amp;#10;&amp;#10;#Trial numbers we want to have for practice and trials&amp;#10;#can be changed as needed&amp;#10;nReps_trial = 80&amp;#10;nReps_practice = 15&amp;#10;&amp;#10;#Accuracy&amp;#10;correct_response = None&amp;#10;&amp;#10;#Create unique locations so no locations of squares are overlapping&amp;#10;def unique_locations(upper_limit):&amp;#10;    potential_location = []&amp;#10;    while len(potential_location) &lt; upper_limit:&amp;#10;        potential_coord = 0.1*randint(-3,3)&amp;#10;        if potential_coord != 0 and not(potential_coord in potential_location):&amp;#10;            potential_location.append(potential_coord) &amp;#10;    return potential_location&amp;#10;&amp;#10;#Function that creates four squares in which color/position are set&amp;#10;def square_manipulation(squares_list, x_coord, y_coord, colors, decider_randomisation, color_or_position, square_to_change, practice_switch):&amp;#10;    if decider_randomisation == 1: # if change&amp;#10;        if color_or_position == 1: #color changes&amp;#10;          change_square = squares_list[square_to_change] &amp;#10;          change_square.color = colors[4]&amp;#10;          if practice_switch == 0: #only save for trial, not for practice&amp;#10;            thisExp.addData('label_square', &quot;Color_Change&quot;)&amp;#10;        elif color_or_position == 2: #position changes&amp;#10;          change_square = squares_list[square_to_change] &amp;#10;          change_square.pos = (x_coord[4], y_coord[4])&amp;#10;          if practice_switch == 0:&amp;#10;            thisExp.addData('label_square', &quot;Locat_Change&quot;)&amp;#10;&amp;#10;&amp;#10;" valType="extendedCode" updates="constant" name="Begin Experiment"/>
+        <Param val="import * as time from 'time';&amp;#10;function _pj_snippets(container) {&amp;#10;    function in_es6(left, right) {&amp;#10;        if (((right instanceof Array) || ((typeof right) === &quot;string&quot;))) {&amp;#10;            return (right.indexOf(left) &gt; (- 1));&amp;#10;        } else {&amp;#10;            if (((right instanceof Map) || (right instanceof Set) || (right instanceof WeakMap) || (right instanceof WeakSet))) {&amp;#10;                return right.has(left);&amp;#10;            } else {&amp;#10;                return (left in right);&amp;#10;            }&amp;#10;        }&amp;#10;    }&amp;#10;    container[&quot;in_es6&quot;] = in_es6;&amp;#10;    return container;&amp;#10;}&amp;#10;_pj = {};&amp;#10;_pj_snippets(_pj);&amp;#10;practice_counter = 0;&amp;#10;trial_counter = 0;&amp;#10;repeat_trial = false;&amp;#10;same_button = &quot;left&quot;;&amp;#10;different_button = &quot;right&quot;;&amp;#10;np.random.seed(42);&amp;#10;practice_list = ((([0] * 5) + ([1] * 5)) + ([2] * 5));&amp;#10;util.shuffle(practice_list);&amp;#10;test_list = ((([0] * 40) + ([1] * 20)) + ([2] * 20));&amp;#10;util.shuffle(test_list);&amp;#10;potential_colors = [&quot;white&quot;, &quot;black&quot;, &quot;red&quot;, &quot;green&quot;, &quot;blue&quot;, &quot;orange&quot;, &quot;pink&quot;, &quot;purple&quot;, &quot;cyan&quot;, &quot;magenta&quot;, &quot;lightsteelblue&quot;, &quot;yellow&quot;, &quot;lightgreen&quot;];&amp;#10;response_accuracy_practice = [];&amp;#10;repeat_trial_practice = false;&amp;#10;response_accuracy_trial = [];&amp;#10;opacity_cross = null;&amp;#10;opacity_text = null;&amp;#10;nReps_trial = 80;&amp;#10;nReps_practice = 15;&amp;#10;correct_response = null;&amp;#10;function unique_locations(upper_limit) {&amp;#10;    var potential_coord, potential_location;&amp;#10;    potential_location = [];&amp;#10;    while ((potential_location.length &lt; upper_limit)) {&amp;#10;        potential_coord = (0.1 * util.randint((- 3), 3));&amp;#10;        if (((potential_coord !== 0) &amp;&amp; (! _pj.in_es6(potential_coord, potential_location)))) {&amp;#10;            potential_location.push(potential_coord);&amp;#10;        }&amp;#10;    }&amp;#10;    return potential_location;&amp;#10;}&amp;#10;function square_manipulation(squares_list, x_coord, y_coord, colors, decider_randomisation, color_or_position, square_to_change, practice_switch) {&amp;#10;    var change_square;&amp;#10;    if ((decider_randomisation === 1)) {&amp;#10;        if ((color_or_position === 1)) {&amp;#10;            change_square = squares_list[square_to_change];&amp;#10;            change_square.color = colors[4];&amp;#10;            if ((practice_switch === 0)) {&amp;#10;                psychoJS.experiment.addData(&quot;label_square&quot;, &quot;Color_Change&quot;);&amp;#10;            }&amp;#10;        } else {&amp;#10;            if ((color_or_position === 2)) {&amp;#10;                change_square = squares_list[square_to_change];&amp;#10;                change_square.pos = [x_coord[4], y_coord[4]];&amp;#10;                if ((practice_switch === 0)) {&amp;#10;                    psychoJS.experiment.addData(&quot;label_square&quot;, &quot;Locat_Change&quot;);&amp;#10;                }&amp;#10;            }&amp;#10;        }&amp;#10;    }&amp;#10;}&amp;#10;" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
         <Param val="" valType="extendedCode" updates="constant" name="Begin Routine"/>
         <Param val="Auto-&gt;JS" valType="str" updates="None" name="Code Type"/>
@@ -386,6 +386,192 @@
         <Param val="False" valType="bool" updates="constant" name="storeCorrect"/>
         <Param val="True" valType="bool" updates="constant" name="syncScreenRefresh"/>
       </KeyboardComponent>
+    </Routine>
+    <Routine name="square_ident">
+      <RoutineSettingsComponent name="square_ident" plugin="None">
+        <Param val="none" valType="str" updates="None" name="backgroundFit"/>
+        <Param val="" valType="str" updates="None" name="backgroundImg"/>
+        <Param val="$[0,0,0]" valType="color" updates="None" name="color"/>
+        <Param val="rgb" valType="str" updates="None" name="colorSpace"/>
+        <Param val="" valType="str" updates="constant" name="desc"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="square_ident" valType="code" updates="None" name="name"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="" valType="code" updates="constant" name="skipIf"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="" valType="code" updates="constant" name="stopVal"/>
+        <Param val="False" valType="bool" updates="None" name="useWindowParams"/>
+      </RoutineSettingsComponent>
+      <PolygonComponent name="fix_cross2" plugin="None">
+        <Param val="center" valType="str" updates="constant" name="anchor"/>
+        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
+        <Param val="1" valType="num" updates="constant" name="contrast"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="black" valType="color" updates="constant" name="fillColor"/>
+        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
+        <Param val="black" valType="color" updates="constant" name="lineColor"/>
+        <Param val="1" valType="num" updates="constant" name="lineWidth"/>
+        <Param val="4" valType="int" updates="constant" name="nVertices"/>
+        <Param val="fix_cross2" valType="code" updates="None" name="name"/>
+        <Param val="" valType="num" updates="constant" name="opacity"/>
+        <Param val="0" valType="num" updates="constant" name="ori"/>
+        <Param val="(0, 0)" valType="list" updates="constant" name="pos"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="cross" valType="str" updates="None" name="shape"/>
+        <Param val="(0.01, 0.01)" valType="list" updates="constant" name="size"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="0.0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="" valType="code" updates="constant" name="stopVal"/>
+        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
+        <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="list" updates="constant" name="vertices"/>
+      </PolygonComponent>
+      <PolygonComponent name="sqr_ident_1" plugin="None">
+        <Param val="center" valType="str" updates="constant" name="anchor"/>
+        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
+        <Param val="1" valType="num" updates="constant" name="contrast"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="white" valType="color" updates="constant" name="fillColor"/>
+        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
+        <Param val="white" valType="color" updates="constant" name="lineColor"/>
+        <Param val="1" valType="num" updates="constant" name="lineWidth"/>
+        <Param val="4" valType="int" updates="constant" name="nVertices"/>
+        <Param val="sqr_ident_1" valType="code" updates="None" name="name"/>
+        <Param val="" valType="num" updates="constant" name="opacity"/>
+        <Param val="0" valType="num" updates="constant" name="ori"/>
+        <Param val="(-0.1, 0.1)" valType="list" updates="constant" name="pos"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="rectangle" valType="str" updates="None" name="shape"/>
+        <Param val="(0.02, 0.02)" valType="list" updates="constant" name="size"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="0.0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="" valType="code" updates="constant" name="stopVal"/>
+        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
+        <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="list" updates="constant" name="vertices"/>
+      </PolygonComponent>
+      <PolygonComponent name="sqr_ident_2" plugin="None">
+        <Param val="center" valType="str" updates="constant" name="anchor"/>
+        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
+        <Param val="1" valType="num" updates="constant" name="contrast"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="yellow" valType="color" updates="constant" name="fillColor"/>
+        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
+        <Param val="white" valType="color" updates="constant" name="lineColor"/>
+        <Param val="1" valType="num" updates="constant" name="lineWidth"/>
+        <Param val="4" valType="int" updates="constant" name="nVertices"/>
+        <Param val="sqr_ident_2" valType="code" updates="None" name="name"/>
+        <Param val="" valType="num" updates="constant" name="opacity"/>
+        <Param val="0" valType="num" updates="constant" name="ori"/>
+        <Param val="(0.2, 0.2)" valType="list" updates="constant" name="pos"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="rectangle" valType="str" updates="None" name="shape"/>
+        <Param val="(0.02, 0.02)" valType="list" updates="constant" name="size"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="0.0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="" valType="code" updates="constant" name="stopVal"/>
+        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
+        <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="list" updates="constant" name="vertices"/>
+      </PolygonComponent>
+      <PolygonComponent name="sqr_ident_3" plugin="None">
+        <Param val="center" valType="str" updates="constant" name="anchor"/>
+        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
+        <Param val="1" valType="num" updates="constant" name="contrast"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="red" valType="color" updates="constant" name="fillColor"/>
+        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
+        <Param val="white" valType="color" updates="constant" name="lineColor"/>
+        <Param val="1" valType="num" updates="constant" name="lineWidth"/>
+        <Param val="4" valType="int" updates="constant" name="nVertices"/>
+        <Param val="sqr_ident_3" valType="code" updates="None" name="name"/>
+        <Param val="" valType="num" updates="constant" name="opacity"/>
+        <Param val="0" valType="num" updates="constant" name="ori"/>
+        <Param val="(0.3, 0.3)" valType="list" updates="constant" name="pos"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="rectangle" valType="str" updates="None" name="shape"/>
+        <Param val="(0.02, 0.02)" valType="list" updates="constant" name="size"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="0.0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="" valType="code" updates="constant" name="stopVal"/>
+        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
+        <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="list" updates="constant" name="vertices"/>
+      </PolygonComponent>
+      <PolygonComponent name="sqr_ident_4" plugin="None">
+        <Param val="center" valType="str" updates="constant" name="anchor"/>
+        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
+        <Param val="1" valType="num" updates="constant" name="contrast"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="" valType="code" updates="None" name="durationEstim"/>
+        <Param val="blue" valType="color" updates="constant" name="fillColor"/>
+        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
+        <Param val="white" valType="color" updates="constant" name="lineColor"/>
+        <Param val="1" valType="num" updates="constant" name="lineWidth"/>
+        <Param val="4" valType="int" updates="constant" name="nVertices"/>
+        <Param val="sqr_ident_4" valType="code" updates="None" name="name"/>
+        <Param val="" valType="num" updates="constant" name="opacity"/>
+        <Param val="0" valType="num" updates="constant" name="ori"/>
+        <Param val="(0.4, 0.4)" valType="list" updates="constant" name="pos"/>
+        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
+        <Param val="rectangle" valType="str" updates="None" name="shape"/>
+        <Param val="(0.02, 0.02)" valType="list" updates="constant" name="size"/>
+        <Param val="" valType="code" updates="None" name="startEstim"/>
+        <Param val="time (s)" valType="str" updates="None" name="startType"/>
+        <Param val="0.0" valType="code" updates="None" name="startVal"/>
+        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
+        <Param val="" valType="code" updates="constant" name="stopVal"/>
+        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
+        <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="list" updates="constant" name="vertices"/>
+      </PolygonComponent>
+      <CodeComponent name="practice_button_presses" plugin="None">
+        <Param val="" valType="extendedCode" updates="constant" name="Before Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="Before JS Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="Begin Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
+        <Param val="squares_test = [sqr_ident_1, sqr_ident_2, sqr_ident_3, sqr_ident_4];&amp;#10;same_button_time = 0;&amp;#10;different_button_time = 0;&amp;#10;same_button = &quot;left&quot;;&amp;#10;different_button = &quot;right&quot;;&amp;#10;same_button_pressed = false;&amp;#10;different_button_pressed = false;&amp;#10;kb = new keyboard.Keyboard();&amp;#10;for (var i, _pj_c = 0, _pj_a = util.range(squares_test.length), _pj_b = _pj_a.length; (_pj_c &lt; _pj_b); _pj_c += 1) {&amp;#10;    i = _pj_a[_pj_c];&amp;#10;    current_square = squares_test[i];&amp;#10;    current_square.pos = [x_coord[i], y_coord[i]];&amp;#10;    current_square.color = colors[i];&amp;#10;}&amp;#10;square_manipulation(squares_test, x_coord, y_coord, colors, decider_randomisation, color_or_position, square_to_change, 1);&amp;#10;" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
+        <Param val="###### Randomization of location and color ######&amp;#10;&amp;#10;&amp;#10;#Create list with all four squares that are used for comparison&amp;#10;squares_test = [sqr_ident_1, sqr_ident_2, sqr_ident_3, sqr_ident_4]&amp;#10;&amp;#10;# bools to check if buttons are pressed&amp;#10;same_button_pressed = False&amp;#10;different_button_pressed = False&amp;#10;&amp;#10;#Register possible buttons&amp;#10;same_button_time = 0&amp;#10;different_button_time = 0&amp;#10;&amp;#10;#Button counter to avoid multiple registrations of button presses&amp;#10;same_button_counter = 0&amp;#10;different_button_counter = 0&amp;#10;&amp;#10;# initialize a keyboard listener - won't work if there is an additional response key in the routine...&amp;#10;kb = keyboard.Keyboard()&amp;#10;&amp;#10;&amp;#10;#Create variables for position and color&amp;#10;#Set these to be identical to squares that were first displayed&amp;#10;for i in range(len(squares_test)):&amp;#10;     current_square = squares_test[i]&amp;#10;     current_square.pos = (x_coord[i], y_coord[i])&amp;#10;     current_square.color = colors[i]&amp;#10;&amp;#10;square_manipulation(squares_test, x_coord, y_coord, colors, decider_randomisation, color_or_position, square_to_change, 1)&amp;#10;" valType="extendedCode" updates="constant" name="Begin Routine"/>
+        <Param val="Py" valType="str" updates="None" name="Code Type"/>
+        <Param val="#Create conditions that register button presses&amp;#10;#Decide whether last trial is repeated or if we go to the next trial&amp;#10;&amp;#10;&amp;#10;keys = kb.getKeys([same_button, different_button], waitRelease = False, clear = False)&amp;#10;&amp;#10;for key in keys:&amp;#10;    if key == same_button and key.duration == None and same_button_counter == 0: # &quot;left&quot; is pressed and no duration assigned yet&amp;#10;        same_button_pressed = True&amp;#10;        same_button_counter = 1 &amp;#10;    if key == different_button and key.duration == None and different_button_counter == 0: # &quot;right&quot;is pressed and no duration assigned yet&amp;#10;        different_button_pressed = True&amp;#10;        different_button_counter = 1&amp;#10;    if same_button_pressed == True and different_button_pressed == True: #left and right are pressed at the same time&amp;#10;        repeat_last_practice.finished = False&amp;#10;        repeat_trial_practice = True&amp;#10;        continueRoutine = False&amp;#10;        different_button_counter = 1&amp;#10;        same_button_counter = 1&amp;#10;    #check if button is released and no second button pressed during that time&amp;#10;    if different_button_counter == 1:&amp;#10;        if key == different_button and key.duration != None: # &quot;right&quot; button pressed &amp; released while duration is there&amp;#10;            repeat_last_practice.finished = True&amp;#10;            repeat_trial_practice = False&amp;#10;            continueRoutine = False&amp;#10;            different_button_time = key.tDown&amp;#10;    if same_button_counter == 1:&amp;#10;        if key == same_button and key.duration != None: # &quot;left&quot; button pressed and released with duration &amp;#10;            repeat_last_practice.finished = True&amp;#10;            repeat_trial_practice = False&amp;#10;            continueRoutine = False&amp;#10;        same_button_time = key.tDown          &amp;#10;" valType="extendedCode" updates="constant" name="Each Frame"/>
+        <Param val="keys = response_key.getKeys({&quot;waitRelease&quot;: false, &quot;clear&quot;: false});&amp;#10;released_keys = response_key.getKeys({&quot;clear&quot;: false});&amp;#10;for (var key, _pj_c = 0, _pj_a = keys, _pj_b = _pj_a.length; (_pj_c &lt; _pj_b); _pj_c += 1) {&amp;#10;    key = _pj_a[_pj_c];&amp;#10;    if (((key === same_button) &amp;&amp; (key.duration === null))) {&amp;#10;        same_button_pressed = true;&amp;#10;    }&amp;#10;    if (((key === different_button) &amp;&amp; (key.duration === null))) {&amp;#10;        different_button_pressed = true;&amp;#10;    }&amp;#10;    if (((same_button_pressed === true) &amp;&amp; (different_button_pressed === true))) {&amp;#10;        repeat_last_practice.finished = false;&amp;#10;        repeat_trial_practice = true;&amp;#10;        continueRoutine = false;&amp;#10;        console.log(&quot;repeat&quot;);&amp;#10;    }&amp;#10;    if (((key === different_button) &amp;&amp; (key.duration !== null))) {&amp;#10;        repeat_last_practice.finished = true;&amp;#10;        repeat_trial_practice = false;&amp;#10;        continueRoutine = false;&amp;#10;        different_button_time = key.tDown;&amp;#10;        console.log(`release diff button ${key.rt}`);&amp;#10;    }&amp;#10;    if (((key === same_button) &amp;&amp; (key.duration !== null))) {&amp;#10;        repeat_last_practice.finished = true;&amp;#10;        repeat_trial_practice = false;&amp;#10;        continueRoutine = false;&amp;#10;        same_button_time = key.tDown;&amp;#10;        console.log(`release same button ${key.rt}`);&amp;#10;    }&amp;#10;}&amp;#10;" valType="extendedCode" updates="constant" name="Each JS Frame"/>
+        <Param val="" valType="extendedCode" updates="constant" name="End Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
+        <Param val="function () {&amp;#10;    var _pj_a = [], _pj_b = keys;&amp;#10;    for (var _pj_c = 0, _pj_d = _pj_b.length; (_pj_c &lt; _pj_d); _pj_c += 1) {&amp;#10;        var key = _pj_b[_pj_c];&amp;#10;        _pj_a.push(console.log(`${key.name} + duration: ${key.duration}`));&amp;#10;    }&amp;#10;    return _pj_a;&amp;#10;}&amp;#10;.call(this);&amp;#10;if (((different_button_time !== 0) &amp;&amp; (same_button_time !== 0))) {&amp;#10;} else {&amp;#10;    if (((same_button_time !== 0) &amp;&amp; (decider_randomisation === 0))) {&amp;#10;        response_accuracy_practice.push(1);&amp;#10;        psychoJS.experiment.addData(&quot;response_accuracy&quot;, &quot;Correct&quot;);&amp;#10;    } else {&amp;#10;        if (((different_button_time !== 0) &amp;&amp; (decider_randomisation !== 0))) {&amp;#10;            response_accuracy_practice.push(1);&amp;#10;            psychoJS.experiment.addData(&quot;response_accuracy&quot;, &quot;Correct&quot;);&amp;#10;        } else {&amp;#10;            response_accuracy_practice.push(0);&amp;#10;            psychoJS.experiment.addData(&quot;response_accuracy&quot;, &quot;Incorrect&quot;);&amp;#10;        }&amp;#10;    }&amp;#10;}&amp;#10;" valType="extendedCode" updates="constant" name="End JS Routine"/>
+        <Param val="#Create variable for accuracy (correct button presses)&amp;#10;#Squares are identical -&gt; decider_randomisation == 0 -&gt; &quot;left&quot; &amp;#10;#Squares are not identical (change of color/location) -&gt; decider_randomisation != 0 -&gt; &quot;right&quot; &amp;#10;kb.clearEvents()&amp;#10;&amp;#10;if different_button_pressed != 0 and same_button_pressed != 0 :  #&quot;left&quot; and &quot;right&quot; pressed: repeat trial&amp;#10;    opacity_text = 0&amp;#10;    opacity_cross = 1&amp;#10;elif same_button_time != 0 and decider_randomisation == 0: #squares identical&amp;#10;    correct_response = True&amp;#10;    response_accuracy_practice.append(1)&amp;#10;    thisExp.addData('response_accuracy', &quot;Correct&quot;)&amp;#10;    opacity_text = 1&amp;#10;    opacity_cross = 0&amp;#10;elif different_button_time != 0 and decider_randomisation != 0: #squares not identical&amp;#10;    correct_response = True    &amp;#10;    response_accuracy_practice.append(1)&amp;#10;    thisExp.addData('response_accuracy', &quot;Correct&quot;)&amp;#10;    opacity_text = 1&amp;#10;    opacity_cross = 0&amp;#10;else: &amp;#10;    correct_response = False    &amp;#10;    response_accuracy_practice.append(0) #wrong button was pressed&amp;#10;    thisExp.addData('response_accuracy', &quot;Incorrect&quot;)&amp;#10;    opacity_text = 1&amp;#10;    opacity_cross = 0&amp;#10;&amp;#10;if trials_practice.thisN == nReps_practice-1:&amp;#10;    opacity_text = 0&amp;#10;    opacity_cross = 0&amp;#10;&amp;#10;    &amp;#10;" valType="extendedCode" updates="constant" name="End Routine"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="practice_button_presses" valType="code" updates="None" name="name"/>
+      </CodeComponent>
+      <CodeComponent name="lsl_practice_accuracy" plugin="None">
+        <Param val="" valType="extendedCode" updates="constant" name="Before Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="Before JS Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="Begin Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
+        <Param val="/* Syntax Error: Fix Python code */" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
+        <Param val="#Push screen target&amp;#10;#screen_outlet.push_sample(screen_markers[1])&amp;#10;#target_present_marker_count = 0&amp;#10;&amp;#10;&amp;#10;" valType="extendedCode" updates="constant" name="Begin Routine"/>
+        <Param val="Auto-&gt;JS" valType="str" updates="None" name="Code Type"/>
+        <Param val="" valType="extendedCode" updates="constant" name="Each Frame"/>
+        <Param val="" valType="extendedCode" updates="constant" name="Each JS Frame"/>
+        <Param val="" valType="extendedCode" updates="constant" name="End Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
+        <Param val="/* Syntax Error: Fix Python code */" valType="extendedCode" updates="constant" name="End JS Routine"/>
+        <Param val="##Push accuracy and if conditions change&amp;#10;#if repeat_trial_practice == True: &amp;#10;#    behav_outlet.push_sample(behav_markers[2]) #repeated trial&amp;#10;#else:&amp;#10;#    #Push whether correct or incorrect button presses&amp;#10;#    if correct_response == True: &amp;#10;#        behav_outlet.push_sample(behav_markers[0]) #correct response&amp;#10;#    elif correct_response == False: &amp;#10;#        behav_outlet.push_sample(behav_markers[1]) #incorrect response&amp;#10;&amp;#10;#    #Push whether target squares stayed identical or not&amp;#10;#    if decider_randomisation == 0:&amp;#10;#        screen_outlet.push_sample(condition_markers[0]) #identical squares&amp;#10;#    elif decider_randomisation == 1: #color_or_position -&gt; 0 = color change, 1 = location change&amp;#10;#        screen_outlet.push_sample(condition_markers[color_or_position])&amp;#10;&amp;#10;&amp;#10;&amp;#10;    &amp;#10;" valType="extendedCode" updates="constant" name="End Routine"/>
+        <Param val="False" valType="bool" updates="None" name="disabled"/>
+        <Param val="lsl_practice_accuracy" valType="code" updates="None" name="name"/>
+      </CodeComponent>
     </Routine>
     <Routine name="square_ident_test">
       <RoutineSettingsComponent name="square_ident_test" plugin="None">
@@ -642,7 +828,7 @@
         <Param val="" valType="code" updates="constant" name="stopVal"/>
         <Param val="False" valType="bool" updates="None" name="useWindowParams"/>
       </RoutineSettingsComponent>
-      <PolygonComponent name="fix_cross1" plugin="None">
+      <PolygonComponent name="fix_cross" plugin="None">
         <Param val="center" valType="str" updates="constant" name="anchor"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
@@ -653,7 +839,7 @@
         <Param val="black" valType="color" updates="constant" name="lineColor"/>
         <Param val="1" valType="num" updates="constant" name="lineWidth"/>
         <Param val="4" valType="int" updates="constant" name="nVertices"/>
-        <Param val="fix_cross1" valType="code" updates="None" name="name"/>
+        <Param val="fix_cross" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
         <Param val="(0, 0)" valType="list" updates="constant" name="pos"/>
@@ -980,7 +1166,7 @@
         <Param val="" valType="code" updates="constant" name="stopVal"/>
         <Param val="False" valType="bool" updates="None" name="useWindowParams"/>
       </RoutineSettingsComponent>
-      <PolygonComponent name="fix_cross_trial2" plugin="None">
+      <PolygonComponent name="fix_cross_4" plugin="None">
         <Param val="center" valType="str" updates="constant" name="anchor"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
@@ -991,7 +1177,7 @@
         <Param val="black" valType="color" updates="constant" name="lineColor"/>
         <Param val="1" valType="num" updates="constant" name="lineWidth"/>
         <Param val="4" valType="int" updates="constant" name="nVertices"/>
-        <Param val="fix_cross_trial2" valType="code" updates="None" name="name"/>
+        <Param val="fix_cross_4" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
         <Param val="(0, 0)" valType="list" updates="constant" name="pos"/>
@@ -1145,7 +1331,7 @@
         <Param val="" valType="extendedCode" updates="constant" name="End Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
         <Param val="if ((((button_different !== null) || (button_same !== null)) &amp;&amp; ((time.time() - button_same) &lt; grace_period))) {&amp;#10;    if ((target_present_marker_count === 0)) {&amp;#10;        if ((response_accuracy_trial[(response_accuracy_trial.length - 1)] === 1)) {&amp;#10;            behav_outlet.push_sample(behav_markers[0]);&amp;#10;            target_present_marker_count += 1;&amp;#10;        } else {&amp;#10;            behav_outlet.push_sample(behav_markers[1]);&amp;#10;            target_present_marker_count += 1;&amp;#10;        }&amp;#10;    }&amp;#10;}&amp;#10;if ((decider_randomisation === 0)) {&amp;#10;    screen_outlet.push_sample(condition_markers[3]);&amp;#10;} else {&amp;#10;    if ((decider_randomisation === 1)) {&amp;#10;        screen_outlet.push_sample(condition_markers[color_or_position]);&amp;#10;    }&amp;#10;}&amp;#10;" valType="extendedCode" updates="constant" name="End JS Routine"/>
-        <Param val="##Push accuracy and if conditions change&amp;#10;&amp;#10;if repeat_trial == True: &amp;#10;    behav_outlet.push_sample(behav_markers[2]) #repeated trial&amp;#10;else:&amp;#10;    #Push wehter correct or incorrect button presses&amp;#10;    if correct_response == True: &amp;#10;        behav_outlet.push_sample(behav_markers[0]) #correct response&amp;#10;    elif correct_response == False: &amp;#10;        behav_outlet.push_sample(behav_markers[1]) #incorrect response&amp;#10;&amp;#10;    #Push whether target squares stayed identical or not&amp;#10;    if decider_randomisation == 0:&amp;#10;        screen_outlet.push_sample(condition_markers[2]) #identical squares&amp;#10;    elif decider_randomisation == 1: #color_or_position -&gt; 0 = color change, 1 = location change&amp;#10;        screen_outlet.push_sample(condition_markers[color_or_position])&amp;#10;&amp;#10;&amp;#10;&amp;#10;&amp;#10;    &amp;#10;" valType="extendedCode" updates="constant" name="End Routine"/>
+        <Param val="##Push accuracy and if conditions change&amp;#10;if repeat_trial == True: &amp;#10;    behav_outlet.push_sample(behav_markers[2]) #repeated trial&amp;#10;else:&amp;#10;    #Push wehter correct or incorrect button presses&amp;#10;    if correct_response == True: &amp;#10;        behav_outlet.push_sample(behav_markers[0]) #correct response&amp;#10;    elif correct_response == False: &amp;#10;        behav_outlet.push_sample(behav_markers[1]) #incorrect response&amp;#10;&amp;#10;    #Push whether target squares stayed identical or not&amp;#10;    if decider_randomisation == 0:&amp;#10;        screen_outlet.push_sample(condition_markers[2]) #identical squares&amp;#10;    elif decider_randomisation == 1: #color_or_position -&gt; 0 = color change, 1 = location change&amp;#10;        screen_outlet.push_sample(condition_markers[color_or_position])&amp;#10;&amp;#10;&amp;#10;&amp;#10;&amp;#10;    &amp;#10;" valType="extendedCode" updates="constant" name="End Routine"/>
         <Param val="False" valType="bool" updates="None" name="disabled"/>
         <Param val="lsl_trial_accuracy" valType="code" updates="None" name="name"/>
       </CodeComponent>
@@ -1172,7 +1358,7 @@
         <Param val="" valType="extendedCode" updates="constant" name="Begin Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
         <Param val="/* Syntax Error: Fix Python code */" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
-        <Param val="#sending iti in between trials&amp;#10;#screen_outlet.push_sample(screen_markers[2])" valType="extendedCode" updates="constant" name="Begin Routine"/>
+        <Param val="#sending first iti for practice&amp;#10;#screen_outlet.push_sample(screen_markers[2])" valType="extendedCode" updates="constant" name="Begin Routine"/>
         <Param val="Auto-&gt;JS" valType="str" updates="None" name="Code Type"/>
         <Param val="" valType="extendedCode" updates="constant" name="Each Frame"/>
         <Param val="" valType="extendedCode" updates="constant" name="Each JS Frame"/>
@@ -1183,7 +1369,7 @@
         <Param val="False" valType="bool" updates="None" name="disabled"/>
         <Param val="lsl_iti_practice" valType="code" updates="None" name="name"/>
       </CodeComponent>
-      <TextComponent name="next_round_text_practice" plugin="None">
+      <TextComponent name="next_round_text" plugin="None">
         <Param val="white" valType="color" updates="constant" name="color"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
@@ -1193,7 +1379,7 @@
         <Param val="Open Sans" valType="str" updates="constant" name="font"/>
         <Param val="LTR" valType="str" updates="None" name="languageStyle"/>
         <Param val="0.05" valType="num" updates="constant" name="letterHeight"/>
-        <Param val="next_round_text_practice" valType="code" updates="None" name="name"/>
+        <Param val="next_round_text" valType="code" updates="None" name="name"/>
         <Param val="opacity_text" valType="num" updates="set every repeat" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
         <Param val="(0, 0)" valType="list" updates="constant" name="pos"/>
@@ -1208,7 +1394,7 @@
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
         <Param val="" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
-      <PolygonComponent name="repeat_cross_practice" plugin="None">
+      <PolygonComponent name="repeat_cross" plugin="None">
         <Param val="center" valType="str" updates="constant" name="anchor"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
@@ -1219,7 +1405,7 @@
         <Param val="black" valType="color" updates="constant" name="lineColor"/>
         <Param val="1" valType="num" updates="constant" name="lineWidth"/>
         <Param val="4" valType="int" updates="constant" name="nVertices"/>
-        <Param val="repeat_cross_practice" valType="code" updates="None" name="name"/>
+        <Param val="repeat_cross" valType="code" updates="None" name="name"/>
         <Param val="opacity_cross" valType="num" updates="set every repeat" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
         <Param val="(0, 0)" valType="list" updates="constant" name="pos"/>
@@ -1258,7 +1444,7 @@
         <Param val="" valType="extendedCode" updates="constant" name="Begin Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
         <Param val="screen_outlet.push_sample(screen_markers[2]);&amp;#10;" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
-        <Param val="#sending iti between trials&amp;#10;screen_outlet.push_sample(screen_markers[2])" valType="extendedCode" updates="constant" name="Begin Routine"/>
+        <Param val="#sending first iti for practice&amp;#10;screen_outlet.push_sample(screen_markers[2])" valType="extendedCode" updates="constant" name="Begin Routine"/>
         <Param val="Auto-&gt;JS" valType="str" updates="None" name="Code Type"/>
         <Param val="" valType="extendedCode" updates="constant" name="Each Frame"/>
         <Param val="" valType="extendedCode" updates="constant" name="Each JS Frame"/>
@@ -1294,7 +1480,7 @@
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
         <Param val="" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
-      <PolygonComponent name="repeat_cross_trial" plugin="None">
+      <PolygonComponent name="repeat_trial_cross" plugin="None">
         <Param val="center" valType="str" updates="constant" name="anchor"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
@@ -1305,7 +1491,7 @@
         <Param val="black" valType="color" updates="constant" name="lineColor"/>
         <Param val="1" valType="num" updates="constant" name="lineWidth"/>
         <Param val="4" valType="int" updates="constant" name="nVertices"/>
-        <Param val="repeat_cross_trial" valType="code" updates="None" name="name"/>
+        <Param val="repeat_trial_cross" valType="code" updates="None" name="name"/>
         <Param val="opacity_cross" valType="num" updates="set every repeat" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
         <Param val="(0, 0)" valType="list" updates="constant" name="pos"/>
@@ -1338,7 +1524,7 @@
         <Param val="" valType="code" updates="constant" name="stopVal"/>
         <Param val="False" valType="bool" updates="None" name="useWindowParams"/>
       </RoutineSettingsComponent>
-      <PolygonComponent name="FixationScreen_Trial" plugin="None">
+      <PolygonComponent name="fix_cross5" plugin="None">
         <Param val="center" valType="str" updates="constant" name="anchor"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
@@ -1349,7 +1535,7 @@
         <Param val="black" valType="color" updates="constant" name="lineColor"/>
         <Param val="1" valType="num" updates="constant" name="lineWidth"/>
         <Param val="4" valType="int" updates="constant" name="nVertices"/>
-        <Param val="FixationScreen_Trial" valType="code" updates="None" name="name"/>
+        <Param val="fix_cross5" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
         <Param val="(0, 0)" valType="list" updates="constant" name="pos"/>
@@ -1383,8 +1569,8 @@
         <Param val="lsl_fixation_trial" valType="code" updates="None" name="name"/>
       </CodeComponent>
     </Routine>
-    <Routine name="ITI_before_start">
-      <RoutineSettingsComponent name="ITI_before_start" plugin="None">
+    <Routine name="ITI_preparation_trial">
+      <RoutineSettingsComponent name="ITI_preparation_trial" plugin="None">
         <Param val="none" valType="str" updates="None" name="backgroundFit"/>
         <Param val="" valType="str" updates="None" name="backgroundImg"/>
         <Param val="$[0,0,0]" valType="color" updates="None" name="color"/>
@@ -1392,14 +1578,14 @@
         <Param val="" valType="str" updates="constant" name="desc"/>
         <Param val="False" valType="bool" updates="None" name="disabled"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
-        <Param val="ITI_before_start" valType="code" updates="None" name="name"/>
+        <Param val="ITI_preparation_trial" valType="code" updates="None" name="name"/>
         <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
         <Param val="" valType="code" updates="constant" name="skipIf"/>
         <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
         <Param val="" valType="code" updates="constant" name="stopVal"/>
         <Param val="False" valType="bool" updates="None" name="useWindowParams"/>
       </RoutineSettingsComponent>
-      <PolygonComponent name="practice_iti_1500" plugin="None">
+      <PolygonComponent name="practice_iti_500" plugin="None">
         <Param val="center" valType="str" updates="constant" name="anchor"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
         <Param val="1" valType="num" updates="constant" name="contrast"/>
@@ -1410,7 +1596,7 @@
         <Param val="black" valType="color" updates="constant" name="lineColor"/>
         <Param val="1" valType="num" updates="constant" name="lineWidth"/>
         <Param val="4" valType="int" updates="constant" name="nVertices"/>
-        <Param val="practice_iti_1500" valType="code" updates="None" name="name"/>
+        <Param val="practice_iti_500" valType="code" updates="None" name="name"/>
         <Param val="" valType="num" updates="constant" name="opacity"/>
         <Param val="0" valType="num" updates="constant" name="ori"/>
         <Param val="(0, 0)" valType="list" updates="constant" name="pos"/>
@@ -1426,7 +1612,7 @@
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
         <Param val="" valType="list" updates="constant" name="vertices"/>
       </PolygonComponent>
-      <CodeComponent name="lsl_iti_before_practice" plugin="None">
+      <CodeComponent name="lsl_iti" plugin="None">
         <Param val="" valType="extendedCode" updates="constant" name="Before Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Before JS Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Begin Experiment"/>
@@ -1441,260 +1627,13 @@
         <Param val="" valType="extendedCode" updates="constant" name="End JS Routine"/>
         <Param val="" valType="extendedCode" updates="constant" name="End Routine"/>
         <Param val="False" valType="bool" updates="None" name="disabled"/>
-        <Param val="lsl_iti_before_practice" valType="code" updates="None" name="name"/>
-      </CodeComponent>
-    </Routine>
-    <Routine name="square_ident_practice">
-      <RoutineSettingsComponent name="square_ident_practice" plugin="None">
-        <Param val="none" valType="str" updates="None" name="backgroundFit"/>
-        <Param val="" valType="str" updates="None" name="backgroundImg"/>
-        <Param val="$[0,0,0]" valType="color" updates="None" name="color"/>
-        <Param val="rgb" valType="str" updates="None" name="colorSpace"/>
-        <Param val="" valType="str" updates="constant" name="desc"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
-        <Param val="" valType="code" updates="None" name="durationEstim"/>
-        <Param val="square_ident_practice" valType="code" updates="None" name="name"/>
-        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="" valType="code" updates="constant" name="skipIf"/>
-        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
-        <Param val="" valType="code" updates="constant" name="stopVal"/>
-        <Param val="False" valType="bool" updates="None" name="useWindowParams"/>
-      </RoutineSettingsComponent>
-      <PolygonComponent name="fix_cross2" plugin="None">
-        <Param val="center" valType="str" updates="constant" name="anchor"/>
-        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
-        <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
-        <Param val="" valType="code" updates="None" name="durationEstim"/>
-        <Param val="black" valType="color" updates="constant" name="fillColor"/>
-        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
-        <Param val="black" valType="color" updates="constant" name="lineColor"/>
-        <Param val="1" valType="num" updates="constant" name="lineWidth"/>
-        <Param val="4" valType="int" updates="constant" name="nVertices"/>
-        <Param val="fix_cross2" valType="code" updates="None" name="name"/>
-        <Param val="" valType="num" updates="constant" name="opacity"/>
-        <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="(0, 0)" valType="list" updates="constant" name="pos"/>
-        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="cross" valType="str" updates="None" name="shape"/>
-        <Param val="(0.01, 0.01)" valType="list" updates="constant" name="size"/>
-        <Param val="" valType="code" updates="None" name="startEstim"/>
-        <Param val="time (s)" valType="str" updates="None" name="startType"/>
-        <Param val="0.0" valType="code" updates="None" name="startVal"/>
-        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
-        <Param val="" valType="code" updates="constant" name="stopVal"/>
-        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
-        <Param val="from exp settings" valType="str" updates="None" name="units"/>
-        <Param val="" valType="list" updates="constant" name="vertices"/>
-      </PolygonComponent>
-      <PolygonComponent name="sqr_ident_1" plugin="None">
-        <Param val="center" valType="str" updates="constant" name="anchor"/>
-        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
-        <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
-        <Param val="" valType="code" updates="None" name="durationEstim"/>
-        <Param val="white" valType="color" updates="constant" name="fillColor"/>
-        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
-        <Param val="white" valType="color" updates="constant" name="lineColor"/>
-        <Param val="1" valType="num" updates="constant" name="lineWidth"/>
-        <Param val="4" valType="int" updates="constant" name="nVertices"/>
-        <Param val="sqr_ident_1" valType="code" updates="None" name="name"/>
-        <Param val="" valType="num" updates="constant" name="opacity"/>
-        <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="(-0.1, 0.1)" valType="list" updates="constant" name="pos"/>
-        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="rectangle" valType="str" updates="None" name="shape"/>
-        <Param val="(0.02, 0.02)" valType="list" updates="constant" name="size"/>
-        <Param val="" valType="code" updates="None" name="startEstim"/>
-        <Param val="time (s)" valType="str" updates="None" name="startType"/>
-        <Param val="0.0" valType="code" updates="None" name="startVal"/>
-        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
-        <Param val="" valType="code" updates="constant" name="stopVal"/>
-        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
-        <Param val="from exp settings" valType="str" updates="None" name="units"/>
-        <Param val="" valType="list" updates="constant" name="vertices"/>
-      </PolygonComponent>
-      <PolygonComponent name="sqr_ident_2" plugin="None">
-        <Param val="center" valType="str" updates="constant" name="anchor"/>
-        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
-        <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
-        <Param val="" valType="code" updates="None" name="durationEstim"/>
-        <Param val="yellow" valType="color" updates="constant" name="fillColor"/>
-        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
-        <Param val="white" valType="color" updates="constant" name="lineColor"/>
-        <Param val="1" valType="num" updates="constant" name="lineWidth"/>
-        <Param val="4" valType="int" updates="constant" name="nVertices"/>
-        <Param val="sqr_ident_2" valType="code" updates="None" name="name"/>
-        <Param val="" valType="num" updates="constant" name="opacity"/>
-        <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="(0.2, 0.2)" valType="list" updates="constant" name="pos"/>
-        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="rectangle" valType="str" updates="None" name="shape"/>
-        <Param val="(0.02, 0.02)" valType="list" updates="constant" name="size"/>
-        <Param val="" valType="code" updates="None" name="startEstim"/>
-        <Param val="time (s)" valType="str" updates="None" name="startType"/>
-        <Param val="0.0" valType="code" updates="None" name="startVal"/>
-        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
-        <Param val="" valType="code" updates="constant" name="stopVal"/>
-        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
-        <Param val="from exp settings" valType="str" updates="None" name="units"/>
-        <Param val="" valType="list" updates="constant" name="vertices"/>
-      </PolygonComponent>
-      <PolygonComponent name="sqr_ident_3" plugin="None">
-        <Param val="center" valType="str" updates="constant" name="anchor"/>
-        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
-        <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
-        <Param val="" valType="code" updates="None" name="durationEstim"/>
-        <Param val="red" valType="color" updates="constant" name="fillColor"/>
-        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
-        <Param val="white" valType="color" updates="constant" name="lineColor"/>
-        <Param val="1" valType="num" updates="constant" name="lineWidth"/>
-        <Param val="4" valType="int" updates="constant" name="nVertices"/>
-        <Param val="sqr_ident_3" valType="code" updates="None" name="name"/>
-        <Param val="" valType="num" updates="constant" name="opacity"/>
-        <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="(0.3, 0.3)" valType="list" updates="constant" name="pos"/>
-        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="rectangle" valType="str" updates="None" name="shape"/>
-        <Param val="(0.02, 0.02)" valType="list" updates="constant" name="size"/>
-        <Param val="" valType="code" updates="None" name="startEstim"/>
-        <Param val="time (s)" valType="str" updates="None" name="startType"/>
-        <Param val="0.0" valType="code" updates="None" name="startVal"/>
-        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
-        <Param val="" valType="code" updates="constant" name="stopVal"/>
-        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
-        <Param val="from exp settings" valType="str" updates="None" name="units"/>
-        <Param val="" valType="list" updates="constant" name="vertices"/>
-      </PolygonComponent>
-      <PolygonComponent name="sqr_ident_4" plugin="None">
-        <Param val="center" valType="str" updates="constant" name="anchor"/>
-        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
-        <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
-        <Param val="" valType="code" updates="None" name="durationEstim"/>
-        <Param val="blue" valType="color" updates="constant" name="fillColor"/>
-        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
-        <Param val="white" valType="color" updates="constant" name="lineColor"/>
-        <Param val="1" valType="num" updates="constant" name="lineWidth"/>
-        <Param val="4" valType="int" updates="constant" name="nVertices"/>
-        <Param val="sqr_ident_4" valType="code" updates="None" name="name"/>
-        <Param val="" valType="num" updates="constant" name="opacity"/>
-        <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="(0.4, 0.4)" valType="list" updates="constant" name="pos"/>
-        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="rectangle" valType="str" updates="None" name="shape"/>
-        <Param val="(0.02, 0.02)" valType="list" updates="constant" name="size"/>
-        <Param val="" valType="code" updates="None" name="startEstim"/>
-        <Param val="time (s)" valType="str" updates="None" name="startType"/>
-        <Param val="0.0" valType="code" updates="None" name="startVal"/>
-        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
-        <Param val="" valType="code" updates="constant" name="stopVal"/>
-        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
-        <Param val="from exp settings" valType="str" updates="None" name="units"/>
-        <Param val="" valType="list" updates="constant" name="vertices"/>
-      </PolygonComponent>
-      <CodeComponent name="practice_button_presses" plugin="None">
-        <Param val="" valType="extendedCode" updates="constant" name="Before Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Before JS Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Begin Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
-        <Param val="squares_test = [sqr_ident_1, sqr_ident_2, sqr_ident_3, sqr_ident_4];&amp;#10;same_button_time = 0;&amp;#10;different_button_time = 0;&amp;#10;same_button = &quot;left&quot;;&amp;#10;different_button = &quot;right&quot;;&amp;#10;same_button_pressed = false;&amp;#10;different_button_pressed = false;&amp;#10;kb = new keyboard.Keyboard();&amp;#10;for (var i, _pj_c = 0, _pj_a = util.range(squares_test.length), _pj_b = _pj_a.length; (_pj_c &lt; _pj_b); _pj_c += 1) {&amp;#10;    i = _pj_a[_pj_c];&amp;#10;    current_square = squares_test[i];&amp;#10;    current_square.pos = [x_coord[i], y_coord[i]];&amp;#10;    current_square.color = colors[i];&amp;#10;}&amp;#10;square_manipulation(squares_test, x_coord, y_coord, colors, decider_randomisation, color_or_position, square_to_change, 1);&amp;#10;" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
-        <Param val="###### Randomization of location and color ######&amp;#10;&amp;#10;&amp;#10;#Create list with all four squares that are used for comparison&amp;#10;squares_test = [sqr_ident_1, sqr_ident_2, sqr_ident_3, sqr_ident_4]&amp;#10;&amp;#10;# bools to check if buttons are pressed&amp;#10;same_button_pressed = False&amp;#10;different_button_pressed = False&amp;#10;&amp;#10;#Register possible buttons&amp;#10;same_button_time = 0&amp;#10;different_button_time = 0&amp;#10;&amp;#10;#Button counter to avoid multiple registrations of button presses&amp;#10;same_button_counter = 0&amp;#10;different_button_counter = 0&amp;#10;&amp;#10;# initialize a keyboard listener - won't work if there is an additional response key in the routine...&amp;#10;kb = keyboard.Keyboard()&amp;#10;&amp;#10;&amp;#10;#Create variables for position and color&amp;#10;#Set these to be identical to squares that were first displayed&amp;#10;for i in range(len(squares_test)):&amp;#10;     current_square = squares_test[i]&amp;#10;     current_square.pos = (x_coord[i], y_coord[i])&amp;#10;     current_square.color = colors[i]&amp;#10;&amp;#10;square_manipulation(squares_test, x_coord, y_coord, colors, decider_randomisation, color_or_position, square_to_change, 1)&amp;#10;" valType="extendedCode" updates="constant" name="Begin Routine"/>
-        <Param val="Py" valType="str" updates="None" name="Code Type"/>
-        <Param val="#Create conditions that register button presses&amp;#10;#Decide whether last trial is repeated or if we go to the next trial&amp;#10;keys = kb.getKeys([same_button, different_button], waitRelease = False, clear = False)&amp;#10;&amp;#10;for key in keys:&amp;#10;    if key == same_button and key.duration == None and same_button_counter == 0: # &quot;left&quot; is pressed and no duration assigned yet&amp;#10;        same_button_pressed = True&amp;#10;        same_button_counter = 1 &amp;#10;    if key == different_button and key.duration == None and different_button_counter == 0: # &quot;right&quot;is pressed and no duration assigned yet&amp;#10;        different_button_pressed = True&amp;#10;        different_button_counter = 1&amp;#10;    if same_button_pressed == True and different_button_pressed == True: #left and right are pressed at the same time&amp;#10;        repeat_last_practice.finished = False&amp;#10;        repeat_trial_practice = True&amp;#10;        continueRoutine = False&amp;#10;        different_button_counter = 1&amp;#10;        same_button_counter = 1&amp;#10;    #check if button is released and no second button pressed during that time&amp;#10;    if different_button_counter == 1:&amp;#10;        if key == different_button and key.duration != None: # &quot;right&quot; button pressed &amp; released while duration is there&amp;#10;            repeat_last_practice.finished = True&amp;#10;            repeat_trial_practice = False&amp;#10;            continueRoutine = False&amp;#10;            different_button_time = key.tDown&amp;#10;    if same_button_counter == 1:&amp;#10;        if key == same_button and key.duration != None: # &quot;left&quot; button pressed and released with duration &amp;#10;            repeat_last_practice.finished = True&amp;#10;            repeat_trial_practice = False&amp;#10;            continueRoutine = False&amp;#10;            same_button_time = key.tDown          &amp;#10;" valType="extendedCode" updates="constant" name="Each Frame"/>
-        <Param val="keys = response_key.getKeys({&quot;waitRelease&quot;: false, &quot;clear&quot;: false});&amp;#10;released_keys = response_key.getKeys({&quot;clear&quot;: false});&amp;#10;for (var key, _pj_c = 0, _pj_a = keys, _pj_b = _pj_a.length; (_pj_c &lt; _pj_b); _pj_c += 1) {&amp;#10;    key = _pj_a[_pj_c];&amp;#10;    if (((key === same_button) &amp;&amp; (key.duration === null))) {&amp;#10;        same_button_pressed = true;&amp;#10;    }&amp;#10;    if (((key === different_button) &amp;&amp; (key.duration === null))) {&amp;#10;        different_button_pressed = true;&amp;#10;    }&amp;#10;    if (((same_button_pressed === true) &amp;&amp; (different_button_pressed === true))) {&amp;#10;        repeat_last_practice.finished = false;&amp;#10;        repeat_trial_practice = true;&amp;#10;        continueRoutine = false;&amp;#10;        console.log(&quot;repeat&quot;);&amp;#10;    }&amp;#10;    if (((key === different_button) &amp;&amp; (key.duration !== null))) {&amp;#10;        repeat_last_practice.finished = true;&amp;#10;        repeat_trial_practice = false;&amp;#10;        continueRoutine = false;&amp;#10;        different_button_time = key.tDown;&amp;#10;        console.log(`release diff button ${key.rt}`);&amp;#10;    }&amp;#10;    if (((key === same_button) &amp;&amp; (key.duration !== null))) {&amp;#10;        repeat_last_practice.finished = true;&amp;#10;        repeat_trial_practice = false;&amp;#10;        continueRoutine = false;&amp;#10;        same_button_time = key.tDown;&amp;#10;        console.log(`release same button ${key.rt}`);&amp;#10;    }&amp;#10;}&amp;#10;" valType="extendedCode" updates="constant" name="Each JS Frame"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
-        <Param val="function () {&amp;#10;    var _pj_a = [], _pj_b = keys;&amp;#10;    for (var _pj_c = 0, _pj_d = _pj_b.length; (_pj_c &lt; _pj_d); _pj_c += 1) {&amp;#10;        var key = _pj_b[_pj_c];&amp;#10;        _pj_a.push(console.log(`${key.name} + duration: ${key.duration}`));&amp;#10;    }&amp;#10;    return _pj_a;&amp;#10;}&amp;#10;.call(this);&amp;#10;if (((different_button_time !== 0) &amp;&amp; (same_button_time !== 0))) {&amp;#10;} else {&amp;#10;    if (((same_button_time !== 0) &amp;&amp; (decider_randomisation === 0))) {&amp;#10;        response_accuracy_practice.push(1);&amp;#10;        psychoJS.experiment.addData(&quot;response_accuracy&quot;, &quot;Correct&quot;);&amp;#10;    } else {&amp;#10;        if (((different_button_time !== 0) &amp;&amp; (decider_randomisation !== 0))) {&amp;#10;            response_accuracy_practice.push(1);&amp;#10;            psychoJS.experiment.addData(&quot;response_accuracy&quot;, &quot;Correct&quot;);&amp;#10;        } else {&amp;#10;            response_accuracy_practice.push(0);&amp;#10;            psychoJS.experiment.addData(&quot;response_accuracy&quot;, &quot;Incorrect&quot;);&amp;#10;        }&amp;#10;    }&amp;#10;}&amp;#10;" valType="extendedCode" updates="constant" name="End JS Routine"/>
-        <Param val="#Create variable for accuracy (correct button presses)&amp;#10;#Squares are identical -&gt; decider_randomisation == 0 -&gt; &quot;left&quot; &amp;#10;#Squares are not identical (change of color/location) -&gt; decider_randomisation != 0 -&gt; &quot;right&quot; &amp;#10;kb.clearEvents()&amp;#10;&amp;#10;if different_button_pressed != 0 and same_button_pressed != 0 :  #&quot;left&quot; and &quot;right&quot; pressed: repeat trial&amp;#10;    opacity_text = 0&amp;#10;    opacity_cross = 1&amp;#10;elif same_button_time != 0 and decider_randomisation == 0: #squares identical&amp;#10;    correct_response = True&amp;#10;    response_accuracy_practice.append(1)&amp;#10;    thisExp.addData('response_accuracy', &quot;Correct&quot;)&amp;#10;    opacity_text = 1&amp;#10;    opacity_cross = 0&amp;#10;elif different_button_time != 0 and decider_randomisation != 0: #squares not identical&amp;#10;    correct_response = True    &amp;#10;    response_accuracy_practice.append(1)&amp;#10;    thisExp.addData('response_accuracy', &quot;Correct&quot;)&amp;#10;    opacity_text = 1&amp;#10;    opacity_cross = 0&amp;#10;else: &amp;#10;    correct_response = False    &amp;#10;    response_accuracy_practice.append(0) #wrong button was pressed&amp;#10;    thisExp.addData('response_accuracy', &quot;Incorrect&quot;)&amp;#10;    opacity_text = 1&amp;#10;    opacity_cross = 0&amp;#10;&amp;#10;if trials_practice.thisN == nReps_practice-1:&amp;#10;    opacity_text = 0&amp;#10;    opacity_cross = 0&amp;#10;&amp;#10;    &amp;#10;" valType="extendedCode" updates="constant" name="End Routine"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
-        <Param val="practice_button_presses" valType="code" updates="None" name="name"/>
-      </CodeComponent>
-      <CodeComponent name="lsl_practice_accuracy" plugin="None">
-        <Param val="" valType="extendedCode" updates="constant" name="Before Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Before JS Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Begin Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
-        <Param val="screen_outlet.push_sample(screen_markers[1]);&amp;#10;target_present_marker_count = 0;&amp;#10;" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
-        <Param val="#Push screen target&amp;#10;screen_outlet.push_sample(screen_markers[1])&amp;#10;target_present_marker_count = 0&amp;#10;&amp;#10;&amp;#10;" valType="extendedCode" updates="constant" name="Begin Routine"/>
-        <Param val="Auto-&gt;JS" valType="str" updates="None" name="Code Type"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Each Frame"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Each JS Frame"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
-        <Param val="if ((repeat_trial_practice === true)) {&amp;#10;    behav_outlet.push_sample(behav_markers[2]);&amp;#10;} else {&amp;#10;    if ((correct_response === true)) {&amp;#10;        behav_outlet.push_sample(behav_markers[0]);&amp;#10;    } else {&amp;#10;        if ((correct_response === false)) {&amp;#10;            behav_outlet.push_sample(behav_markers[1]);&amp;#10;        }&amp;#10;    }&amp;#10;    if ((decider_randomisation === 0)) {&amp;#10;        screen_outlet.push_sample(condition_markers[0]);&amp;#10;    } else {&amp;#10;        if ((decider_randomisation === 1)) {&amp;#10;            screen_outlet.push_sample(condition_markers[color_or_position]);&amp;#10;        }&amp;#10;    }&amp;#10;}&amp;#10;" valType="extendedCode" updates="constant" name="End JS Routine"/>
-        <Param val="##Push accuracy and if conditions change&amp;#10;if repeat_trial_practice == True: &amp;#10;    behav_outlet.push_sample(behav_markers[2]) #repeated trial&amp;#10;else:&amp;#10;    #Push whether correct or incorrect button presses&amp;#10;    if correct_response == True: &amp;#10;        behav_outlet.push_sample(behav_markers[0]) #correct response&amp;#10;    elif correct_response == False: &amp;#10;        behav_outlet.push_sample(behav_markers[1]) #incorrect response&amp;#10;&amp;#10;    #Push whether target squares stayed identical or not&amp;#10;    if decider_randomisation == 0:&amp;#10;        screen_outlet.push_sample(condition_markers[0]) #identical squares&amp;#10;    elif decider_randomisation == 1: #color_or_position -&gt; 0 = color change, 1 = location change&amp;#10;        screen_outlet.push_sample(condition_markers[color_or_position])&amp;#10;&amp;#10;&amp;#10;&amp;#10;    &amp;#10;" valType="extendedCode" updates="constant" name="End Routine"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
-        <Param val="lsl_practice_accuracy" valType="code" updates="None" name="name"/>
-      </CodeComponent>
-    </Routine>
-    <Routine name="ITI_before_main">
-      <RoutineSettingsComponent name="ITI_before_main" plugin="None">
-        <Param val="none" valType="str" updates="None" name="backgroundFit"/>
-        <Param val="" valType="str" updates="None" name="backgroundImg"/>
-        <Param val="$[0,0,0]" valType="color" updates="None" name="color"/>
-        <Param val="rgb" valType="str" updates="None" name="colorSpace"/>
-        <Param val="" valType="str" updates="constant" name="desc"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
-        <Param val="" valType="code" updates="None" name="durationEstim"/>
-        <Param val="ITI_before_main" valType="code" updates="None" name="name"/>
-        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="" valType="code" updates="constant" name="skipIf"/>
-        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
-        <Param val="" valType="code" updates="constant" name="stopVal"/>
-        <Param val="False" valType="bool" updates="None" name="useWindowParams"/>
-      </RoutineSettingsComponent>
-      <PolygonComponent name="fixation_before_trials" plugin="None">
-        <Param val="center" valType="str" updates="constant" name="anchor"/>
-        <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>
-        <Param val="1" valType="num" updates="constant" name="contrast"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
-        <Param val="" valType="code" updates="None" name="durationEstim"/>
-        <Param val="black" valType="color" updates="constant" name="fillColor"/>
-        <Param val="linear" valType="str" updates="constant" name="interpolate"/>
-        <Param val="black" valType="color" updates="constant" name="lineColor"/>
-        <Param val="1" valType="num" updates="constant" name="lineWidth"/>
-        <Param val="4" valType="int" updates="constant" name="nVertices"/>
-        <Param val="fixation_before_trials" valType="code" updates="None" name="name"/>
-        <Param val="" valType="num" updates="constant" name="opacity"/>
-        <Param val="0" valType="num" updates="constant" name="ori"/>
-        <Param val="(0, 0)" valType="list" updates="constant" name="pos"/>
-        <Param val="True" valType="bool" updates="None" name="saveStartStop"/>
-        <Param val="cross" valType="str" updates="None" name="shape"/>
-        <Param val="(0.01, 0.01)" valType="list" updates="constant" name="size"/>
-        <Param val="" valType="code" updates="None" name="startEstim"/>
-        <Param val="time (s)" valType="str" updates="None" name="startType"/>
-        <Param val="0.0" valType="code" updates="None" name="startVal"/>
-        <Param val="duration (s)" valType="str" updates="None" name="stopType"/>
-        <Param val="1.5" valType="code" updates="constant" name="stopVal"/>
-        <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
-        <Param val="from exp settings" valType="str" updates="None" name="units"/>
-        <Param val="" valType="list" updates="constant" name="vertices"/>
-      </PolygonComponent>
-      <CodeComponent name="lsl_iti_before_trials" plugin="None">
-        <Param val="" valType="extendedCode" updates="constant" name="Before Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Before JS Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Begin Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
-        <Param val="/* Syntax Error: Fix Python code */" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
-        <Param val="#sending first iti for trials&amp;#10;#screen_outlet.push_sample([screen_markers[2]])&amp;#10;#fixation_marker_count = 0&amp;#10;" valType="extendedCode" updates="constant" name="Begin Routine"/>
-        <Param val="Auto-&gt;JS" valType="str" updates="None" name="Code Type"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Each Frame"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Each JS Frame"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End JS Routine"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End Routine"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
-        <Param val="lsl_iti_before_trials" valType="code" updates="None" name="name"/>
+        <Param val="lsl_iti" valType="code" updates="None" name="name"/>
       </CodeComponent>
     </Routine>
   </Routines>
   <Flow>
     <Routine name="instruction"/>
-    <Routine name="ITI_before_start"/>
+    <Routine name="ITI_preparation_trial"/>
     <LoopInitiator loopType="TrialHandler" name="trials_practice">
       <Param name="Selected rows" updates="None" val="" valType="str"/>
       <Param name="conditions" updates="None" val="None" valType="str"/>
@@ -1713,18 +1652,18 @@
       <Param name="endPoints" updates="None" val="[0, 1]" valType="num"/>
       <Param name="isTrials" updates="None" val="False" valType="bool"/>
       <Param name="loopType" updates="None" val="random" valType="str"/>
-      <Param name="nReps" updates="None" val="15" valType="num"/>
+      <Param name="nReps" updates="None" val="5" valType="num"/>
       <Param name="name" updates="None" val="repeat_last_practice" valType="code"/>
       <Param name="random seed" updates="None" val="" valType="code"/>
     </LoopInitiator>
     <Routine name="sqr_practice"/>
     <Routine name="fixation"/>
-    <Routine name="square_ident_practice"/>
+    <Routine name="square_ident"/>
     <Routine name="pause_practice"/>
     <LoopTerminator name="repeat_last_practice"/>
     <LoopTerminator name="trials_practice"/>
     <Routine name="start_test"/>
-    <Routine name="ITI_before_main"/>
+    <Routine name="ITI_preparation_trial"/>
     <LoopInitiator loopType="TrialHandler" name="trials_trial">
       <Param name="Selected rows" updates="None" val="" valType="str"/>
       <Param name="conditions" updates="None" val="None" valType="str"/>
@@ -1743,7 +1682,7 @@
       <Param name="endPoints" updates="None" val="[0, 1]" valType="num"/>
       <Param name="isTrials" updates="None" val="True" valType="bool"/>
       <Param name="loopType" updates="None" val="random" valType="str"/>
-      <Param name="nReps" updates="None" val="80" valType="num"/>
+      <Param name="nReps" updates="None" val="8" valType="num"/>
       <Param name="name" updates="None" val="repeat_last_trial" valType="code"/>
       <Param name="random seed" updates="None" val="" valType="code"/>
     </LoopInitiator>
