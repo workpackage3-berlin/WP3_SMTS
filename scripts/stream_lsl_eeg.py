@@ -67,7 +67,7 @@ try:
         
         # Load the EEG channel set and configuration
         print("load EEG config")
-        dev.import_configuration(join(configs_dir, "saga_config_EEG32.xml"))
+        dev.import_configuration(join(configs_dir, "juliette_eeg_config.xml"))
         #if dev.get_num_channels()<64:
             #dev.import_configuration(join(configs_dir, "juliette_saga_config_EEG32.xml"))
         #else:
@@ -94,7 +94,7 @@ try:
         time.sleep(1)
 
         print("load recording config")
-        dev.import_configuration(join(configs_dir, "juliette_saga_config_EEG32_modified.xml"))
+        dev.import_configuration(join(configs_dir, "juliette_eeg_config.xml"))
         sf = dev.get_device_sampling_frequency()
         print(sf)
 
