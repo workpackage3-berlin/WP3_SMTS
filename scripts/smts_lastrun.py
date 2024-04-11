@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2023.2.3),
-    on Thu Apr 11 13:55:50 2024
+    on Thu Apr 11 14:30:24 2024
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -868,7 +868,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 globals()[paramName] = thisTrials_practice[paramName]
         
         # set up handler to look after randomisation of conditions etc
-        repeat_last_practice = data.TrialHandler(nReps=1.0, method='random', 
+        repeat_last_practice = data.TrialHandler(nReps=15.0, method='random', 
             extraInfo=expInfo, originPath=-1,
             trialList=[None],
             seed=None, name='repeat_last_practice')
@@ -1670,7 +1670,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             if thisSession is not None:
                 # if running in a Session with a Liaison client, send data up to now
                 thisSession.sendExperimentData()
-        # completed 1.0 repeats of 'repeat_last_practice'
+        # completed 15.0 repeats of 'repeat_last_practice'
         
         # get names of stimulus parameters
         if repeat_last_practice.trialList in ([], [None], None):
