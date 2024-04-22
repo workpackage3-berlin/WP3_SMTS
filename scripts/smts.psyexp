@@ -10,7 +10,7 @@
     <Param val="" valType="str" updates="None" name="End Message"/>
     <Param val="{'participant': 'f&quot;{randint(0, 999999):06.0f}&quot;', 'session': '001'}" valType="code" updates="None" name="Experiment info"/>
     <Param val="True" valType="bool" updates="None" name="Force stereo"/>
-    <Param val="False" valType="bool" updates="None" name="Full-screen window"/>
+    <Param val="True" valType="bool" updates="None" name="Full-screen window"/>
     <Param val="" valType="str" updates="None" name="HTML path"/>
     <Param val="" valType="str" updates="None" name="Incomplete URL"/>
     <Param val="testMonitor" valType="str" updates="None" name="Monitor"/>
@@ -26,7 +26,7 @@
     <Param val="False" valType="bool" updates="None" name="Show mouse"/>
     <Param val="height" valType="str" updates="None" name="Units"/>
     <Param val="" valType="str" updates="None" name="Use version"/>
-    <Param val="[900, 600]" valType="list" updates="None" name="Window size (pixels)"/>
+    <Param val="[1440, 900]" valType="list" updates="None" name="Window size (pixels)"/>
     <Param val="none" valType="str" updates="None" name="backgroundFit"/>
     <Param val="" valType="str" updates="None" name="backgroundImg"/>
     <Param val="avg" valType="str" updates="None" name="blendMode"/>
@@ -116,23 +116,6 @@
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
         <Param val="" valType="list" updates="constant" name="vertices"/>
       </PolygonComponent>
-      <CodeComponent name="lsl_fixation_practice" plugin="None">
-        <Param val="" valType="extendedCode" updates="constant" name="Before Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Before JS Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Begin Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
-        <Param val="/* Syntax Error: Fix Python code */" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
-        <Param val="#Push screen fixation&amp;#10;#screen_outlet.push_sample(screen_markers[0])&amp;#10;#fixation_marker_count = 0" valType="extendedCode" updates="constant" name="Begin Routine"/>
-        <Param val="Auto-&gt;JS" valType="str" updates="None" name="Code Type"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Each Frame"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Each JS Frame"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End JS Routine"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End Routine"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
-        <Param val="lsl_fixation_practice" valType="code" updates="None" name="name"/>
-      </CodeComponent>
     </Routine>
     <Routine name="button_press">
       <RoutineSettingsComponent name="button_press" plugin="None">
@@ -554,23 +537,6 @@
         <Param val="#Create variable for accuracy (correct button presses)&amp;#10;#Squares are identical -&gt; decider_randomisation == 0 -&gt; &quot;left&quot; &amp;#10;#Squares are not identical (change of color/location) -&gt; decider_randomisation != 0 -&gt; &quot;right&quot; &amp;#10;kb.clearEvents()&amp;#10;&amp;#10;#Save trial number in .csv file &amp;#10;thisExp.addData('trial_number_practice', practice_counter)&amp;#10;&amp;#10;if different_button_pressed != 0 and same_button_pressed != 0 :  #&quot;left&quot; and &quot;right&quot; pressed: repeat trial&amp;#10;    opacity_text = 0&amp;#10;    opacity_cross = 1&amp;#10;    thisExp.addData('response_accuracy_practice', &quot;Repeat/Checking&quot;)    &amp;#10;elif same_button_time != 0 and decider_randomisation == 0: #squares identical&amp;#10;    correct_response = True&amp;#10;    response_accuracy_practice.append(1)&amp;#10;    thisExp.addData('response_accuracy_practice', &quot;Correct&quot;)&amp;#10;    opacity_text = 1&amp;#10;    opacity_cross = 0&amp;#10;elif different_button_time != 0 and decider_randomisation != 0: #squares not identical&amp;#10;    correct_response = True    &amp;#10;    response_accuracy_practice.append(1)&amp;#10;    thisExp.addData('response_accuracy_practice', &quot;Correct&quot;)&amp;#10;    opacity_text = 1&amp;#10;    opacity_cross = 0&amp;#10;else: &amp;#10;    correct_response = False    &amp;#10;    response_accuracy_practice.append(0) #wrong button was pressed&amp;#10;    thisExp.addData('response_accuracy_practice', &quot;Incorrect&quot;)&amp;#10;    opacity_text = 1&amp;#10;    opacity_cross = 0&amp;#10;&amp;#10;#If at last trial, we want to continue without showing text&amp;#10;#Also continue to main part of experiment&amp;#10;if practice_counter == nReps_practice:&amp;#10;    opacity_text = 0&amp;#10;    opacity_cross = 0&amp;#10;    trials_practice.finished = True&amp;#10;&amp;#10;    &amp;#10;" valType="extendedCode" updates="constant" name="End Routine"/>
         <Param val="False" valType="bool" updates="None" name="disabled"/>
         <Param val="practice_button_presses" valType="code" updates="None" name="name"/>
-      </CodeComponent>
-      <CodeComponent name="lsl_practice_accuracy" plugin="None">
-        <Param val="" valType="extendedCode" updates="constant" name="Before Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Before JS Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Begin Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
-        <Param val="/* Syntax Error: Fix Python code */" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
-        <Param val="#Push screen target&amp;#10;#screen_outlet.push_sample(screen_markers[1])&amp;#10;#target_present_marker_count = 0&amp;#10;&amp;#10;&amp;#10;" valType="extendedCode" updates="constant" name="Begin Routine"/>
-        <Param val="Auto-&gt;JS" valType="str" updates="None" name="Code Type"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Each Frame"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Each JS Frame"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
-        <Param val="/* Syntax Error: Fix Python code */" valType="extendedCode" updates="constant" name="End JS Routine"/>
-        <Param val="##Push accuracy and if conditions change&amp;#10;#if repeat_trial_practice == True: &amp;#10;#    behav_outlet.push_sample(behav_markers[2]) #repeated trial&amp;#10;#else:&amp;#10;#    #Push whether correct or incorrect button presses&amp;#10;#    if correct_response == True: &amp;#10;#        behav_outlet.push_sample(behav_markers[0]) #correct response&amp;#10;#    elif correct_response == False: &amp;#10;#        behav_outlet.push_sample(behav_markers[1]) #incorrect response&amp;#10;&amp;#10;#    #Push whether target squares stayed identical or not&amp;#10;#    if decider_randomisation == 0:&amp;#10;#        screen_outlet.push_sample(condition_markers[0]) #identical squares&amp;#10;#    elif decider_randomisation == 1: #color_or_position -&gt; 0 = color change, 1 = location change&amp;#10;#        screen_outlet.push_sample(condition_markers[color_or_position])&amp;#10;&amp;#10;&amp;#10;&amp;#10;    &amp;#10;" valType="extendedCode" updates="constant" name="End Routine"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
-        <Param val="lsl_practice_accuracy" valType="code" updates="None" name="name"/>
       </CodeComponent>
     </Routine>
     <Routine name="square_ident_test">
@@ -1331,7 +1297,7 @@
         <Param val="" valType="extendedCode" updates="constant" name="End Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
         <Param val="if ((((button_different !== null) || (button_same !== null)) &amp;&amp; ((time.time() - button_same) &lt; grace_period))) {&amp;#10;    if ((target_present_marker_count === 0)) {&amp;#10;        if ((response_accuracy_trial[(response_accuracy_trial.length - 1)] === 1)) {&amp;#10;            behav_outlet.push_sample(behav_markers[0]);&amp;#10;            target_present_marker_count += 1;&amp;#10;        } else {&amp;#10;            behav_outlet.push_sample(behav_markers[1]);&amp;#10;            target_present_marker_count += 1;&amp;#10;        }&amp;#10;    }&amp;#10;}&amp;#10;if ((decider_randomisation === 0)) {&amp;#10;    screen_outlet.push_sample(condition_markers[3]);&amp;#10;} else {&amp;#10;    if ((decider_randomisation === 1)) {&amp;#10;        screen_outlet.push_sample(condition_markers[color_or_position]);&amp;#10;    }&amp;#10;}&amp;#10;" valType="extendedCode" updates="constant" name="End JS Routine"/>
-        <Param val="##Push accuracy and if conditions change&amp;#10;if repeat_trial == True: &amp;#10;    behav_outlet.push_sample(behav_markers[2]) #repeated trial&amp;#10;else:&amp;#10;    #Push wehter correct or incorrect button presses&amp;#10;    if correct_response == True: &amp;#10;        behav_outlet.push_sample(behav_markers[0]) #correct response&amp;#10;    elif correct_response == False: &amp;#10;        behav_outlet.push_sample(behav_markers[1]) #incorrect response&amp;#10;&amp;#10;    #Push whether target squares stayed identical or not&amp;#10;    if decider_randomisation == 0:&amp;#10;        screen_outlet.push_sample(condition_markers[2]) #identical squares&amp;#10;    elif decider_randomisation == 1: #color_or_position -&gt; 0 = color change, 1 = location change&amp;#10;        screen_outlet.push_sample(condition_markers[color_or_position])&amp;#10;&amp;#10;&amp;#10;&amp;#10;&amp;#10;    &amp;#10;" valType="extendedCode" updates="constant" name="End Routine"/>
+        <Param val="##Push accuracy and if conditions change&amp;#10;if repeat_trial == True: &amp;#10;    behav_outlet.push_sample(behav_markers[2]) #repeated trial&amp;#10;else:&amp;#10;    #Push whether correct or incorrect button presses&amp;#10;    if correct_response == True: &amp;#10;        behav_outlet.push_sample(behav_markers[0]) #correct response&amp;#10;    elif correct_response == False: &amp;#10;        behav_outlet.push_sample(behav_markers[1]) #incorrect response&amp;#10;&amp;#10;    #Push whether target squares stayed identical or not&amp;#10;    if decider_randomisation == 0:&amp;#10;        screen_outlet.push_sample(condition_markers[0]) #identical squares&amp;#10;    elif decider_randomisation == 1: #color_or_position -&gt; 1 = color change, 2 = location change&amp;#10;        screen_outlet.push_sample(condition_markers[color_or_position])&amp;#10;   &amp;#10;&amp;#10;&amp;#10;&amp;#10;&amp;#10;    &amp;#10;" valType="extendedCode" updates="constant" name="End Routine"/>
         <Param val="False" valType="bool" updates="None" name="disabled"/>
         <Param val="lsl_trial_accuracy" valType="code" updates="None" name="name"/>
       </CodeComponent>
@@ -1352,23 +1318,6 @@
         <Param val="" valType="code" updates="constant" name="stopVal"/>
         <Param val="False" valType="bool" updates="None" name="useWindowParams"/>
       </RoutineSettingsComponent>
-      <CodeComponent name="lsl_iti_practice" plugin="None">
-        <Param val="" valType="extendedCode" updates="constant" name="Before Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Before JS Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Begin Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
-        <Param val="/* Syntax Error: Fix Python code */" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
-        <Param val="#sending first iti for practice&amp;#10;#screen_outlet.push_sample(screen_markers[2])" valType="extendedCode" updates="constant" name="Begin Routine"/>
-        <Param val="Auto-&gt;JS" valType="str" updates="None" name="Code Type"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Each Frame"/>
-        <Param val="" valType="extendedCode" updates="constant" name="Each JS Frame"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End JS Routine"/>
-        <Param val="" valType="extendedCode" updates="constant" name="End Routine"/>
-        <Param val="False" valType="bool" updates="None" name="disabled"/>
-        <Param val="lsl_iti_practice" valType="code" updates="None" name="name"/>
-      </CodeComponent>
       <TextComponent name="next_round_text" plugin="None">
         <Param val="white" valType="color" updates="constant" name="color"/>
         <Param val="rgb" valType="str" updates="constant" name="colorSpace"/>

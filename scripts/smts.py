@@ -1,8 +1,8 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2023.2.3),
-    on Tue Apr 16 20:07:58 2024
+    on Mon Apr 22 20:00:33 2024
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -174,7 +174,7 @@ def setupWindow(expInfo=None, win=None):
     if win is None:
         # if not given a window to setup, make one
         win = visual.Window(
-            size=[900, 600], fullscr=False, screen=1,
+            size=[1440, 900], fullscr=True, screen=1,
             winType='pyglet', allowStencil=False,
             monitor='testMonitor', color=[0,0,0], colorSpace='rgb',
             backgroundImage='', backgroundFit='none',
@@ -191,7 +191,7 @@ def setupWindow(expInfo=None, win=None):
         win.backgroundImage = ''
         win.backgroundFit = 'none'
         win.units = 'height'
-    win.mouseVisible = True
+    win.mouseVisible = False
     win.hideMessage()
     return win
 
@@ -483,13 +483,13 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         pos=(0, 0), height=0.05, wrapWidth=None, ori=0.0, 
         color='white', colorSpace='rgb', opacity=1.0, 
         languageStyle='LTR',
-        depth=-1.0);
+        depth=0.0);
     repeat_cross = visual.ShapeStim(
         win=win, name='repeat_cross', vertices='cross',
         size=(0.01, 0.01),
         ori=0.0, pos=(0, 0), anchor='center',
         lineWidth=1.0,     colorSpace='rgb',  lineColor='black', fillColor='black',
-        opacity=1.0, depth=-2.0, interpolate=True)
+        opacity=1.0, depth=-1.0, interpolate=True)
     
     # --- Initialize components for Routine "start_test" ---
     starting_test = visual.TextStim(win=win, name='starting_test',
@@ -1243,10 +1243,6 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         continueRoutine = True
         # update component parameters for each repeat
         thisExp.addData('fixation.started', globalClock.getTime())
-        # Run 'Begin Routine' code from lsl_fixation_practice
-        #Push screen fixation
-        #screen_outlet.push_sample(screen_markers[0])
-        #fixation_marker_count = 0
         # keep track of which components have finished
         fixationComponents = [fix]
         for thisComponent in fixationComponents:
@@ -1370,13 +1366,6 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
              current_square.color = colors[i]
         
         square_manipulation(squares_test, x_coord, y_coord, colors, decider_randomisation, color_or_position, square_to_change, 1)
-        
-        # Run 'Begin Routine' code from lsl_practice_accuracy
-        #Push screen target
-        #screen_outlet.push_sample(screen_markers[1])
-        #target_present_marker_count = 0
-        
-        
         
         # keep track of which components have finished
         square_identComponents = [fix_cross2, sqr_ident_1, sqr_ident_2, sqr_ident_3, sqr_ident_4]
@@ -1600,27 +1589,6 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         
             
         
-        # Run 'End Routine' code from lsl_practice_accuracy
-        ##Push accuracy and if conditions change
-        #if repeat_trial_practice == True: 
-        #    behav_outlet.push_sample(behav_markers[2]) #repeated trial
-        #else:
-        #    #Push whether correct or incorrect button presses
-        #    if correct_response == True: 
-        #        behav_outlet.push_sample(behav_markers[0]) #correct response
-        #    elif correct_response == False: 
-        #        behav_outlet.push_sample(behav_markers[1]) #incorrect response
-        
-        #    #Push whether target squares stayed identical or not
-        #    if decider_randomisation == 0:
-        #        screen_outlet.push_sample(condition_markers[0]) #identical squares
-        #    elif decider_randomisation == 1: #color_or_position -> 0 = color change, 1 = location change
-        #        screen_outlet.push_sample(condition_markers[color_or_position])
-        
-        
-        
-            
-        
         # the Routine "square_ident" was not non-slip safe, so reset the non-slip timer
         routineTimer.reset()
         
@@ -1628,9 +1596,6 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         continueRoutine = True
         # update component parameters for each repeat
         thisExp.addData('pause_practice.started', globalClock.getTime())
-        # Run 'Begin Routine' code from lsl_iti_practice
-        #sending first iti for practice
-        #screen_outlet.push_sample(screen_markers[2])
         next_round_text.setOpacity(opacity_text)
         repeat_cross.setOpacity(opacity_cross)
         # keep track of which components have finished
@@ -2766,7 +2731,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         if repeat_trial == True: 
             behav_outlet.push_sample(behav_markers[2]) #repeated trial
         else:
-            #Push wehter correct or incorrect button presses
+            #Push whether correct or incorrect button presses
             if correct_response == True: 
                 behav_outlet.push_sample(behav_markers[0]) #correct response
             elif correct_response == False: 
@@ -2774,9 +2739,10 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         
             #Push whether target squares stayed identical or not
             if decider_randomisation == 0:
-                screen_outlet.push_sample(condition_markers[2]) #identical squares
-            elif decider_randomisation == 1: #color_or_position -> 0 = color change, 1 = location change
+                screen_outlet.push_sample(condition_markers[0]) #identical squares
+            elif decider_randomisation == 1: #color_or_position -> 1 = color change, 2 = location change
                 screen_outlet.push_sample(condition_markers[color_or_position])
+           
         
         
         
