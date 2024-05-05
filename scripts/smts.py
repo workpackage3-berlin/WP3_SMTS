@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2023.2.3),
-    on Mon Apr 22 20:00:33 2024
+    on Sun May  5 16:45:46 2024
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -359,6 +359,9 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     opacity_cross = None
     opacity_text = None
     
+    #Feedback accuracy for iti
+    correct_text = None
+    
     #Trial numbers we want to have for practice and trials
     #can be changed as needed
     nReps_trial = 80
@@ -490,6 +493,13 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         ori=0.0, pos=(0, 0), anchor='center',
         lineWidth=1.0,     colorSpace='rgb',  lineColor='black', fillColor='black',
         opacity=1.0, depth=-1.0, interpolate=True)
+    accuracy_text = visual.TextStim(win=win, name='accuracy_text',
+        text='',
+        font='Open Sans',
+        pos=(0, -0.2), height=0.05, wrapWidth=None, ori=0.0, 
+        color='white', colorSpace='rgb', opacity=None, 
+        languageStyle='LTR',
+        depth=-2.0);
     
     # --- Initialize components for Routine "start_test" ---
     starting_test = visual.TextStim(win=win, name='starting_test',
@@ -1560,25 +1570,29 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         if different_button_pressed != 0 and same_button_pressed != 0 :  #"left" and "right" pressed: repeat trial
             opacity_text = 0
             opacity_cross = 1
-            thisExp.addData('response_accuracy_practice', "Repeat/Checking")    
+            thisExp.addData('response_accuracy_practice', "Repeat/Checking")   
+            correct_text = None
         elif same_button_time != 0 and decider_randomisation == 0: #squares identical
             correct_response = True
             response_accuracy_practice.append(1)
             thisExp.addData('response_accuracy_practice', "Correct")
             opacity_text = 1
             opacity_cross = 0
+            correct_text = 'Richtig'
         elif different_button_time != 0 and decider_randomisation != 0: #squares not identical
             correct_response = True    
             response_accuracy_practice.append(1)
             thisExp.addData('response_accuracy_practice', "Correct")
             opacity_text = 1
             opacity_cross = 0
+            correct_text = 'Richtig'
         else: 
             correct_response = False    
             response_accuracy_practice.append(0) #wrong button was pressed
             thisExp.addData('response_accuracy_practice', "Incorrect")
             opacity_text = 1
             opacity_cross = 0
+            correct_text = 'Falsch'
         
         #If at last trial, we want to continue without showing text
         #Also continue to main part of experiment
@@ -1586,6 +1600,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             opacity_text = 0
             opacity_cross = 0
             trials_practice.finished = True
+            correct_text = None
         
             
         
@@ -1599,7 +1614,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         next_round_text.setOpacity(opacity_text)
         repeat_cross.setOpacity(opacity_cross)
         # keep track of which components have finished
-        pause_practiceComponents = [next_round_text, repeat_cross]
+        pause_practiceComponents = [next_round_text, repeat_cross, accuracy_text]
         for thisComponent in pause_practiceComponents:
             thisComponent.tStart = None
             thisComponent.tStop = None
@@ -1687,6 +1702,39 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                     # update status
                     repeat_cross.status = FINISHED
                     repeat_cross.setAutoDraw(False)
+            
+            # *accuracy_text* updates
+            
+            # if accuracy_text is starting this frame...
+            if accuracy_text.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                accuracy_text.frameNStart = frameN  # exact frame index
+                accuracy_text.tStart = t  # local t and not account for scr refresh
+                accuracy_text.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(accuracy_text, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'accuracy_text.started')
+                # update status
+                accuracy_text.status = STARTED
+                accuracy_text.setAutoDraw(True)
+            
+            # if accuracy_text is active this frame...
+            if accuracy_text.status == STARTED:
+                # update params
+                accuracy_text.setText(correct_text, log=False)
+            
+            # if accuracy_text is stopping this frame...
+            if accuracy_text.status == STARTED:
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > accuracy_text.tStartRefresh + 1.5-frameTolerance:
+                    # keep track of stop time/frame for later
+                    accuracy_text.tStop = t  # not accounting for scr refresh
+                    accuracy_text.frameNStop = frameN  # exact frame index
+                    # add timestamp to datafile
+                    thisExp.timestampOnFlip(win, 'accuracy_text.stopped')
+                    # update status
+                    accuracy_text.status = FINISHED
+                    accuracy_text.setAutoDraw(False)
             
             # check for quit (typically the Esc key)
             if defaultKeyboard.getKeys(keyList=["escape"]):

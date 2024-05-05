@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2023.2.3),
-    on Tue Apr 16 19:54:02 2024
+    on Sun May  5 16:41:57 2024
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -174,7 +174,7 @@ def setupWindow(expInfo=None, win=None):
     if win is None:
         # if not given a window to setup, make one
         win = visual.Window(
-            size=[900, 600], fullscr=False, screen=1,
+            size=[1440, 900], fullscr=True, screen=1,
             winType='pyglet', allowStencil=False,
             monitor='testMonitor', color=[0,0,0], colorSpace='rgb',
             backgroundImage='', backgroundFit='none',
@@ -191,7 +191,7 @@ def setupWindow(expInfo=None, win=None):
         win.backgroundImage = ''
         win.backgroundFit = 'none'
         win.units = 'height'
-    win.mouseVisible = True
+    win.mouseVisible = False
     win.hideMessage()
     return win
 
@@ -359,6 +359,9 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     opacity_cross = None
     opacity_text = None
     
+    #Feedback accuracy for iti
+    correct_text = None
+    
     #Trial numbers we want to have for practice and trials
     #can be changed as needed
     nReps_trial = 80
@@ -483,13 +486,20 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         pos=(0, 0), height=0.05, wrapWidth=None, ori=0.0, 
         color='white', colorSpace='rgb', opacity=1.0, 
         languageStyle='LTR',
-        depth=-1.0);
+        depth=0.0);
     repeat_cross = visual.ShapeStim(
         win=win, name='repeat_cross', vertices='cross',
         size=(0.01, 0.01),
         ori=0.0, pos=(0, 0), anchor='center',
         lineWidth=1.0,     colorSpace='rgb',  lineColor='black', fillColor='black',
-        opacity=1.0, depth=-2.0, interpolate=True)
+        opacity=1.0, depth=-1.0, interpolate=True)
+    accuracy_text = visual.TextStim(win=win, name='accuracy_text',
+        text='',
+        font='Open Sans',
+        pos=(0, -0.2), height=0.05, wrapWidth=None, ori=0.0, 
+        color='white', colorSpace='rgb', opacity=None, 
+        languageStyle='LTR',
+        depth=-2.0);
     
     # --- Initialize components for Routine "start_test" ---
     starting_test = visual.TextStim(win=win, name='starting_test',
@@ -956,7 +966,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         routineTimer.addTime(-1.500000)
     
     # set up handler to look after randomisation of conditions etc
-    trials_practice = data.TrialHandler(nReps=50.0, method='random', 
+    trials_practice = data.TrialHandler(nReps=100.0, method='random', 
         extraInfo=expInfo, originPath=-1,
         trialList=[None],
         seed=None, name='trials_practice')
@@ -1010,7 +1020,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 color_or_position = practice_list[practice_counter]
              square_to_change = randint(0,4) # for which square
              practice_counter = practice_counter + 1
-        print(x_coord)
+        
         # set first squares with respective color and location
         # the created extra 5th location/color is not used here
         for i in range(len(squares_test)):
@@ -1243,10 +1253,6 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         continueRoutine = True
         # update component parameters for each repeat
         thisExp.addData('fixation.started', globalClock.getTime())
-        # Run 'Begin Routine' code from lsl_fixation_practice
-        #Push screen fixation
-        #screen_outlet.push_sample(screen_markers[0])
-        #fixation_marker_count = 0
         # keep track of which components have finished
         fixationComponents = [fix]
         for thisComponent in fixationComponents:
@@ -1370,13 +1376,6 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
              current_square.color = colors[i]
         
         square_manipulation(squares_test, x_coord, y_coord, colors, decider_randomisation, color_or_position, square_to_change, 1)
-        
-        # Run 'Begin Routine' code from lsl_practice_accuracy
-        #Push screen target
-        #screen_outlet.push_sample(screen_markers[1])
-        #target_present_marker_count = 0
-        
-        
         
         # keep track of which components have finished
         square_identComponents = [fix_cross2, sqr_ident_1, sqr_ident_2, sqr_ident_3, sqr_ident_4]
@@ -1571,25 +1570,29 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         if different_button_pressed != 0 and same_button_pressed != 0 :  #"left" and "right" pressed: repeat trial
             opacity_text = 0
             opacity_cross = 1
-            thisExp.addData('response_accuracy_practice', "Repeat/Checking")    
+            thisExp.addData('response_accuracy_practice', "Repeat/Checking")   
+            correct_text = None
         elif same_button_time != 0 and decider_randomisation == 0: #squares identical
             correct_response = True
             response_accuracy_practice.append(1)
             thisExp.addData('response_accuracy_practice', "Correct")
             opacity_text = 1
             opacity_cross = 0
+            correct_text = 'Richtig'
         elif different_button_time != 0 and decider_randomisation != 0: #squares not identical
             correct_response = True    
             response_accuracy_practice.append(1)
             thisExp.addData('response_accuracy_practice', "Correct")
             opacity_text = 1
             opacity_cross = 0
+            correct_text = 'Richtig'
         else: 
             correct_response = False    
             response_accuracy_practice.append(0) #wrong button was pressed
             thisExp.addData('response_accuracy_practice', "Incorrect")
             opacity_text = 1
             opacity_cross = 0
+            correct_text = 'Falsch'
         
         #If at last trial, we want to continue without showing text
         #Also continue to main part of experiment
@@ -1597,27 +1600,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             opacity_text = 0
             opacity_cross = 0
             trials_practice.finished = True
-        
-            
-        
-        # Run 'End Routine' code from lsl_practice_accuracy
-        ##Push accuracy and if conditions change
-        #if repeat_trial_practice == True: 
-        #    behav_outlet.push_sample(behav_markers[2]) #repeated trial
-        #else:
-        #    #Push whether correct or incorrect button presses
-        #    if correct_response == True: 
-        #        behav_outlet.push_sample(behav_markers[0]) #correct response
-        #    elif correct_response == False: 
-        #        behav_outlet.push_sample(behav_markers[1]) #incorrect response
-        
-        #    #Push whether target squares stayed identical or not
-        #    if decider_randomisation == 0:
-        #        screen_outlet.push_sample(condition_markers[0]) #identical squares
-        #    elif decider_randomisation == 1: #color_or_position -> 0 = color change, 1 = location change
-        #        screen_outlet.push_sample(condition_markers[color_or_position])
-        
-        
+            correct_text = None
         
             
         
@@ -1628,13 +1611,10 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         continueRoutine = True
         # update component parameters for each repeat
         thisExp.addData('pause_practice.started', globalClock.getTime())
-        # Run 'Begin Routine' code from lsl_iti_practice
-        #sending first iti for practice
-        #screen_outlet.push_sample(screen_markers[2])
         next_round_text.setOpacity(opacity_text)
         repeat_cross.setOpacity(opacity_cross)
         # keep track of which components have finished
-        pause_practiceComponents = [next_round_text, repeat_cross]
+        pause_practiceComponents = [next_round_text, repeat_cross, accuracy_text]
         for thisComponent in pause_practiceComponents:
             thisComponent.tStart = None
             thisComponent.tStop = None
@@ -1723,6 +1703,39 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                     repeat_cross.status = FINISHED
                     repeat_cross.setAutoDraw(False)
             
+            # *accuracy_text* updates
+            
+            # if accuracy_text is starting this frame...
+            if accuracy_text.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                accuracy_text.frameNStart = frameN  # exact frame index
+                accuracy_text.tStart = t  # local t and not account for scr refresh
+                accuracy_text.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(accuracy_text, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'accuracy_text.started')
+                # update status
+                accuracy_text.status = STARTED
+                accuracy_text.setAutoDraw(True)
+            
+            # if accuracy_text is active this frame...
+            if accuracy_text.status == STARTED:
+                # update params
+                accuracy_text.setText(correct_text, log=False)
+            
+            # if accuracy_text is stopping this frame...
+            if accuracy_text.status == STARTED:
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > accuracy_text.tStartRefresh + 1.5-frameTolerance:
+                    # keep track of stop time/frame for later
+                    accuracy_text.tStop = t  # not accounting for scr refresh
+                    accuracy_text.frameNStop = frameN  # exact frame index
+                    # add timestamp to datafile
+                    thisExp.timestampOnFlip(win, 'accuracy_text.stopped')
+                    # update status
+                    accuracy_text.status = FINISHED
+                    accuracy_text.setAutoDraw(False)
+            
             # check for quit (typically the Esc key)
             if defaultKeyboard.getKeys(keyList=["escape"]):
                 thisExp.status = FINISHED
@@ -1759,7 +1772,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         if thisSession is not None:
             # if running in a Session with a Liaison client, send data up to now
             thisSession.sendExperimentData()
-    # completed 50.0 repeats of 'trials_practice'
+    # completed 100.0 repeats of 'trials_practice'
     
     # get names of stimulus parameters
     if trials_practice.trialList in ([], [None], None):
@@ -2102,7 +2115,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         routineTimer.addTime(-1.500000)
     
     # set up handler to look after randomisation of conditions etc
-    trials_trial = data.TrialHandler(nReps=200.0, method='random', 
+    trials_trial = data.TrialHandler(nReps=300.0, method='random', 
         extraInfo=expInfo, originPath=-1,
         trialList=[None],
         seed=None, name='trials_trial')
@@ -2751,14 +2764,14 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             opacity_cross = 0
             trials_trial.finished = True
         
-        print('-----------------')
-        print('we are in trial no:', trial_counter)
-        print('randomization:', decider_randomisation)
+        #print('-----------------')
+        #print('we are in trial no:', trial_counter)
+        #print('randomization:', decider_randomisation)
         #print('response:', response_randomisation)
-        if repeat_trial == True: 
-            print('!!!!REPEAT!!!!')
-        if repeat_trial == False: 
-            print('list of results:', response_accuracy_trial)
+        #if repeat_trial == True: 
+        #    print('!!!!REPEAT!!!!')
+        #if repeat_trial == False: 
+        #    print('list of results:', response_accuracy_trial)
             
         
         # Run 'End Routine' code from lsl_trial_accuracy
@@ -2766,7 +2779,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         if repeat_trial == True: 
             behav_outlet.push_sample(behav_markers[2]) #repeated trial
         else:
-            #Push wehter correct or incorrect button presses
+            #Push whether correct or incorrect button presses
             if correct_response == True: 
                 behav_outlet.push_sample(behav_markers[0]) #correct response
             elif correct_response == False: 
@@ -2774,9 +2787,10 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         
             #Push whether target squares stayed identical or not
             if decider_randomisation == 0:
-                screen_outlet.push_sample(condition_markers[2]) #identical squares
-            elif decider_randomisation == 1: #color_or_position -> 0 = color change, 1 = location change
+                screen_outlet.push_sample(condition_markers[0]) #identical squares
+            elif decider_randomisation == 1: #color_or_position -> 1 = color change, 2 = location change
                 screen_outlet.push_sample(condition_markers[color_or_position])
+           
         
         
         
@@ -2921,7 +2935,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         if thisSession is not None:
             # if running in a Session with a Liaison client, send data up to now
             thisSession.sendExperimentData()
-    # completed 200.0 repeats of 'trials_trial'
+    # completed 300.0 repeats of 'trials_trial'
     
     # get names of stimulus parameters
     if trials_trial.trialList in ([], [None], None):
