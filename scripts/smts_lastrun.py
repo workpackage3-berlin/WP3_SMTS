@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2023.2.3),
-    on Tue May 14 19:18:18 2024
+    on Tue May 21 16:53:43 2024
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -174,7 +174,7 @@ def setupWindow(expInfo=None, win=None):
     if win is None:
         # if not given a window to setup, make one
         win = visual.Window(
-            size=[900, 600], fullscr=False, screen=1,
+            size=[1440, 900], fullscr=True, screen=1,
             winType='pyglet', allowStencil=False,
             monitor='testMonitor', color=[0,0,0], colorSpace='rgb',
             backgroundImage='', backgroundFit='none',
@@ -191,7 +191,7 @@ def setupWindow(expInfo=None, win=None):
         win.backgroundImage = ''
         win.backgroundFit = 'none'
         win.units = 'height'
-    win.mouseVisible = True
+    win.mouseVisible = False
     win.hideMessage()
     return win
 
@@ -364,16 +364,16 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     
     #Trial numbers we want to have for practice and trials
     #can be changed as needed
-    nReps_trial = 10
-    nReps_practice = 5
+    nReps_trial = 140
+    nReps_practice = 2
     
     #Accuracy
     correct_response = None
     
     #Variable that is used to create break screens in between 
-    n_trial_break_one = 5
-    n_trial_break_two = 10
-    n_trial_break_three = 15
+    n_trial_break_one = 40
+    n_trial_break_two = 80
+    n_trial_break_three = 110
     trial_break = None
     
     #Create unique locations so no locations of squares are overlapping
@@ -401,6 +401,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         else:
             if practice_switch == 0: 
                 thisExp.addData('label_square', "No_change")
+    
     
     
     
@@ -769,10 +770,8 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     #Conditions: Squares stay identical, color change, location change, both change
     practice_list = [0]*5 + [1]*5 + [2]*5  #15 practice trials
     shuffle(practice_list)
-    test_list = [0]*40 + [1]*20 + [2]*20 #80 test trials for part one
+    test_list = [0]*70 + [1]*35 + [2]*35 #140 test trials for part one
     shuffle(test_list)
-    test_list_parttwo = [0]*30 + [1]*15 + [2]*15 #60 test trials for part two
-    shuffle(test_list_parttwo)
     
     # keep track of which components have finished
     instructionComponents = [text, key_resp]
@@ -1043,6 +1042,8 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
              current_square = squares_test[i]
              current_square.pos = (x_coord[i], y_coord[i])
              current_square.color = colors[i]
+             
+        
         # keep track of which components have finished
         sqr_practiceComponents = [fix_cross, sqr1, sqr2, sqr3, sqr4]
         for thisComponent in sqr_practiceComponents:
@@ -1389,6 +1390,8 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
              current_square = squares_test[i]
              current_square.pos = (x_coord[i], y_coord[i])
              current_square.color = colors[i]
+        
+        
         
         square_manipulation(squares_test, x_coord, y_coord, colors, decider_randomisation, color_or_position, square_to_change, 1)
         # keep track of which components have finished
@@ -1867,7 +1870,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             win.callOnFlip(beginn_test.clock.reset)  # t=0 on next screen flip
             win.callOnFlip(beginn_test.clearEvents, eventType='keyboard')  # clear events on next screen flip
         if beginn_test.status == STARTED and not waitOnFlip:
-            theseKeys = beginn_test.getKeys(keyList=['s'], ignoreKeys=["escape"], waitRelease=False)
+            theseKeys = beginn_test.getKeys(keyList=['p'], ignoreKeys=["escape"], waitRelease=False)
             _beginn_test_allKeys.extend(theseKeys)
             if len(_beginn_test_allKeys):
                 beginn_test.keys = _beginn_test_allKeys[-1].name  # just the last key pressed
@@ -2190,6 +2193,9 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
              current_square = squares_trial[i]
              current_square.pos = (x_coord[i], y_coord[i])
              current_square.color = colors[i]
+             thisExp.addData(f"initial_square_{i}_pos", (x_coord[i], y_coord[i]))
+             thisExp.addData(f"initial_square_{i}_color", colors[i])
+        
         
         
         
@@ -2547,6 +2553,13 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         
         square_manipulation(squares_test, x_coord, y_coord, colors, decider_randomisation, color_or_position, square_to_change, 0)
         
+        for i, square in enumerate(squares_test):
+            if decider_randomisation == 1 and i == square_to_change: 
+                thisExp.addData(f'condition_square_{i}_pos', (x_coord[4], y_coord[4]))
+                thisExp.addData(f'condition_square_{i}_color', colors[4])
+            else:
+                thisExp.addData(f'condition_square_{i}_pos', (x_coord[i], y_coord[i]))
+                thisExp.addData(f'condition_square_{i}_color', colors[i])
         
         # Run 'Begin Routine' code from lsl_trial_accuracy
         #Push screen target
@@ -3161,7 +3174,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             win.callOnFlip(end_experiment.clock.reset)  # t=0 on next screen flip
             win.callOnFlip(end_experiment.clearEvents, eventType='keyboard')  # clear events on next screen flip
         if end_experiment.status == STARTED and not waitOnFlip:
-            theseKeys = end_experiment.getKeys(keyList=None, ignoreKeys=["escape"], waitRelease=False)
+            theseKeys = end_experiment.getKeys(keyList=['p'], ignoreKeys=["escape"], waitRelease=False)
             _end_experiment_allKeys.extend(theseKeys)
             if len(_end_experiment_allKeys):
                 end_experiment.keys = _end_experiment_allKeys[-1].name  # just the last key pressed
