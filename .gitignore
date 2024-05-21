@@ -3,3 +3,6 @@ data/*
 recordings/*
 scripts/data/*
 src/pyxdftools/
+measurements/
+
+!measurements/README.md

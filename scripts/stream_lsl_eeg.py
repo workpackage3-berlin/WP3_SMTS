@@ -33,13 +33,13 @@ limitations under the License.
 from PySide2.QtWidgets import *
 import sys
 from os.path import join, dirname, realpath
-Example_dir = dirname(realpath(__file__)) # directory of this file
-print(Example_dir)
-modules_dir = join(Example_dir, '..') # directory with all modules
+scripts_dir = dirname(realpath(__file__)) # directory of this file
+print(scripts_dir)
+modules_dir = join(scripts_dir, '..') # directory with all modules
 print(modules_dir)
-measurements_dir = join(Example_dir, '../measurements') # directory with all measurements
+measurements_dir = join(scripts_dir, '../measurements') # directory with all measurements
 print(measurements_dir)
-configs_dir = join(Example_dir, '../TMSiSDK\\tmsi_resources') # directory with configurations
+configs_dir = join(scripts_dir, '../TMSiSDK\\tmsi_resources') # directory with configurations
 print(configs_dir)
 sys.path.append(modules_dir)
 import time
@@ -67,11 +67,7 @@ try:
         
         # Load the EEG channel set and configuration
         print("load EEG config")
-        dev.import_configuration(join(configs_dir, "juliette_eeg_config_changed_ref.xm"))
-        #if dev.get_num_channels()<64:
-            #dev.import_configuration(join(configs_dir, "juliette_saga_config_EEG32.xml"))
-        #else:
-            #dev.import_configuration(join(configs_dir, "saga_config_EEG64.xml"))        
+        dev.import_configuration(join(configs_dir, "juliette_eeg_config_changed_ref.xml"))
 
         # Check if there is already a plotter application in existence
         app = QApplication.instance()
@@ -83,7 +79,7 @@ try:
         # Initialise the helper
         plotter_helper = ImpedancePlotterHelper(device=dev,
                                                  layout='head', 
-                                                 file_storage = join(measurements_dir,"example_EEG_workflow"))
+                                                 file_storage = join(measurements_dir,"SMTS_impedances"))
         # Define the GUI object and show it 
         gui = Gui(plotter_helper = plotter_helper)
          # Enter the event loop
@@ -91,6 +87,7 @@ try:
 
         # Pause for a while to properly close the GUI after completion
         print('\n Wait for a bit while we close the plot... \n')
+        print('\n Saving impedances values in measurements folder under "SMTS_impedances-date-time"...')
         time.sleep(1)
 
         print("load recording config")
