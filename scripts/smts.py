@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2023.2.3),
-    on Mon Jun  3 15:48:14 2024
+    on Wed Jun  5 20:10:39 2024
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -38,17 +38,13 @@ import pylsl
 
 # Make stream outlets & info for each "marker" we want to push, and a corresponding outlet
 print('Creating a new streaminfo...')
-screen_info = pylsl.StreamInfo('screen_markers', 'screen_pres', 1, 0, 'string')
-behav_info = pylsl.StreamInfo('button_press', 'beh', 1, 0, 'string')
+screen_info = pylsl.StreamInfo('Psychopy', 'screen_pres', 1, 0, 'string')
 
 print('Opening an outlet...')
 screen_outlet = pylsl.StreamOutlet(screen_info)
-behav_outlet = pylsl.StreamOutlet(behav_info)
 
 print("now sending markers...")
-screen_markers = [['Fixation'], ['Target'], ['ITI']]
-behav_markers = [['Correct'], ['Incorrect'], ['Repeat']]
-condition_markers = [['Identical'], ['Color_Change'], ['Locat_Change']]
+psychopy_markers = [['Fixation'], ['Target'], ['ITI'], ['Correct'], ['Incorrect'], ['Repeat'], ['Identical'], ['Color_Change'], ['Locat_Change']]
 # --- Setup global variables (available in all functions) ---
 # Ensure that relative paths start from the same directory as this script
 _thisDir = os.path.dirname(os.path.abspath(__file__))
@@ -113,7 +109,7 @@ def setupData(expInfo, dataDir=None):
     # data file name stem = absolute path + name; later add .psyexp, .csv, .log, etc
     if dataDir is None:
         dataDir = _thisDir
-    filename = u'data/%s_%s_%s_%s' % (expInfo['participant'], expInfo['session'], expName, expInfo['date'])
+    filename = u'data/%s_%s_%s' % (expInfo['participant'], expName, expInfo['date'])
     # make sure filename is relative to dataDir
     if os.path.isabs(filename):
         dataDir = os.path.commonprefix([dataDir, filename])
@@ -2181,7 +2177,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 decider_randomisation = 0 #squares stay the same
                 color_or_position = 0
              elif test_list[trial_counter] != 0:
-                decider_randomisation = 1 #squares change (color, position, both)
+                decider_randomisation = 1 #squares change (color, position)
                 color_or_position = test_list[trial_counter]
              square_to_change = randint(0,4) # for which square
              trial_counter = trial_counter + 1
@@ -2426,7 +2422,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         thisExp.addData('fixation_trial.started', globalClock.getTime())
         # Run 'Begin Routine' code from lsl_fixation_trial
         #Push fixation
-        screen_outlet.push_sample(screen_markers[0])
+        screen_outlet.push_sample(psychopy_markers[0])
         fixation_marker_count = 0
         # keep track of which components have finished
         fixation_trialComponents = [fix_cross5]
@@ -2563,7 +2559,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         
         # Run 'Begin Routine' code from lsl_trial_accuracy
         #Push screen target
-        screen_outlet.push_sample(screen_markers[1])
+        screen_outlet.push_sample(psychopy_markers[1])
         target_present_marker_count = 0
         
         
@@ -2802,32 +2798,27 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         if trial_counter == n_trial_break_three: 
             trial_break = True
         
-        #print('-----------------')
-        #print('we are in trial no:', trial_counter)
-        #print('randomization:', decider_randomisation)
-        #print('response:', response_randomisation)
-        #if repeat_trial == True: 
-        #    print('!!!!REPEAT!!!!')
-        #if repeat_trial == False: 
-        #    print('list of results:', response_accuracy_trial)
             
         
         # Run 'End Routine' code from lsl_trial_accuracy
         ##Push accuracy and if conditions change
         if repeat_trial == True: 
-            behav_outlet.push_sample(behav_markers[2]) #repeated trial
+            screen_outlet.push_sample(psychopy_markers[5]) #repeated trial
         else:
             #Push whether correct or incorrect button presses
             if correct_response == True: 
-                behav_outlet.push_sample(behav_markers[0]) #correct response
+                screen_outlet.push_sample(psychopy_markers[3]) #correct response
             elif correct_response == False: 
-                behav_outlet.push_sample(behav_markers[1]) #incorrect response
+                screen_outlet.push_sample(psychopy_markers[4]) #incorrect response
         
             #Push whether target squares stayed identical or not
             if decider_randomisation == 0:
-                screen_outlet.push_sample(condition_markers[0]) #identical squares
+                screen_outlet.push_sample(psychopy_markers[6]) #identical squares
             elif decider_randomisation == 1: #color_or_position -> 1 = color change, 2 = location change
-                screen_outlet.push_sample(condition_markers[color_or_position])
+                if color_or_position == 1:
+                    screen_outlet.push_sample(psychopy_markers[7])
+                elif color_or_position == 2:
+                    screen_outlet.push_sample(psychopy_markers[8])
            
         
         
@@ -2963,7 +2954,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         thisExp.addData('pause_trial.started', globalClock.getTime())
         # Run 'Begin Routine' code from lsl_iti_trial
         #sending first iti for practice
-        screen_outlet.push_sample(screen_markers[2])
+        screen_outlet.push_sample(psychopy_markers[2])
         next_round_text_trial.setOpacity(opacity_text)
         repeat_trial_cross.setOpacity(opacity_cross)
         # keep track of which components have finished
