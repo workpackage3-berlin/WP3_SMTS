@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2023.2.3),
-    on Sun Jun 30 13:53:04 2024
+    on Sun Jun 30 13:56:43 2024
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -361,7 +361,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     #Trial numbers we want to have for practice and trials
     #can be changed as needed
     nReps_trial = 140
-    nReps_practice = 2
+    nReps_practice = 15
     
     #Accuracy
     correct_response = None
