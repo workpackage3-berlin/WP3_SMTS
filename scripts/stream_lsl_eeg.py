@@ -67,7 +67,7 @@ try:
         
         # Load the EEG channel set and configuration
         print("load EEG config")
-        dev.import_configuration(join(configs_dir, "juliette_eeg_config_changed_ref.xml"))
+        dev.import_configuration(join(configs_dir, "NEW_juliette_eeg_config_changed_ref.xml"))
 
         # Check if there is already a plotter application in existence
         app = QApplication.instance()
@@ -91,7 +91,7 @@ try:
         time.sleep(1)
 
         print("load recording config")
-        dev.import_configuration(join(configs_dir, "juliette_eeg_config_changed_ref.xml"))
+        dev.import_configuration(join(configs_dir, "NEW_juliette_eeg_config_changed_ref.xml"))
         sf = dev.get_device_sampling_frequency()
         print(sf)
 
