@@ -4,5 +4,7 @@ recordings/*
 scripts/data/*
 src/pyxdftools/
 measurements/
+data/
+lsl-data/
 
 !measurements/README.md

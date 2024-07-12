@@ -5,7 +5,7 @@
   <Device>
     
     
-    <BaseSampleRateHz>4096</BaseSampleRateHz>
+    <BaseSampleRateHz>2048</BaseSampleRateHz>
     
     
     <ConfiguredInterface>4</ConfiguredInterface>
