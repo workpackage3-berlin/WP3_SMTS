@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2023.2.3),
-    on Sun Jun 30 13:42:28 2024
+    on Fri Jul 12 09:05:27 2024
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -360,14 +360,14 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     
     #Trial numbers we want to have for practice and trials
     #can be changed as needed
-    nReps_trial = 140
-    nReps_practice = 2
+    nReps_trial = 10 #140
+    nReps_practice = 2 #15
     
     #Accuracy
     correct_response = None
     
     #Variable that is used to create break screens in between 
-    n_trial_break_one = 40
+    n_trial_break_one = 2
     n_trial_break_two = 80
     n_trial_break_three = 110
     trial_break = None
@@ -621,27 +621,13 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     
     # --- Initialize components for Routine "Certainty_Check" ---
     certainty_btw_blocks = visual.TextStim(win=win, name='certainty_btw_blocks',
-        text='Herzlichen Glückwunsch, dieser Teil ist geschafft! \nWaren Sie sich im Großteil Ihrer Antworten in diesem Durchgang überwiegend sicher oder unsicher?',
+        text='Herzlichen Glückwunsch, dieser Teil ist geschafft! \n\nWie sicher waren Sie sich bei der Mehrheit der Antworten auf einer Skala von 1 (sehr unsicher) bis 10 (sehr sicher)?',
         font='Open Sans',
         pos=(0, 0), height=0.05, wrapWidth=None, ori=0.0, 
         color='white', colorSpace='rgb', opacity=None, 
         languageStyle='LTR',
         depth=0.0);
     response_certainty = keyboard.Keyboard()
-    response_certain = visual.TextStim(win=win, name='response_certain',
-        text='Sicher',
-        font='Open Sans',
-        pos=(-0.5, -0.3), height=0.05, wrapWidth=None, ori=0.0, 
-        color='white', colorSpace='rgb', opacity=None, 
-        languageStyle='LTR',
-        depth=-2.0);
-    response_uncertain = visual.TextStim(win=win, name='response_uncertain',
-        text='Unsicher',
-        font='Open Sans',
-        pos=(0.5, -0.3), height=0.05, wrapWidth=None, ori=0.0, 
-        color='white', colorSpace='rgb', opacity=None, 
-        languageStyle='LTR',
-        depth=-3.0);
     
     # --- Initialize components for Routine "End_Part_One" ---
     break_partone = visual.TextStim(win=win, name='break_partone',
@@ -2997,7 +2983,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             continueRoutine = False
             
         # keep track of which components have finished
-        Certainty_CheckComponents = [certainty_btw_blocks, response_certainty, response_certain, response_uncertain]
+        Certainty_CheckComponents = [certainty_btw_blocks, response_certainty]
         for thisComponent in Certainty_CheckComponents:
             thisComponent.tStart = None
             thisComponent.tStop = None
@@ -3059,7 +3045,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 win.callOnFlip(response_certainty.clock.reset)  # t=0 on next screen flip
                 win.callOnFlip(response_certainty.clearEvents, eventType='keyboard')  # clear events on next screen flip
             if response_certainty.status == STARTED and not waitOnFlip:
-                theseKeys = response_certainty.getKeys(keyList=['left','right'], ignoreKeys=["escape"], waitRelease=False)
+                theseKeys = response_certainty.getKeys(keyList=['p'], ignoreKeys=["escape"], waitRelease=False)
                 _response_certainty_allKeys.extend(theseKeys)
                 if len(_response_certainty_allKeys):
                     response_certainty.keys = _response_certainty_allKeys[-1].name  # just the last key pressed
@@ -3067,46 +3053,6 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                     response_certainty.duration = _response_certainty_allKeys[-1].duration
                     # a response ends the routine
                     continueRoutine = False
-            
-            # *response_certain* updates
-            
-            # if response_certain is starting this frame...
-            if response_certain.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
-                # keep track of start time/frame for later
-                response_certain.frameNStart = frameN  # exact frame index
-                response_certain.tStart = t  # local t and not account for scr refresh
-                response_certain.tStartRefresh = tThisFlipGlobal  # on global time
-                win.timeOnFlip(response_certain, 'tStartRefresh')  # time at next scr refresh
-                # add timestamp to datafile
-                thisExp.timestampOnFlip(win, 'response_certain.started')
-                # update status
-                response_certain.status = STARTED
-                response_certain.setAutoDraw(True)
-            
-            # if response_certain is active this frame...
-            if response_certain.status == STARTED:
-                # update params
-                pass
-            
-            # *response_uncertain* updates
-            
-            # if response_uncertain is starting this frame...
-            if response_uncertain.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
-                # keep track of start time/frame for later
-                response_uncertain.frameNStart = frameN  # exact frame index
-                response_uncertain.tStart = t  # local t and not account for scr refresh
-                response_uncertain.tStartRefresh = tThisFlipGlobal  # on global time
-                win.timeOnFlip(response_uncertain, 'tStartRefresh')  # time at next scr refresh
-                # add timestamp to datafile
-                thisExp.timestampOnFlip(win, 'response_uncertain.started')
-                # update status
-                response_uncertain.status = STARTED
-                response_uncertain.setAutoDraw(True)
-            
-            # if response_uncertain is active this frame...
-            if response_uncertain.status == STARTED:
-                # update params
-                pass
             
             # check for quit (typically the Esc key)
             if defaultKeyboard.getKeys(keyList=["escape"]):
