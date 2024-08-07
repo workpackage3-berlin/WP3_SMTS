@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2023.2.3),
-    on Wed Jul 31 09:49:49 2024
+    on Wed Aug  7 14:29:14 2024
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -360,8 +360,8 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     
     #Trial numbers we want to have for practice and trials
     #can be changed as needed
-    nReps_trial = 140 #140
-    nReps_practice = 15 #15
+    nReps_trial = 2 #140
+    nReps_practice = 2 #15
     
     #Accuracy
     correct_response = None
@@ -655,15 +655,15 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         depth=-1.0);
     continue_partone = keyboard.Keyboard()
     
-    # --- Initialize components for Routine "Certainty_Check" ---
-    certainty_btw_blocks = visual.TextStim(win=win, name='certainty_btw_blocks',
-        text='Herzlichen Glückwunsch, dieser Teil ist geschafft! \n\nWie sicher waren Sie sich bei der Mehrheit der Antworten auf einer Skala von 1 (sehr unsicher) bis 10 (sehr sicher)?',
+    # --- Initialize components for Routine "Certainty_Check_End" ---
+    certainty_end = visual.TextStim(win=win, name='certainty_end',
+        text='Herzlichen Glückwunsch, der letzte Teil ist geschafft! \n\nWie sicher waren Sie sich bei der Mehrheit der Antworten auf einer Skala von 1 (sehr unsicher) bis 10 (sehr sicher)?',
         font='Open Sans',
         pos=(0, 0), height=0.05, wrapWidth=None, ori=0.0, 
         color='white', colorSpace='rgb', opacity=None, 
         languageStyle='LTR',
         depth=0.0);
-    response_certainty = keyboard.Keyboard()
+    response_certainty_end = keyboard.Keyboard()
     
     # --- Initialize components for Routine "goodbye" ---
     goodbye_text = visual.TextStim(win=win, name='goodbye_text',
@@ -3437,20 +3437,16 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         stimOut=params,
         dataOut=['n','all_mean','all_std', 'all_raw'])
     
-    # --- Prepare to start Routine "Certainty_Check" ---
+    # --- Prepare to start Routine "Certainty_Check_End" ---
     continueRoutine = True
     # update component parameters for each repeat
-    thisExp.addData('Certainty_Check.started', globalClock.getTime())
-    response_certainty.keys = []
-    response_certainty.rt = []
-    _response_certainty_allKeys = []
-    # Run 'Begin Routine' code from certainty_check_btw_blocks
-    if trial_break == False:
-        continueRoutine = False
-        
+    thisExp.addData('Certainty_Check_End.started', globalClock.getTime())
+    response_certainty_end.keys = []
+    response_certainty_end.rt = []
+    _response_certainty_end_allKeys = []
     # keep track of which components have finished
-    Certainty_CheckComponents = [certainty_btw_blocks, response_certainty]
-    for thisComponent in Certainty_CheckComponents:
+    Certainty_Check_EndComponents = [certainty_end, response_certainty_end]
+    for thisComponent in Certainty_Check_EndComponents:
         thisComponent.tStart = None
         thisComponent.tStop = None
         thisComponent.tStartRefresh = None
@@ -3462,7 +3458,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     _timeToFirstFrame = win.getFutureFlipTime(clock="now")
     frameN = -1
     
-    # --- Run Routine "Certainty_Check" ---
+    # --- Run Routine "Certainty_Check_End" ---
     routineForceEnded = not continueRoutine
     while continueRoutine:
         # get current time
@@ -3472,51 +3468,51 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
         # update/draw components on each frame
         
-        # *certainty_btw_blocks* updates
+        # *certainty_end* updates
         
-        # if certainty_btw_blocks is starting this frame...
-        if certainty_btw_blocks.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+        # if certainty_end is starting this frame...
+        if certainty_end.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
             # keep track of start time/frame for later
-            certainty_btw_blocks.frameNStart = frameN  # exact frame index
-            certainty_btw_blocks.tStart = t  # local t and not account for scr refresh
-            certainty_btw_blocks.tStartRefresh = tThisFlipGlobal  # on global time
-            win.timeOnFlip(certainty_btw_blocks, 'tStartRefresh')  # time at next scr refresh
+            certainty_end.frameNStart = frameN  # exact frame index
+            certainty_end.tStart = t  # local t and not account for scr refresh
+            certainty_end.tStartRefresh = tThisFlipGlobal  # on global time
+            win.timeOnFlip(certainty_end, 'tStartRefresh')  # time at next scr refresh
             # add timestamp to datafile
-            thisExp.timestampOnFlip(win, 'certainty_btw_blocks.started')
+            thisExp.timestampOnFlip(win, 'certainty_end.started')
             # update status
-            certainty_btw_blocks.status = STARTED
-            certainty_btw_blocks.setAutoDraw(True)
+            certainty_end.status = STARTED
+            certainty_end.setAutoDraw(True)
         
-        # if certainty_btw_blocks is active this frame...
-        if certainty_btw_blocks.status == STARTED:
+        # if certainty_end is active this frame...
+        if certainty_end.status == STARTED:
             # update params
             pass
         
-        # *response_certainty* updates
+        # *response_certainty_end* updates
         waitOnFlip = False
         
-        # if response_certainty is starting this frame...
-        if response_certainty.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+        # if response_certainty_end is starting this frame...
+        if response_certainty_end.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
             # keep track of start time/frame for later
-            response_certainty.frameNStart = frameN  # exact frame index
-            response_certainty.tStart = t  # local t and not account for scr refresh
-            response_certainty.tStartRefresh = tThisFlipGlobal  # on global time
-            win.timeOnFlip(response_certainty, 'tStartRefresh')  # time at next scr refresh
+            response_certainty_end.frameNStart = frameN  # exact frame index
+            response_certainty_end.tStart = t  # local t and not account for scr refresh
+            response_certainty_end.tStartRefresh = tThisFlipGlobal  # on global time
+            win.timeOnFlip(response_certainty_end, 'tStartRefresh')  # time at next scr refresh
             # add timestamp to datafile
-            thisExp.timestampOnFlip(win, 'response_certainty.started')
+            thisExp.timestampOnFlip(win, 'response_certainty_end.started')
             # update status
-            response_certainty.status = STARTED
+            response_certainty_end.status = STARTED
             # keyboard checking is just starting
             waitOnFlip = True
-            win.callOnFlip(response_certainty.clock.reset)  # t=0 on next screen flip
-            win.callOnFlip(response_certainty.clearEvents, eventType='keyboard')  # clear events on next screen flip
-        if response_certainty.status == STARTED and not waitOnFlip:
-            theseKeys = response_certainty.getKeys(keyList=['1','2','3','4','5','6','7','8','9','0'], ignoreKeys=["escape"], waitRelease=False)
-            _response_certainty_allKeys.extend(theseKeys)
-            if len(_response_certainty_allKeys):
-                response_certainty.keys = _response_certainty_allKeys[-1].name  # just the last key pressed
-                response_certainty.rt = _response_certainty_allKeys[-1].rt
-                response_certainty.duration = _response_certainty_allKeys[-1].duration
+            win.callOnFlip(response_certainty_end.clock.reset)  # t=0 on next screen flip
+            win.callOnFlip(response_certainty_end.clearEvents, eventType='keyboard')  # clear events on next screen flip
+        if response_certainty_end.status == STARTED and not waitOnFlip:
+            theseKeys = response_certainty_end.getKeys(keyList=['1','2','3','4','5','6','7','8','9','0'], ignoreKeys=["escape"], waitRelease=False)
+            _response_certainty_end_allKeys.extend(theseKeys)
+            if len(_response_certainty_end_allKeys):
+                response_certainty_end.keys = _response_certainty_end_allKeys[-1].name  # just the last key pressed
+                response_certainty_end.rt = _response_certainty_end_allKeys[-1].rt
+                response_certainty_end.duration = _response_certainty_end_allKeys[-1].duration
                 # a response ends the routine
                 continueRoutine = False
         
@@ -3532,7 +3528,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             routineForceEnded = True
             break
         continueRoutine = False  # will revert to True if at least one component still running
-        for thisComponent in Certainty_CheckComponents:
+        for thisComponent in Certainty_Check_EndComponents:
             if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
                 continueRoutine = True
                 break  # at least one component has not yet finished
@@ -3541,20 +3537,20 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
             win.flip()
     
-    # --- Ending Routine "Certainty_Check" ---
-    for thisComponent in Certainty_CheckComponents:
+    # --- Ending Routine "Certainty_Check_End" ---
+    for thisComponent in Certainty_Check_EndComponents:
         if hasattr(thisComponent, "setAutoDraw"):
             thisComponent.setAutoDraw(False)
-    thisExp.addData('Certainty_Check.stopped', globalClock.getTime())
+    thisExp.addData('Certainty_Check_End.stopped', globalClock.getTime())
     # check responses
-    if response_certainty.keys in ['', [], None]:  # No response was made
-        response_certainty.keys = None
-    thisExp.addData('response_certainty.keys',response_certainty.keys)
-    if response_certainty.keys != None:  # we had a response
-        thisExp.addData('response_certainty.rt', response_certainty.rt)
-        thisExp.addData('response_certainty.duration', response_certainty.duration)
+    if response_certainty_end.keys in ['', [], None]:  # No response was made
+        response_certainty_end.keys = None
+    thisExp.addData('response_certainty_end.keys',response_certainty_end.keys)
+    if response_certainty_end.keys != None:  # we had a response
+        thisExp.addData('response_certainty_end.rt', response_certainty_end.rt)
+        thisExp.addData('response_certainty_end.duration', response_certainty_end.duration)
     thisExp.nextEntry()
-    # the Routine "Certainty_Check" was not non-slip safe, so reset the non-slip timer
+    # the Routine "Certainty_Check_End" was not non-slip safe, so reset the non-slip timer
     routineTimer.reset()
     
     # --- Prepare to start Routine "goodbye" ---
